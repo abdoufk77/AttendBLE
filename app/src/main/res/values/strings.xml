@@ -1,3 +1,21 @@
 <resources>
     <string name="app_name">AttendBLE</string>
+
+    <string name="login_welcome_title">Welcome Back</string>
+    <string name="login_welcome_subtitle">Sign in to manage your lectures and track student attendance.</string>
+    <string name="login_email_hint">Academic Email</string>
+    <string name="login_password_hint">Password</string>
+    <string name="login_button_professor">Login as Professor</string>
+    <string name="login_link_student">I am a Student</string>
+    <string name="login_link_forgot">Forgot Password?</string>
+    <string name="cd_logo">AttendBLE logo</string>
+    <string name="cd_profile">Profile</string>
+    <string name="cd_hero">Academic icon</string>
+
+    <string name="toast_login_professor">Login as Professor — TODO</string>
+    <string name="toast_login_student">Login as Student — TODO</string>
+    <string name="toast_forgot">Forgot Password — TODO</string>
+    <string name="toast_email_required">Please enter your email</string>
+    <string name="toast_password_required">Please enter your password</string>
+    <string name="toast_profile">Profile — TODO</string>
 </resources>
