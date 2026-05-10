@@ -15,4 +15,24 @@
     <string name="toast_forgot">Forgot Password — TODO</string>
     <string name="toast_email_required">Please enter your email</string>
     <string name="toast_password_required">Please enter your password</string>
+
+    <string name="signup_title">Join AttendBLE</string>
+    <string name="signup_subtitle">Create your account to start tracking attendance with BLE precision.</string>
+    <string name="signup_role_professor">Professor</string>
+    <string name="signup_role_student">Student</string>
+    <string name="signup_fullname_hint">Full Name</string>
+    <string name="signup_student_id_hint">Student ID</string>
+    <string name="signup_department_hint">Department</string>
+    <string name="signup_confirm_password_hint">Confirm Password</string>
+    <string name="signup_button_student">Create Student Account</string>
+    <string name="signup_button_professor">Create Professor Account</string>
+    <string name="signup_link_login">Already have an account? Login</string>
+
+    <string name="toast_signup_student">Create Student Account — TODO</string>
+    <string name="toast_signup_professor">Create Professor Account — TODO</string>
+    <string name="toast_fullname_required">Please enter your full name</string>
+    <string name="toast_student_id_required">Please enter your student ID</string>
+    <string name="toast_department_required">Please enter your department</string>
+    <string name="toast_confirm_password_required">Please confirm your password</string>
+    <string name="toast_password_mismatch">Passwords do not match</string>
 </resources>

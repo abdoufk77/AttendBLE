@@ -1,5 +1,6 @@
 package com.example.attendble.ui.auth;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Toast;
@@ -44,7 +45,7 @@ public class LoginActivity extends AppCompatActivity {
         MaterialButton btnForgot = findViewById(R.id.btn_forgot);
 
         btnLogin.setOnClickListener(v -> attemptLogin());
-        btnSignup.setOnClickListener(v -> toast(R.string.toast_signup));
+        btnSignup.setOnClickListener(v -> startActivity(new Intent(this, SignupActivity.class)));
         btnForgot.setOnClickListener(v -> toast(R.string.toast_forgot));
     }
 
