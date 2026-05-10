@@ -2,7 +2,6 @@ package com.example.attendble.ui.auth;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -40,18 +39,16 @@ public class LoginActivity extends AppCompatActivity {
         etEmail = findViewById(R.id.et_email);
         etPassword = findViewById(R.id.et_password);
 
-        MaterialButton btnLoginProf = findViewById(R.id.btn_login_professor);
-        MaterialButton btnStudent = findViewById(R.id.btn_student);
+        MaterialButton btnLogin = findViewById(R.id.btn_login);
+        MaterialButton btnSignup = findViewById(R.id.btn_signup);
         MaterialButton btnForgot = findViewById(R.id.btn_forgot);
-        ImageView profile = findViewById(R.id.topbar_profile);
 
-        btnLoginProf.setOnClickListener(v -> attemptLoginAsProfessor());
-        btnStudent.setOnClickListener(v -> toast(R.string.toast_login_student));
+        btnLogin.setOnClickListener(v -> attemptLogin());
+        btnSignup.setOnClickListener(v -> toast(R.string.toast_signup));
         btnForgot.setOnClickListener(v -> toast(R.string.toast_forgot));
-        profile.setOnClickListener(v -> toast(R.string.toast_profile));
     }
 
-    private void attemptLoginAsProfessor() {
+    private void attemptLogin() {
         String email = etEmail.getText() != null ? etEmail.getText().toString().trim() : "";
         String password = etPassword.getText() != null ? etPassword.getText().toString() : "";
 
@@ -68,7 +65,7 @@ public class LoginActivity extends AppCompatActivity {
             toast(R.string.toast_password_required);
             return;
         }
-        toast(R.string.toast_login_professor);
+        toast(R.string.toast_login);
     }
 
     private void toast(int resId) {
