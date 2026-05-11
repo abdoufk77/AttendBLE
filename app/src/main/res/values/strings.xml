@@ -197,4 +197,25 @@
     <string name="as_end_session">End Session</string>
     <string name="as_end_hint">Closing the session will generate the final attendance report.</string>
     <string name="as_toast_end">End session — TODO</string>
+
+    <!-- SessionClosedActivity -->
+    <string name="sc_title">Session Summary</string>
+    <string name="sc_close_cd">Close</string>
+    <string name="sc_success">Session closed successfully</string>
+    <string name="sc_subtitle">Attendance data for CS101 - Algorithm Design has been finalized.</string>
+    <string name="sc_stat_present_label">Present</string>
+    <string name="sc_stat_present_value">28</string>
+    <string name="sc_stat_absent_label">Absent</string>
+    <string name="sc_stat_absent_value">14</string>
+    <string name="sc_stat_rate_label">Rate</string>
+    <string name="sc_stat_rate_value">67%</string>
+    <string name="sc_students_label">Students</string>
+    <string name="sc_chip_present">Present</string>
+    <string name="sc_chip_absent">Absent</string>
+    <string name="sc_student1_name">Karim Dridi</string>
+    <string name="sc_student2_name">Lina Rayan</string>
+    <string name="sc_student3_name">Alex Rivera</string>
+    <string name="sc_action_export">Export Report</string>
+    <string name="sc_action_back">Back to Classes</string>
+    <string name="sc_toast_export">Export — TODO</string>
 </resources>

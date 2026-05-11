@@ -2,6 +2,7 @@ package com.example.attendble.ui.prof.serve;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,21 +11,20 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.attendble.R;
+import com.example.attendble.ui.prof.classes.MyClassesActivity;
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.progressindicator.CircularProgressIndicator;
-import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 /**
- * Écran de session active : code 4-chiffres, timer 2 min, liste live des pointages.
- * Stubé — sera branché sur SessionRepository + BleAdvertiserManager + countdown timer.
+ * Récap d'une session fermée : stats (présent / absent / taux), liste des étudiants et leur statut.
+ * Stubé — à brancher via SessionRepository.getReport(sessionId).
  */
-public class ActiveSessionActivity extends AppCompatActivity {
+public class SessionClosedActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_active_session);
+        setContentView(R.layout.activity_session_closed);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -32,12 +32,16 @@ public class ActiveSessionActivity extends AppCompatActivity {
             return insets;
         });
 
-        ((CircularProgressIndicator) findViewById(R.id.progress_timer)).setProgressCompat(53, false);
-        ((LinearProgressIndicator) findViewById(R.id.progress_live)).setProgressCompat(28, false);
+        findViewById(R.id.btn_close).setOnClickListener(v -> finish());
 
-        ((MaterialButton) findViewById(R.id.btn_end_session))
+        ((MaterialButton) findViewById(R.id.btn_export))
+                .setOnClickListener(v -> Toast.makeText(this, R.string.sc_toast_export, Toast.LENGTH_SHORT).show());
+
+        ((MaterialButton) findViewById(R.id.btn_back_classes))
                 .setOnClickListener(v -> {
-                    startActivity(new Intent(this, SessionClosedActivity.class));
+                    Intent intent = new Intent(this, MyClassesActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    startActivity(intent);
                     finish();
                 });
     }
