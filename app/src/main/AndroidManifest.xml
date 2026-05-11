@@ -43,6 +43,9 @@
         <activity
             android:name=".ui.prof.serve.SessionClosedActivity"
             android:exported="false" />
+        <activity
+            android:name=".ui.prof.home.HomeActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

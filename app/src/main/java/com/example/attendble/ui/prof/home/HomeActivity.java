@@ -1,8 +1,7 @@
-package com.example.attendble.ui.prof.profil;
+package com.example.attendble.ui.prof.home;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -13,22 +12,23 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.attendble.R;
 import com.example.attendble.ui.prof.classes.MyClassesActivity;
-import com.example.attendble.ui.prof.home.HomeActivity;
+import com.example.attendble.ui.prof.profil.ProfilActivity;
+import com.example.attendble.ui.prof.serve.ActiveSessionActivity;
 import com.example.attendble.ui.prof.serve.ServeHomeActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 
 /**
- * Écran profil du professeur : avatar, stats, cours gérés, settings, logout.
- * Les listeners sont des stubs — la logique métier sera branchée via ServiceLocator (use cases).
+ * Écran d'accueil du professeur : greeting, stats du jour, planning et statut BLE.
+ * Stubé — à brancher via GetCurrentUserUseCase + GetTodayScheduleUseCase + stats du repo.
  */
-public class ProfilActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_prof_dashboard);
+        setContentView(R.layout.activity_home);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -36,40 +36,21 @@ public class ProfilActivity extends AppCompatActivity {
             return insets;
         });
 
-        bindCourseCards();
-        bindSettingsRows();
-        bindLogout();
+        findViewById(R.id.btn_view_all).setOnClickListener(v ->
+                startActivity(new Intent(this, MyClassesActivity.class)));
+
+        ((MaterialButton) findViewById(R.id.btn_start_session_1)).setOnClickListener(v ->
+                startActivity(new Intent(this, ActiveSessionActivity.class)));
+
         bindBottomNav();
-    }
-
-    private void bindCourseCards() {
-        View card1 = findViewById(R.id.card_course_1);
-        View card2 = findViewById(R.id.card_course_2);
-        View.OnClickListener courseListener = v -> toast(R.string.prof_toast_course_clicked);
-        card1.setOnClickListener(courseListener);
-        card2.setOnClickListener(courseListener);
-    }
-
-    private void bindSettingsRows() {
-        View.OnClickListener settingsListener = v -> toast(R.string.prof_toast_settings_clicked);
-        findViewById(R.id.row_settings_account).setOnClickListener(settingsListener);
-        findViewById(R.id.row_settings_notifications).setOnClickListener(settingsListener);
-        findViewById(R.id.row_settings_privacy).setOnClickListener(settingsListener);
-    }
-
-    private void bindLogout() {
-        MaterialButton btnLogout = findViewById(R.id.btn_logout);
-        btnLogout.setOnClickListener(v -> toast(R.string.prof_toast_logout));
     }
 
     private void bindBottomNav() {
         BottomNavigationView nav = findViewById(R.id.bottom_nav);
-        nav.setSelectedItemId(R.id.nav_profile);
+        nav.setSelectedItemId(R.id.nav_home);
         nav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.nav_home) {
-                startActivity(new Intent(this, HomeActivity.class));
-                finish();
                 return true;
             }
             if (id == R.id.nav_classes) {
@@ -83,14 +64,12 @@ public class ProfilActivity extends AppCompatActivity {
                 return true;
             }
             if (id == R.id.nav_profile) {
+                startActivity(new Intent(this, ProfilActivity.class));
+                finish();
                 return true;
             }
-            toast(R.string.prof_toast_nav);
+            Toast.makeText(this, R.string.prof_toast_nav, Toast.LENGTH_SHORT).show();
             return true;
         });
-    }
-
-    private void toast(int resId) {
-        Toast.makeText(this, resId, Toast.LENGTH_SHORT).show();
     }
 }

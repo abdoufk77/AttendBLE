@@ -218,4 +218,40 @@
     <string name="sc_action_export">Export Report</string>
     <string name="sc_action_back">Back to Classes</string>
     <string name="sc_toast_export">Export — TODO</string>
+
+    <!-- HomeActivity -->
+    <string name="home_greeting">Good morning, Prof. Hassan</string>
+    <string name="home_lectures_count">You have 3 lectures scheduled for today.</string>
+    <string name="home_stat_total_students">Total Students</string>
+    <string name="home_stat_total_value">142</string>
+    <string name="home_stat_total_chip">Active Enrolled</string>
+    <string name="home_stat_avg_attendance">Avg Attendance</string>
+    <string name="home_stat_avg_value">94%</string>
+    <string name="home_stat_avg_chip">+2% this week</string>
+    <string name="home_today_title">Today\'s Schedule</string>
+    <string name="home_view_all">View All</string>
+
+    <string name="home_course1_name">Distributed Systems</string>
+    <string name="home_course1_group">Group GL3</string>
+    <string name="home_course1_room">Room 402</string>
+    <string name="home_course1_time">09:00 AM - 10:30 AM</string>
+    <string name="home_course1_action">Start Session</string>
+
+    <string name="home_course2_name">Network Security</string>
+    <string name="home_course2_group">Group GL3</string>
+    <string name="home_course2_room">Room 105</string>
+    <string name="home_course2_time">11:00 AM - 12:30 PM</string>
+
+    <string name="home_course3_name">Operating Systems</string>
+    <string name="home_course3_group">Group GL1</string>
+    <string name="home_course3_room">Lab 2</string>
+    <string name="home_course3_time">02:00 PM - 03:30 PM</string>
+
+    <string name="home_course_upcoming">Upcoming</string>
+
+    <string name="home_ble_title">BLE Attendance Active</string>
+    <string name="home_ble_subtitle">Auto-tracking nearby student devices</string>
+
+    <string name="home_toast_view_all">View all — TODO</string>
+    <string name="home_toast_start_session">Start session — TODO</string>
 </resources>

@@ -16,6 +16,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.attendble.R;
+import com.example.attendble.ui.prof.home.HomeActivity;
 import com.example.attendble.ui.prof.profil.ProfilActivity;
 import com.example.attendble.ui.prof.serve.ServeHomeActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -108,6 +109,11 @@ public class MyClassesActivity extends AppCompatActivity {
         nav.setSelectedItemId(R.id.nav_classes);
         nav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
+            if (id == R.id.nav_home) {
+                startActivity(new Intent(this, HomeActivity.class));
+                finish();
+                return true;
+            }
             if (id == R.id.nav_profile) {
                 startActivity(new Intent(this, ProfilActivity.class));
                 finish();
