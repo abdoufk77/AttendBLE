@@ -1,0 +1,73 @@
+package com.example.attendble.ui.prof;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
+
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
+import com.example.attendble.R;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.button.MaterialButton;
+
+/**
+ * Écran profil/dashboard du professeur : avatar, stats, cours gérés, settings, logout.
+ * Les listeners sont des stubs — la logique métier sera branchée via ServiceLocator (use cases).
+ */
+public class ProfDashboardActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_prof_dashboard);
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(bars.left, bars.top, bars.right, bars.bottom);
+            return insets;
+        });
+
+        bindCourseCards();
+        bindSettingsRows();
+        bindLogout();
+        bindBottomNav();
+    }
+
+    private void bindCourseCards() {
+        View card1 = findViewById(R.id.card_course_1);
+        View card2 = findViewById(R.id.card_course_2);
+        View.OnClickListener courseListener = v -> toast(R.string.prof_toast_course_clicked);
+        card1.setOnClickListener(courseListener);
+        card2.setOnClickListener(courseListener);
+    }
+
+    private void bindSettingsRows() {
+        View.OnClickListener settingsListener = v -> toast(R.string.prof_toast_settings_clicked);
+        findViewById(R.id.row_settings_account).setOnClickListener(settingsListener);
+        findViewById(R.id.row_settings_notifications).setOnClickListener(settingsListener);
+        findViewById(R.id.row_settings_privacy).setOnClickListener(settingsListener);
+    }
+
+    private void bindLogout() {
+        MaterialButton btnLogout = findViewById(R.id.btn_logout);
+        btnLogout.setOnClickListener(v -> toast(R.string.prof_toast_logout));
+    }
+
+    private void bindBottomNav() {
+        BottomNavigationView nav = findViewById(R.id.bottom_nav);
+        nav.setSelectedItemId(R.id.nav_profile);
+        nav.setOnItemSelectedListener(item -> {
+            toast(R.string.prof_toast_nav);
+            return true;
+        });
+    }
+
+    private void toast(int resId) {
+        Toast.makeText(this, resId, Toast.LENGTH_SHORT).show();
+    }
+}

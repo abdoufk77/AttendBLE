@@ -11,6 +11,11 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.attendble.R;
+import com.example.attendble.data.ServiceLocator;
+import com.example.attendble.domain.Callback;
+import com.example.attendble.domain.model.Etudiant;
+import com.example.attendble.domain.model.Professeur;
+import com.example.attendble.domain.usecase.SignupUseCase;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.textfield.TextInputEditText;
@@ -33,6 +38,8 @@ public class SignupActivity extends AppCompatActivity {
     private MaterialButton btnSignup;
 
     private boolean isStudent = true;
+
+    private SignupUseCase signupUseCase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +68,8 @@ public class SignupActivity extends AppCompatActivity {
         MaterialButtonToggleGroup toggleRole = findViewById(R.id.toggle_role);
         btnSignup = findViewById(R.id.btn_signup);
         MaterialButton btnLogin = findViewById(R.id.btn_login);
+
+        signupUseCase = ServiceLocator.provideSignupUseCase();
 
         toggleRole.check(R.id.btn_role_student);
         applyRole(true);
@@ -132,7 +141,42 @@ public class SignupActivity extends AppCompatActivity {
             return;
         }
 
-        toast(isStudent ? R.string.toast_signup_student : R.string.toast_signup_professor);
+        btnSignup.setEnabled(false);
+        if (isStudent) {
+            signupUseCase.signupEtudiant(email, password, fullName, roleField, new Callback<Etudiant>() {
+                @Override
+                public void onSuccess(Etudiant etudiant) {
+                    btnSignup.setEnabled(true);
+                    Toast.makeText(SignupActivity.this,
+                            "Étudiant inscrit : " + etudiant.getNom() + " (uid=" + etudiant.getUid() + ")",
+                            Toast.LENGTH_LONG).show();
+                    finish();
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    btnSignup.setEnabled(true);
+                    Toast.makeText(SignupActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+        } else {
+            signupUseCase.signupProfesseur(email, password, fullName, roleField, new Callback<Professeur>() {
+                @Override
+                public void onSuccess(Professeur professeur) {
+                    btnSignup.setEnabled(true);
+                    Toast.makeText(SignupActivity.this,
+                            "Professeur inscrit : " + professeur.getNom() + " (uid=" + professeur.getUid() + ")",
+                            Toast.LENGTH_LONG).show();
+                    finish();
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    btnSignup.setEnabled(true);
+                    Toast.makeText(SignupActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+        }
     }
 
     private String textOf(TextInputEditText et) {

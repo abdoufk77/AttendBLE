@@ -15,4 +15,9 @@
 
     <style name="Theme.AttendBLE" parent="Base.Theme.AttendBLE" />
 
+    <style name="ThemeOverlay.AttendBLE.BottomNav" parent="">
+        <item name="colorSecondaryContainer">@color/brand_primary</item>
+        <item name="colorOnSecondaryContainer">@color/white</item>
+    </style>
+
 </resources>

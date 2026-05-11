@@ -35,4 +35,37 @@
     <string name="toast_department_required">Please enter your department</string>
     <string name="toast_confirm_password_required">Please confirm your password</string>
     <string name="toast_password_mismatch">Passwords do not match</string>
+
+    <!-- ProfDashboardActivity -->
+    <string name="prof_dashboard_title">AttendBLE</string>
+    <string name="prof_profile_name">Prof. Hassan</string>
+    <string name="prof_profile_department">Department of Computer Science</string>
+    <string name="prof_stats_label_classes">Classes</string>
+    <string name="prof_stats_label_students">Students</string>
+    <string name="prof_stats_label_attendance">Attendance</string>
+    <string name="prof_stats_value_classes">42</string>
+    <string name="prof_stats_value_students">142</string>
+    <string name="prof_stats_value_attendance">94%</string>
+    <string name="prof_section_managed_courses">Managed Courses</string>
+    <string name="prof_course1_name">Advanced Algorithms</string>
+    <string name="prof_course1_code">CS-402</string>
+    <string name="prof_course1_room">Room 304</string>
+    <string name="prof_course1_rate">96%</string>
+    <string name="prof_course2_name">Distributed Systems</string>
+    <string name="prof_course2_code">GL3</string>
+    <string name="prof_course2_room">Lab B</string>
+    <string name="prof_course2_rate">92%</string>
+    <string name="prof_section_settings">Settings</string>
+    <string name="prof_settings_account">Account Settings</string>
+    <string name="prof_settings_notifications">Notification Preferences</string>
+    <string name="prof_settings_privacy">Privacy &amp; Security</string>
+    <string name="prof_action_logout">Logout</string>
+    <string name="prof_nav_home">Home</string>
+    <string name="prof_nav_scan">Scan</string>
+    <string name="prof_nav_profile">Profile</string>
+    <string name="prof_cd_avatar">Profile picture</string>
+    <string name="prof_toast_course_clicked">Course selected — TODO</string>
+    <string name="prof_toast_settings_clicked">Settings — TODO</string>
+    <string name="prof_toast_logout">Logout — TODO</string>
+    <string name="prof_toast_nav">Navigation — TODO</string>
 </resources>

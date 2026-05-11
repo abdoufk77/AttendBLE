@@ -22,6 +22,9 @@
         <activity
             android:name=".ui.auth.SignupActivity"
             android:exported="false" />
+        <activity
+            android:name=".ui.prof.ProfDashboardActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
