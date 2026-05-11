@@ -43,9 +43,10 @@
                 android:id="@+id/iv_topbar_avatar"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:background="@drawable/bg_avatar_circle"
                 android:contentDescription="@string/prof_cd_avatar"
                 android:scaleType="centerCrop"
-                android:src="@mipmap/ic_launcher_round"
+                android:src="@drawable/profil"
                 app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full" />
         </LinearLayout>
     </com.google.android.material.appbar.MaterialToolbar>
