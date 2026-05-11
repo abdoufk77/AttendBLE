@@ -177,4 +177,24 @@
     <string name="serve_course3_code">MATH-201</string>
     <string name="serve_course3_room">Auditorium B</string>
     <string name="serve_course3_students">120 students</string>
+
+    <!-- ActiveSessionActivity -->
+    <string name="as_join_code_label">JOIN CODE</string>
+    <string name="as_code">7342</string>
+    <string name="as_timer">1:47</string>
+    <string name="as_remaining">Remaining</string>
+    <string name="as_ble_active">BLE active</string>
+    <string name="as_live_title">Live attendance</string>
+    <string name="as_live_counter">12 / 42 students</string>
+    <string name="as_student1_name">Amine Benhalima</string>
+    <string name="as_student1_id">Student ID: 220194</string>
+    <string name="as_student1_time">08:34</string>
+    <string name="as_student2_name">Sara Mansouri</string>
+    <string name="as_student2_id">Student ID: 220142</string>
+    <string name="as_student2_time">08:35</string>
+    <string name="as_student3_name">Omar Khalid</string>
+    <string name="as_student3_pending">Pending discovery…</string>
+    <string name="as_end_session">End Session</string>
+    <string name="as_end_hint">Closing the session will generate the final attendance report.</string>
+    <string name="as_toast_end">End session — TODO</string>
 </resources>

@@ -71,8 +71,7 @@ public class ServeHomeActivity extends AppCompatActivity {
             ((TextView) card.findViewById(R.id.tv_class_students)).setText(clazz.students);
 
             MaterialButton btnStart = card.findViewById(R.id.btn_start);
-            btnStart.setOnClickListener(v -> Toast.makeText(this,
-                    R.string.serve_toast_start, Toast.LENGTH_SHORT).show());
+            btnStart.setOnClickListener(v -> startActivity(new Intent(this, ActiveSessionActivity.class)));
             container.addView(card);
         }
     }

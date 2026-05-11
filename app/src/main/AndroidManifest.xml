@@ -37,6 +37,9 @@
         <activity
             android:name=".ui.prof.serve.ServeHomeActivity"
             android:exported="false" />
+        <activity
+            android:name=".ui.prof.serve.ActiveSessionActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
