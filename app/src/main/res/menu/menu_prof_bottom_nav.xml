@@ -8,9 +8,9 @@
         android:icon="@drawable/ic_classes"
         android:title="@string/prof_nav_classes" />
     <item
-        android:id="@+id/nav_scan"
-        android:icon="@drawable/ic_scan"
-        android:title="@string/prof_nav_scan" />
+        android:id="@+id/nav_serve"
+        android:icon="@drawable/ic_serve"
+        android:title="@string/prof_nav_serve" />
     <item
         android:id="@+id/nav_profile"
         android:icon="@drawable/ic_person"

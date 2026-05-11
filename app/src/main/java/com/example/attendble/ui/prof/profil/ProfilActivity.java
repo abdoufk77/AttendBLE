@@ -13,6 +13,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.attendble.R;
 import com.example.attendble.ui.prof.classes.MyClassesActivity;
+import com.example.attendble.ui.prof.serve.ServeHomeActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 
@@ -67,6 +68,11 @@ public class ProfilActivity extends AppCompatActivity {
             int id = item.getItemId();
             if (id == R.id.nav_classes) {
                 startActivity(new Intent(this, MyClassesActivity.class));
+                finish();
+                return true;
+            }
+            if (id == R.id.nav_serve) {
+                startActivity(new Intent(this, ServeHomeActivity.class));
                 finish();
                 return true;
             }

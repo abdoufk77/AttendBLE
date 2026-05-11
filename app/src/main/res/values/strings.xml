@@ -62,7 +62,7 @@
     <string name="prof_action_logout">Logout</string>
     <string name="prof_nav_home">Home</string>
     <string name="prof_nav_classes">My Classes</string>
-    <string name="prof_nav_scan">Scan</string>
+    <string name="prof_nav_serve">Serve</string>
     <string name="prof_nav_profile">Profile</string>
     <string name="prof_cd_avatar">Profile picture</string>
     <string name="prof_toast_course_clicked">Course selected — TODO</string>
@@ -155,4 +155,26 @@
     <string name="cc_action_create">Create Class</string>
     <string name="cc_toast_create">Create class — TODO</string>
     <string name="cc_error_required">Required field</string>
+
+    <!-- ServeHomeActivity -->
+    <string name="serve_subtitle">Pick the class you\'re teaching right now</string>
+    <string name="serve_description">The BLE scanner will automatically activate once you start a session.</string>
+    <string name="serve_action_start">Start</string>
+    <string name="serve_toast_start">Start session — TODO</string>
+    <string name="serve_dot">·</string>
+
+    <string name="serve_course1_name">Advanced Algorithms</string>
+    <string name="serve_course1_code">CS-402</string>
+    <string name="serve_course1_room">Room 304</string>
+    <string name="serve_course1_students">42 students</string>
+
+    <string name="serve_course2_name">Operating Systems</string>
+    <string name="serve_course2_code">CS-301</string>
+    <string name="serve_course2_room">Lab 2A</string>
+    <string name="serve_course2_students">35 students</string>
+
+    <string name="serve_course3_name">Discrete Mathematics</string>
+    <string name="serve_course3_code">MATH-201</string>
+    <string name="serve_course3_room">Auditorium B</string>
+    <string name="serve_course3_students">120 students</string>
 </resources>

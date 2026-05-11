@@ -34,6 +34,9 @@
         <activity
             android:name=".ui.prof.classes.CreerClasseActivity"
             android:exported="false" />
+        <activity
+            android:name=".ui.prof.serve.ServeHomeActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
