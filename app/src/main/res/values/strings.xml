@@ -141,4 +141,18 @@
     <string name="cd_toast_invite">Invite — TODO</string>
     <string name="cd_toast_student_clicked">Student selected — TODO</string>
     <string name="cd_toast_student_more">Student options — TODO</string>
+
+    <!-- CreerClasseActivity -->
+    <string name="cc_title">Create New Class</string>
+    <string name="cc_intro">Fill in the details below to initialize a new BLE tracking session for your course.</string>
+    <string name="cc_hint_course_name">Course Name</string>
+    <string name="cc_hint_subject">Subject</string>
+    <string name="cc_hint_group">Group</string>
+    <string name="cc_hint_room">Room</string>
+    <string name="cc_hint_schedule">Schedule (e.g. Mon 09:00)</string>
+    <string name="cc_hint_total_students">Total Students</string>
+    <string name="cc_info">Upon creation, this class will be visible in your Dashboard for immediate attendance tracking using Bluetooth.</string>
+    <string name="cc_action_create">Create Class</string>
+    <string name="cc_toast_create">Create class — TODO</string>
+    <string name="cc_error_required">Required field</string>
 </resources>

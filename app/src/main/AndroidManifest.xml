@@ -31,6 +31,9 @@
         <activity
             android:name=".ui.prof.classes.ClassDetailsActivity"
             android:exported="false" />
+        <activity
+            android:name=".ui.prof.classes.CreerClasseActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

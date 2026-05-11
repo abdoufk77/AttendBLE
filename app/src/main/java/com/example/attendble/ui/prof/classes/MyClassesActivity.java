@@ -93,12 +93,13 @@ public class MyClassesActivity extends AppCompatActivity {
     }
 
     private void bindPlaceholder() {
-        findViewById(R.id.card_create_new).setOnClickListener(v -> toast(R.string.mc_toast_create));
+        findViewById(R.id.card_create_new)
+                .setOnClickListener(v -> startActivity(new Intent(this, CreerClasseActivity.class)));
     }
 
     private void bindFab() {
         FloatingActionButton fab = findViewById(R.id.fab_add);
-        fab.setOnClickListener(v -> toast(R.string.mc_toast_create));
+        fab.setOnClickListener(v -> startActivity(new Intent(this, CreerClasseActivity.class)));
     }
 
     private void bindBottomNav() {
