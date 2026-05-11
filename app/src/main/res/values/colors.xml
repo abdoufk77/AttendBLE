@@ -20,4 +20,11 @@
     <color name="brand_tertiary_fixed">#FFDBCB</color>
     <color name="brand_on_tertiary_fixed_variant">#783100</color>
     <color name="brand_tertiary">#9E4300</color>
+
+    <!-- Warning banner (student home absence warning) -->
+    <color name="brand_warning_bg">#FFF4E5</color>
+    <color name="brand_warning_stroke">#FFB347</color>
+    <color name="brand_warning_icon">#B45309</color>
+    <color name="brand_warning_title">#78350F</color>
+    <color name="brand_warning_body">#92400E</color>
 </resources>

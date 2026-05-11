@@ -85,12 +85,11 @@ public class LoginActivity extends AppCompatActivity {
                 btnLogin.setEnabled(true);
                 if (user.getRole() == UserRole.PROFESSEUR) {
                     startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-                    finish();
                 } else {
-                    Toast.makeText(LoginActivity.this,
-                            "Étudiant connecté : " + user.getNom() + " (dashboard à venir)",
-                            Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(LoginActivity.this,
+                            com.example.attendble.ui.student.home.HomeActivity.class));
                 }
+                finish();
             }
 
             @Override

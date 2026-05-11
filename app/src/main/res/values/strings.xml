@@ -254,4 +254,41 @@
 
     <string name="home_toast_view_all">View all — TODO</string>
     <string name="home_toast_start_session">Start session — TODO</string>
+
+    <!-- Student HomeActivity -->
+    <string name="student_greeting">Hi, Abdou!</string>
+    <string name="student_greeting_sub">Ready for your morning sessions?</string>
+
+    <string name="student_warning_title">Absence Warning</string>
+    <string name="student_warning_body">You\'ve reached 85%% of your absence limit in Computer Science 101. Further absences may affect your grade.</string>
+
+    <string name="student_today_title">Today\'s Courses</string>
+    <string name="student_view_schedule">View Schedule</string>
+
+    <string name="student_course1_time">09:00 AM — 10:30 AM</string>
+    <string name="student_course1_name">Computer Science 101</string>
+    <string name="student_course1_room">Room 402, Science Wing</string>
+    <string name="student_course1_status">Ongoing</string>
+
+    <string name="student_course2_time">11:00 AM — 12:30 PM</string>
+    <string name="student_course2_name">Digital Ethics</string>
+    <string name="student_course2_room">Lecture Hall B</string>
+
+    <string name="student_progress_title">Attendance Progress</string>
+    <string name="student_progress1_name">Computer Science 101</string>
+    <string name="student_progress1_value">82%</string>
+    <string name="student_progress2_name">Digital Ethics</string>
+    <string name="student_progress2_value">94%</string>
+    <string name="student_progress3_name">Advanced Mathematics</string>
+    <string name="student_progress3_value">98%</string>
+
+    <string name="student_nav_home">Home</string>
+    <string name="student_nav_classes">Mes classes</string>
+    <string name="student_nav_scan">Scan</string>
+    <string name="student_nav_profile">Profile</string>
+    <string name="student_fab_cd">Scan for sessions</string>
+
+    <string name="student_toast_view_schedule">View schedule — TODO</string>
+    <string name="student_toast_scan">Scan — TODO</string>
+    <string name="student_toast_nav">Navigation — TODO</string>
 </resources>
