@@ -116,4 +116,29 @@
     <string name="mc_toast_course_clicked">Course selected — TODO</string>
     <string name="mc_toast_more">Options — TODO</string>
     <string name="mc_toast_create">Create new class — TODO</string>
+
+    <!-- ClassDetailsActivity -->
+    <string name="cd_back_cd">Back</string>
+    <string name="cd_class_name">Advanced Algorithms</string>
+    <string name="cd_class_group">Group GL3</string>
+    <string name="cd_class_room">Room 304</string>
+    <string name="cd_invitation_label">Class invitation code</string>
+    <string name="cd_invitation_code">GL3-ALGO-7X2</string>
+    <string name="cd_copy_cd">Copy code</string>
+    <string name="cd_share_cd">Share link</string>
+    <string name="cd_students_title">Enrolled Students (24)</string>
+    <string name="cd_invite">Invite</string>
+
+    <string name="cd_student1_name">Amine Benhalima</string>
+    <string name="cd_student1_attendance">96%</string>
+    <string name="cd_student2_name">Sara Mansouri</string>
+    <string name="cd_student2_attendance">88%</string>
+    <string name="cd_student3_name">Karim Dridi</string>
+    <string name="cd_student3_attendance">92%</string>
+
+    <string name="cd_toast_copy">Code copied — TODO</string>
+    <string name="cd_toast_share">Share — TODO</string>
+    <string name="cd_toast_invite">Invite — TODO</string>
+    <string name="cd_toast_student_clicked">Student selected — TODO</string>
+    <string name="cd_toast_student_more">Student options — TODO</string>
 </resources>

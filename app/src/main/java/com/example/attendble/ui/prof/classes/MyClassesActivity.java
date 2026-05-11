@@ -86,7 +86,7 @@ public class MyClassesActivity extends AppCompatActivity {
             ((LinearProgressIndicator) card.findViewById(R.id.progress_attendance))
                     .setProgressCompat(course.progress, false);
 
-            card.setOnClickListener(v -> toast(R.string.mc_toast_course_clicked));
+            card.setOnClickListener(v -> startActivity(new Intent(this, ClassDetailsActivity.class)));
             card.findViewById(R.id.btn_more).setOnClickListener(v -> toast(R.string.mc_toast_more));
             container.addView(card);
         }
