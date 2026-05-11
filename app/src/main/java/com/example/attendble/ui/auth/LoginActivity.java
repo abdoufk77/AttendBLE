@@ -17,7 +17,7 @@ import com.example.attendble.domain.Callback;
 import com.example.attendble.domain.enums.UserRole;
 import com.example.attendble.domain.model.User;
 import com.example.attendble.domain.usecase.LoginUseCase;
-import com.example.attendble.ui.prof.ProfDashboardActivity;
+import com.example.attendble.ui.prof.profil.ProfilActivity;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -84,7 +84,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onSuccess(User user) {
                 btnLogin.setEnabled(true);
                 if (user.getRole() == UserRole.PROFESSEUR) {
-                    startActivity(new Intent(LoginActivity.this, ProfDashboardActivity.class));
+                    startActivity(new Intent(LoginActivity.this, ProfilActivity.class));
                     finish();
                 } else {
                     Toast.makeText(LoginActivity.this,

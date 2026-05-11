@@ -4,6 +4,10 @@
         android:icon="@drawable/ic_home"
         android:title="@string/prof_nav_home" />
     <item
+        android:id="@+id/nav_classes"
+        android:icon="@drawable/ic_classes"
+        android:title="@string/prof_nav_classes" />
+    <item
         android:id="@+id/nav_scan"
         android:icon="@drawable/ic_scan"
         android:title="@string/prof_nav_scan" />

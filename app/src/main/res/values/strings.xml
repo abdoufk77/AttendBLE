@@ -61,6 +61,7 @@
     <string name="prof_settings_privacy">Privacy &amp; Security</string>
     <string name="prof_action_logout">Logout</string>
     <string name="prof_nav_home">Home</string>
+    <string name="prof_nav_classes">My Classes</string>
     <string name="prof_nav_scan">Scan</string>
     <string name="prof_nav_profile">Profile</string>
     <string name="prof_cd_avatar">Profile picture</string>
@@ -68,4 +69,51 @@
     <string name="prof_toast_settings_clicked">Settings — TODO</string>
     <string name="prof_toast_logout">Logout — TODO</string>
     <string name="prof_toast_nav">Navigation — TODO</string>
+
+    <!-- MyClassesActivity -->
+    <string name="mc_title">My Classes</string>
+    <string name="mc_label_attendance">Average Attendance</string>
+    <string name="mc_placeholder_text">Create New Class</string>
+    <string name="mc_fab_cd">Add new class</string>
+    <string name="mc_more_cd">More options</string>
+
+    <string name="mc_course1_name">Advanced Algorithms</string>
+    <string name="mc_course1_code">CS-402</string>
+    <string name="mc_course1_room">Room 304</string>
+    <string name="mc_course1_students">42 Students Enrolled</string>
+    <string name="mc_course1_attendance">92%</string>
+
+    <string name="mc_course2_name">Operating Systems</string>
+    <string name="mc_course2_code">CS-301</string>
+    <string name="mc_course2_room">Lab 2A</string>
+    <string name="mc_course2_students">35 Students Enrolled</string>
+    <string name="mc_course2_attendance">85%</string>
+
+    <string name="mc_course3_name">Discrete Mathematics</string>
+    <string name="mc_course3_code">MATH-201</string>
+    <string name="mc_course3_room">Auditorium B</string>
+    <string name="mc_course3_students">120 Students Enrolled</string>
+    <string name="mc_course3_attendance">78%</string>
+
+    <string name="mc_course4_name">Software Engineering</string>
+    <string name="mc_course4_code">CS-401</string>
+    <string name="mc_course4_room">Room 102</string>
+    <string name="mc_course4_students">28 Students Enrolled</string>
+    <string name="mc_course4_attendance">95%</string>
+
+    <string name="mc_course5_name">Database Systems</string>
+    <string name="mc_course5_code">CS-305</string>
+    <string name="mc_course5_room">Lab 1B</string>
+    <string name="mc_course5_students">52 Students Enrolled</string>
+    <string name="mc_course5_attendance">88%</string>
+
+    <string name="mc_course6_name">Computer Networks</string>
+    <string name="mc_course6_code">CS-410</string>
+    <string name="mc_course6_room">Room 208</string>
+    <string name="mc_course6_students">38 Students Enrolled</string>
+    <string name="mc_course6_attendance">73%</string>
+
+    <string name="mc_toast_course_clicked">Course selected — TODO</string>
+    <string name="mc_toast_more">Options — TODO</string>
+    <string name="mc_toast_create">Create new class — TODO</string>
 </resources>

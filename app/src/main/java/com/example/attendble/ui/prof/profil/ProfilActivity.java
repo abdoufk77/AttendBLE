@@ -1,5 +1,6 @@
-package com.example.attendble.ui.prof;
+package com.example.attendble.ui.prof.profil;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -11,14 +12,15 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.attendble.R;
+import com.example.attendble.ui.prof.classes.MyClassesActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 
 /**
- * Écran profil/dashboard du professeur : avatar, stats, cours gérés, settings, logout.
+ * Écran profil du professeur : avatar, stats, cours gérés, settings, logout.
  * Les listeners sont des stubs — la logique métier sera branchée via ServiceLocator (use cases).
  */
-public class ProfDashboardActivity extends AppCompatActivity {
+public class ProfilActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +64,15 @@ public class ProfDashboardActivity extends AppCompatActivity {
         BottomNavigationView nav = findViewById(R.id.bottom_nav);
         nav.setSelectedItemId(R.id.nav_profile);
         nav.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_classes) {
+                startActivity(new Intent(this, MyClassesActivity.class));
+                finish();
+                return true;
+            }
+            if (id == R.id.nav_profile) {
+                return true;
+            }
             toast(R.string.prof_toast_nav);
             return true;
         });

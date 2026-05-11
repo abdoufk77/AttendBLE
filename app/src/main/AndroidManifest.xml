@@ -23,7 +23,10 @@
             android:name=".ui.auth.SignupActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.prof.ProfDashboardActivity"
+            android:name=".ui.prof.profil.ProfilActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.prof.classes.MyClassesActivity"
             android:exported="false" />
     </application>
 
