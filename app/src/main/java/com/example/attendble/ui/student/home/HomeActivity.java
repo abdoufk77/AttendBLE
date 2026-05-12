@@ -11,6 +11,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.attendble.R;
+import com.example.attendble.ui.student.classes.MyClassesActivity;
 import com.example.attendble.ui.student.profil.ProfilActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -50,6 +51,11 @@ public class HomeActivity extends AppCompatActivity {
         nav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.nav_home) {
+                return true;
+            }
+            if (id == R.id.nav_classes) {
+                startActivity(new Intent(this, MyClassesActivity.class));
+                finish();
                 return true;
             }
             if (id == R.id.nav_profile) {

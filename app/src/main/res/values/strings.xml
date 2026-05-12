@@ -324,4 +324,28 @@
     <string name="sp_version">Version 2.4.1 (BLE-Stable)</string>
 
     <string name="sp_toast_logout">Logout — TODO</string>
+
+    <!-- Student MyClassesActivity -->
+    <string name="smc_title">My Classes</string>
+    <string name="smc_fab_join_cd">Join a class</string>
+    <string name="smc_placeholder_text">Join a Class</string>
+
+    <string name="smc_class1_name">Advanced Algorithms</string>
+    <string name="smc_class1_meta">Prof. Hassan · GL3</string>
+    <string name="smc_class1_room">Room 304</string>
+    <string name="smc_class1_attendance">92%</string>
+
+    <string name="smc_class2_name">Operating Systems</string>
+    <string name="smc_class2_meta">Prof. Amine · GL3</string>
+    <string name="smc_class2_room">Lab 2A</string>
+    <string name="smc_class2_attendance">64%</string>
+
+    <string name="smc_class3_name">Discrete Mathematics</string>
+    <string name="smc_class3_meta">Prof. Sara · GL1</string>
+    <string name="smc_class3_room">Auditorium B</string>
+    <string name="smc_class3_attendance">88%</string>
+
+    <string name="smc_toast_class_clicked">Class selected — TODO</string>
+    <string name="smc_toast_join">Join class — TODO</string>
+    <string name="smc_toast_more">Class options — TODO</string>
 </resources>

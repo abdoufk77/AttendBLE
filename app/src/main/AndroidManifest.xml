@@ -52,6 +52,9 @@
         <activity
             android:name=".ui.student.profil.ProfilActivity"
             android:exported="false" />
+        <activity
+            android:name=".ui.student.classes.MyClassesActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

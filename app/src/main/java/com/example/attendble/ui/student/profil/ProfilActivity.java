@@ -12,6 +12,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.attendble.R;
 import com.example.attendble.ui.auth.LoginActivity;
+import com.example.attendble.ui.student.classes.MyClassesActivity;
 import com.example.attendble.ui.student.home.HomeActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
@@ -56,6 +57,11 @@ public class ProfilActivity extends AppCompatActivity {
             }
             if (id == R.id.nav_home) {
                 startActivity(new Intent(this, HomeActivity.class));
+                finish();
+                return true;
+            }
+            if (id == R.id.nav_classes) {
+                startActivity(new Intent(this, MyClassesActivity.class));
                 finish();
                 return true;
             }
