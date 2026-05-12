@@ -291,4 +291,37 @@
     <string name="student_toast_view_schedule">View schedule — TODO</string>
     <string name="student_toast_scan">Scan — TODO</string>
     <string name="student_toast_nav">Navigation — TODO</string>
+
+    <!-- Student ProfilActivity -->
+    <string name="sp_name">Abdou Foukahy</string>
+    <string name="sp_id">ID: STU-88294-2024</string>
+    <string name="sp_chip_total">Total: 124</string>
+    <string name="sp_chip_absences">Absences: 08</string>
+    <string name="sp_chip_attendance">Attendance: 94%%</string>
+    <string name="sp_verified_cd">Verified account</string>
+
+    <string name="sp_overall_title">Overall Attendance</string>
+    <string name="sp_overall_value">94%%</string>
+    <string name="sp_overall_label">Present</string>
+    <string name="sp_legend_present">Present</string>
+    <string name="sp_legend_absent">Absent</string>
+
+    <string name="sp_subjects_title">Subject Breakdown</string>
+    <string name="sp_subject1_name">Advanced Mathematics</string>
+    <string name="sp_subject1_meta">Room 302 • Dr. Aris</string>
+    <string name="sp_subject1_value">98%%</string>
+    <string name="sp_subject2_name">Human Computer Interaction</string>
+    <string name="sp_subject2_meta">Lab 04 • Prof. Chen</string>
+    <string name="sp_subject2_value">82%%</string>
+    <string name="sp_subject3_name">Systems Architecture</string>
+    <string name="sp_subject3_meta">Auditorium B • Dr. Smith</string>
+    <string name="sp_subject3_value">64%%</string>
+    <string name="sp_subject4_name">Database Management</string>
+    <string name="sp_subject4_meta">Room 101 • Prof. Miller</string>
+    <string name="sp_subject4_value">91%%</string>
+
+    <string name="sp_logout">Logout</string>
+    <string name="sp_version">Version 2.4.1 (BLE-Stable)</string>
+
+    <string name="sp_toast_logout">Logout — TODO</string>
 </resources>

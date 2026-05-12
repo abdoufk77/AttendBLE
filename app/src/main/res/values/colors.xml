@@ -21,6 +21,11 @@
     <color name="brand_on_tertiary_fixed_variant">#783100</color>
     <color name="brand_tertiary">#9E4300</color>
 
+    <!-- Error / destructive (logout, absences) -->
+    <color name="brand_error">#BA1A1A</color>
+    <color name="brand_error_container">#FFDAD6</color>
+    <color name="brand_on_error_container">#93000A</color>
+
     <!-- Warning banner (student home absence warning) -->
     <color name="brand_warning_bg">#FFF4E5</color>
     <color name="brand_warning_stroke">#FFB347</color>
