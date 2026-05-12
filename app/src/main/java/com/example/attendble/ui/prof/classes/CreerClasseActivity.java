@@ -11,19 +11,25 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.attendble.R;
+import com.example.attendble.data.ServiceLocator;
+import com.example.attendble.domain.Callback;
+import com.example.attendble.domain.model.Classe;
+import com.example.attendble.domain.usecase.CreerClasseUseCase;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 /**
- * Formulaire de création d'une nouvelle classe.
- * Stubé — à brancher via un futur CreerClasseUseCase + ClasseRepository.
+ * Formulaire de création d'une classe. Le {@code codeInvitation} est généré et garanti
+ * unique par le repository — l'UI n'a rien à faire pour ça.
  */
 public class CreerClasseActivity extends AppCompatActivity {
 
     private TextInputLayout tilCourseName, tilSubject, tilGroup, tilRoom, tilSchedule, tilTotalStudents;
     private TextInputEditText etCourseName, etSubject, etGroup, etRoom, etSchedule, etTotalStudents;
     private MaterialButton btnCreate;
+
+    private CreerClasseUseCase creerClasseUseCase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +42,8 @@ public class CreerClasseActivity extends AppCompatActivity {
             v.setPadding(bars.left, bars.top, bars.right, bars.bottom);
             return insets;
         });
+
+        creerClasseUseCase = ServiceLocator.provideCreerClasseUseCase();
 
         bindViews();
         findViewById(R.id.btn_back).setOnClickListener(v -> finish());
@@ -63,27 +71,46 @@ public class CreerClasseActivity extends AppCompatActivity {
     private void attemptCreate() {
         clearErrors();
 
-        boolean valid = true;
-        valid &= validateRequired(tilCourseName, etCourseName);
-        valid &= validateRequired(tilSubject, etSubject);
-        valid &= validateRequired(tilGroup, etGroup);
-        valid &= validateRequired(tilRoom, etRoom);
-        valid &= validateRequired(tilSchedule, etSchedule);
-        valid &= validateRequired(tilTotalStudents, etTotalStudents);
+        String nom = textOf(etCourseName);
+        String matiere = textOf(etSubject);
+        String groupe = textOf(etGroup);
+        String salle = textOf(etRoom);
+        String horaire = textOf(etSchedule);
+        String nbEtu = textOf(etTotalStudents);
 
+        boolean valid = true;
+        if (TextUtils.isEmpty(nom)) { tilCourseName.setError(getString(R.string.cc_error_required)); valid = false; }
+        if (TextUtils.isEmpty(matiere)) { tilSubject.setError(getString(R.string.cc_error_required)); valid = false; }
+        if (TextUtils.isEmpty(groupe)) { tilGroup.setError(getString(R.string.cc_error_required)); valid = false; }
+        if (TextUtils.isEmpty(salle)) { tilRoom.setError(getString(R.string.cc_error_required)); valid = false; }
+        if (TextUtils.isEmpty(horaire)) { tilSchedule.setError(getString(R.string.cc_error_required)); valid = false; }
+        if (TextUtils.isEmpty(nbEtu)) { tilTotalStudents.setError(getString(R.string.cc_error_required)); valid = false; }
         if (!valid) return;
 
-        Toast.makeText(this, R.string.cc_toast_create, Toast.LENGTH_SHORT).show();
-        finish();
+        String profId = ServiceLocator.getAuthRepository().getCurrentUserId();
+
+        btnCreate.setEnabled(false);
+        creerClasseUseCase.execute(nom, matiere, groupe, salle, horaire, nbEtu, profId,
+                new Callback<Classe>() {
+                    @Override
+                    public void onSuccess(Classe classe) {
+                        btnCreate.setEnabled(true);
+                        Toast.makeText(CreerClasseActivity.this,
+                                getString(R.string.cc_created_format, classe.getCodeInvitation()),
+                                Toast.LENGTH_LONG).show();
+                        finish();
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        btnCreate.setEnabled(true);
+                        Toast.makeText(CreerClasseActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 
-    private boolean validateRequired(TextInputLayout til, TextInputEditText et) {
-        String value = et.getText() != null ? et.getText().toString().trim() : "";
-        if (TextUtils.isEmpty(value)) {
-            til.setError(getString(R.string.cc_error_required));
-            return false;
-        }
-        return true;
+    private String textOf(TextInputEditText et) {
+        return et.getText() != null ? et.getText().toString().trim() : "";
     }
 
     private void clearErrors() {

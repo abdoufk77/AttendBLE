@@ -2,6 +2,8 @@ package com.example.attendble.ui.student.scan;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Toast;
@@ -27,6 +29,15 @@ public class SearchingActivity extends AppCompatActivity {
 
     private static final long PULSE_DURATION_MS = 1800L;
 
+    // DEMO: simule la détection d'un beacon après ~3s pour la démo PFA — à supprimer
+    // une fois le vrai BleScanner branché.
+    private static final long DEMO_DETECT_DELAY_MS = 3000L;
+    private final Handler demoHandler = new Handler(Looper.getMainLooper());
+    private final Runnable demoNavigate = () -> {
+        startActivity(new Intent(this, SessionCodeActivity.class));
+        finish();
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,9 +52,12 @@ public class SearchingActivity extends AppCompatActivity {
 
         MaterialButton btnCancel = findViewById(R.id.btn_cancel);
         btnCancel.setOnClickListener(v -> {
+            demoHandler.removeCallbacks(demoNavigate);
             startActivity(new Intent(this, HomeActivity.class));
             finish();
         });
+
+        demoHandler.postDelayed(demoNavigate, DEMO_DETECT_DELAY_MS);
 
         startPulse(findViewById(R.id.ring_inner), 0L);
         startPulse(findViewById(R.id.ring_middle), 600L);
@@ -73,6 +87,12 @@ public class SearchingActivity extends AppCompatActivity {
                 .setInterpolator(new AccelerateDecelerateInterpolator())
                 .withEndAction(() -> loopPulse(ring))
                 .start();
+    }
+
+    @Override
+    protected void onDestroy() {
+        demoHandler.removeCallbacks(demoNavigate);
+        super.onDestroy();
     }
 
     private void bindBottomNav() {

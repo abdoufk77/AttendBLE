@@ -14,14 +14,22 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.attendble.R;
+import com.example.attendble.data.ServiceLocator;
+import com.example.attendble.domain.Callback;
+import com.example.attendble.domain.model.Classe;
+import com.example.attendble.domain.usecase.GetClasseUseCase;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
+import java.util.Locale;
+
 /**
- * Détail d'une classe : hero (nom/groupe/salle), code invitation, liste des étudiants inscrits.
- * Stubé — à brancher via ClasseRepository + ListEtudiantsUseCase.
+ * Détail d'une classe : hero (nom/groupe/salle), code invitation (réel),
+ * liste des étudiants inscrits (démo — sera branché plus tard sur Pointage/Inscriptions).
  */
 public class ClassDetailsActivity extends AppCompatActivity {
+
+    public static final String EXTRA_CLASSE_ID = "extra_classe_id";
 
     private static class StudentStub {
         final int name, attendance, progress;
@@ -39,6 +47,9 @@ public class ClassDetailsActivity extends AppCompatActivity {
             new StudentStub(R.string.cd_student3_name, R.string.cd_student3_attendance, 92)
     };
 
+    private TextView tvClassName, tvClassGroup, tvClassRoom, tvInvitationCode;
+    private GetClasseUseCase getClasseUseCase;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,12 +62,41 @@ public class ClassDetailsActivity extends AppCompatActivity {
             return insets;
         });
 
+        tvClassName = findViewById(R.id.tv_class_name);
+        tvClassGroup = findViewById(R.id.tv_class_group);
+        tvClassRoom = findViewById(R.id.tv_class_room);
+        tvInvitationCode = findViewById(R.id.tv_invitation_code);
+
+        getClasseUseCase = ServiceLocator.provideGetClasseUseCase();
+
         findViewById(R.id.btn_back).setOnClickListener(v -> finish());
         findViewById(R.id.btn_copy).setOnClickListener(v -> toast(R.string.cd_toast_copy));
         findViewById(R.id.btn_share).setOnClickListener(v -> toast(R.string.cd_toast_share));
         ((MaterialButton) findViewById(R.id.btn_invite)).setOnClickListener(v -> toast(R.string.cd_toast_invite));
 
+        loadClasse();
         populateStudents();
+    }
+
+    private void loadClasse() {
+        String classeId = getIntent().getStringExtra(EXTRA_CLASSE_ID);
+        getClasseUseCase.execute(classeId, new Callback<Classe>() {
+            @Override
+            public void onSuccess(Classe classe) {
+                tvClassName.setText(classe.getNom());
+                tvClassGroup.setText(String.format(Locale.getDefault(), "%s · %s",
+                        classe.getMatiere(), classe.getGroupe()));
+                tvClassRoom.setText(String.format(Locale.getDefault(), "%s · %s",
+                        classe.getSalle(), classe.getHoraire()));
+                tvInvitationCode.setText(classe.getCodeInvitation());
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Toast.makeText(ClassDetailsActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                finish();
+            }
+        });
     }
 
     private void populateStudents() {

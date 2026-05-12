@@ -1,11 +1,11 @@
 package com.example.attendble.ui.student.scan;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -50,8 +50,12 @@ public class SessionCodeActivity extends AppCompatActivity {
         wireDigitFields();
 
         btnConfirm = findViewById(R.id.btn_confirm);
-        btnConfirm.setOnClickListener(v ->
-                Toast.makeText(this, R.string.ssc_toast_confirm, Toast.LENGTH_SHORT).show());
+        // DEMO: ouvre directement l'écran de succès — à remplacer par
+        // ValiderPresenceUseCase.execute(...) une fois la couche métier branchée.
+        btnConfirm.setOnClickListener(v -> {
+            startActivity(new Intent(this, AttendanceSuccessActivity.class));
+            finish();
+        });
 
         findViewById(R.id.btn_rescan).setOnClickListener(v -> finish());
 
