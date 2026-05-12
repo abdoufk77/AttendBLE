@@ -383,4 +383,15 @@
     <string name="ssc_confirm">Confirm presence</string>
     <string name="ssc_rescan">Wrong session? Rescan</string>
     <string name="ssc_toast_confirm">Confirm presence — TODO</string>
+
+    <!-- Student AttendanceSuccessActivity -->
+    <string name="as_title">Done</string>
+    <string name="as_hero_cd">Attendance recorded</string>
+    <string name="as_heading">Attendance recorded</string>
+    <string name="as_subtitle">You\'ve been marked present for Advanced Algorithms at 08:34.</string>
+    <string name="as_room">Room 304</string>
+    <string name="as_time">08:34 · Today</string>
+    <string name="as_verified">BLE + code verified</string>
+    <string name="as_action_home">Back to Home</string>
+    <string name="as_action_classes">View my classes</string>
 </resources>
