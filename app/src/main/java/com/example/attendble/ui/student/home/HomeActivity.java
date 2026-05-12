@@ -13,6 +13,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.attendble.R;
 import com.example.attendble.ui.student.classes.MyClassesActivity;
 import com.example.attendble.ui.student.profil.ProfilActivity;
+import com.example.attendble.ui.student.scan.SearchingActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -39,8 +40,7 @@ public class HomeActivity extends AppCompatActivity {
                 Toast.makeText(this, R.string.student_toast_view_schedule, Toast.LENGTH_SHORT).show());
 
         FloatingActionButton fab = findViewById(R.id.fab_scan);
-        fab.setOnClickListener(v ->
-                Toast.makeText(this, R.string.student_toast_scan, Toast.LENGTH_SHORT).show());
+        fab.setOnClickListener(v -> startActivity(new Intent(this, SearchingActivity.class)));
 
         bindBottomNav();
     }
@@ -55,6 +55,11 @@ public class HomeActivity extends AppCompatActivity {
             }
             if (id == R.id.nav_classes) {
                 startActivity(new Intent(this, MyClassesActivity.class));
+                finish();
+                return true;
+            }
+            if (id == R.id.nav_scan) {
+                startActivity(new Intent(this, SearchingActivity.class));
                 finish();
                 return true;
             }

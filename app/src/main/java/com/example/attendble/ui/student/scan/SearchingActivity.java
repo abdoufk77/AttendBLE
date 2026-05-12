@@ -1,7 +1,9 @@
-package com.example.attendble.ui.student.profil;
+package com.example.attendble.ui.student.scan;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -11,24 +13,25 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.attendble.R;
-import com.example.attendble.ui.auth.LoginActivity;
 import com.example.attendble.ui.student.classes.MyClassesActivity;
 import com.example.attendble.ui.student.home.HomeActivity;
-import com.example.attendble.ui.student.scan.SearchingActivity;
+import com.example.attendble.ui.student.profil.ProfilActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 
 /**
- * Écran profil de l'étudiant : avatar vérifié, stats, présence globale,
- * détail par matière et logout. Logique métier à brancher via ServiceLocator.
+ * Écran de scan BLE étudiant (état idle/searching) : 3 anneaux pulsés + statut Bluetooth +
+ * bouton Cancel. La détection réelle sera branchée via BleScanner + ListenSessionsUseCase.
  */
-public class ProfilActivity extends AppCompatActivity {
+public class SearchingActivity extends AppCompatActivity {
+
+    private static final long PULSE_DURATION_MS = 1800L;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_student_profil);
+        setContentView(R.layout.activity_searching);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -36,24 +39,48 @@ public class ProfilActivity extends AppCompatActivity {
             return insets;
         });
 
-        MaterialButton btnLogout = findViewById(R.id.btn_logout);
-        btnLogout.setOnClickListener(v -> {
-            Toast.makeText(this, R.string.sp_toast_logout, Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(this, LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
+        MaterialButton btnCancel = findViewById(R.id.btn_cancel);
+        btnCancel.setOnClickListener(v -> {
+            startActivity(new Intent(this, HomeActivity.class));
             finish();
         });
+
+        startPulse(findViewById(R.id.ring_inner), 0L);
+        startPulse(findViewById(R.id.ring_middle), 600L);
+        startPulse(findViewById(R.id.ring_outer), 1200L);
 
         bindBottomNav();
     }
 
+    private void startPulse(View ring, long startDelay) {
+        ring.setScaleX(0.6f);
+        ring.setScaleY(0.6f);
+        ring.setAlpha(0f);
+        ring.animate().cancel();
+        ring.postDelayed(() -> loopPulse(ring), startDelay);
+    }
+
+    private void loopPulse(View ring) {
+        if (isFinishing() || isDestroyed()) return;
+        ring.setScaleX(0.6f);
+        ring.setScaleY(0.6f);
+        ring.setAlpha(0.4f);
+        ring.animate()
+                .scaleX(1.6f)
+                .scaleY(1.6f)
+                .alpha(0f)
+                .setDuration(PULSE_DURATION_MS)
+                .setInterpolator(new AccelerateDecelerateInterpolator())
+                .withEndAction(() -> loopPulse(ring))
+                .start();
+    }
+
     private void bindBottomNav() {
         BottomNavigationView nav = findViewById(R.id.bottom_nav);
-        nav.setSelectedItemId(R.id.nav_profile);
+        nav.setSelectedItemId(R.id.nav_scan);
         nav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
-            if (id == R.id.nav_profile) {
+            if (id == R.id.nav_scan) {
                 return true;
             }
             if (id == R.id.nav_home) {
@@ -66,8 +93,8 @@ public class ProfilActivity extends AppCompatActivity {
                 finish();
                 return true;
             }
-            if (id == R.id.nav_scan) {
-                startActivity(new Intent(this, SearchingActivity.class));
+            if (id == R.id.nav_profile) {
+                startActivity(new Intent(this, ProfilActivity.class));
                 finish();
                 return true;
             }

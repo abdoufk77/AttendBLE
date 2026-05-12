@@ -362,4 +362,11 @@
     <string name="jc_no_code">I don\'t have a code</string>
     <string name="jc_toast_join">Join class — TODO</string>
     <string name="jc_toast_no_code">Ask your professor for the invitation code</string>
+
+    <!-- Student SearchingActivity -->
+    <string name="ss_hero_cd">Searching for BLE beacons</string>
+    <string name="ss_title">Searching for sessions…</string>
+    <string name="ss_subtitle">Make sure Bluetooth is on and stay within the classroom.</string>
+    <string name="ss_status_bluetooth">Bluetooth active</string>
+    <string name="ss_cancel">Cancel</string>
 </resources>

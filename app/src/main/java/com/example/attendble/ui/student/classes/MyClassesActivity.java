@@ -17,6 +17,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.attendble.R;
 import com.example.attendble.ui.student.home.HomeActivity;
 import com.example.attendble.ui.student.profil.ProfilActivity;
+import com.example.attendble.ui.student.scan.SearchingActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
@@ -106,6 +107,11 @@ public class MyClassesActivity extends AppCompatActivity {
             }
             if (id == R.id.nav_home) {
                 startActivity(new Intent(this, HomeActivity.class));
+                finish();
+                return true;
+            }
+            if (id == R.id.nav_scan) {
+                startActivity(new Intent(this, SearchingActivity.class));
                 finish();
                 return true;
             }

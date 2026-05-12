@@ -58,6 +58,9 @@
         <activity
             android:name=".ui.student.classes.JoinClassActivity"
             android:exported="false" />
+        <activity
+            android:name=".ui.student.scan.SearchingActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
