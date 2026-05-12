@@ -6,6 +6,8 @@ import com.example.attendble.domain.repository.AuthRepository;
 import com.example.attendble.domain.repository.ClasseRepository;
 import com.example.attendble.domain.usecase.CreerClasseUseCase;
 import com.example.attendble.domain.usecase.GetClasseUseCase;
+import com.example.attendble.domain.usecase.JoinClasseUseCase;
+import com.example.attendble.domain.usecase.ListClassesByEtudiantUseCase;
 import com.example.attendble.domain.usecase.ListClassesByProfUseCase;
 import com.example.attendble.domain.usecase.LoginUseCase;
 import com.example.attendble.domain.usecase.SignupUseCase;
@@ -55,5 +57,13 @@ public final class ServiceLocator {
 
     public static GetClasseUseCase provideGetClasseUseCase() {
         return new GetClasseUseCase(getClasseRepository());
+    }
+
+    public static JoinClasseUseCase provideJoinClasseUseCase() {
+        return new JoinClasseUseCase(getClasseRepository());
+    }
+
+    public static ListClassesByEtudiantUseCase provideListClassesByEtudiantUseCase() {
+        return new ListClassesByEtudiantUseCase(getClasseRepository());
     }
 }

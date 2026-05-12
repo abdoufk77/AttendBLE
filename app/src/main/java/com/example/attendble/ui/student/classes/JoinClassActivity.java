@@ -12,6 +12,10 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.attendble.R;
+import com.example.attendble.data.ServiceLocator;
+import com.example.attendble.domain.Callback;
+import com.example.attendble.domain.model.Classe;
+import com.example.attendble.domain.usecase.JoinClasseUseCase;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -28,6 +32,8 @@ public class JoinClassActivity extends AppCompatActivity {
     private TextInputLayout tilCode;
     private TextInputEditText etCode;
     private MaterialButton btnJoin;
+
+    private JoinClasseUseCase joinClasseUseCase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +53,8 @@ public class JoinClassActivity extends AppCompatActivity {
         tilCode = findViewById(R.id.til_code);
         etCode = findViewById(R.id.et_code);
         btnJoin = findViewById(R.id.btn_join);
+
+        joinClasseUseCase = ServiceLocator.provideJoinClasseUseCase();
 
         etCode.addTextChangedListener(new TextWatcher() {
             @Override
@@ -73,6 +81,22 @@ public class JoinClassActivity extends AppCompatActivity {
             tilCode.setError(getString(R.string.jc_error_invalid));
             return;
         }
-        Toast.makeText(this, R.string.jc_toast_join, Toast.LENGTH_SHORT).show();
+        String etudiantId = ServiceLocator.getAuthRepository().getCurrentUserId();
+        btnJoin.setEnabled(false);
+        joinClasseUseCase.execute(code, etudiantId, new Callback<Classe>() {
+            @Override
+            public void onSuccess(Classe classe) {
+                Toast.makeText(JoinClassActivity.this,
+                        getString(R.string.jc_toast_joined_format, classe.getNom()),
+                        Toast.LENGTH_LONG).show();
+                finish();
+            }
+
+            @Override
+            public void onError(Exception e) {
+                btnJoin.setEnabled(true);
+                tilCode.setError(e.getMessage());
+            }
+        });
     }
 }

@@ -22,4 +22,10 @@ public interface ClasseRepository {
 
     /** Recherche une classe via son code d'invitation (utilisé côté étudiant pour rejoindre). */
     void findByCodeInvitation(String codeInvitation, Callback<Classe> callback);
+
+    /** Inscrit un étudiant à une classe via son code d'invitation. Retourne la classe rejointe. */
+    void joinClasseByCode(String codeInvitation, String etudiantId, Callback<Classe> callback);
+
+    /** Liste les classes dans lesquelles un étudiant est inscrit. */
+    void listClassesByEtudiant(String etudiantId, Callback<List<Classe>> callback);
 }

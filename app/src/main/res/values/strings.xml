@@ -136,7 +136,7 @@
     <string name="cd_student3_name">Karim Dridi</string>
     <string name="cd_student3_attendance">92%</string>
 
-    <string name="cd_toast_copy">Code copied — TODO</string>
+    <string name="cd_toast_copy">Code copié dans le presse-papiers</string>
     <string name="cd_toast_share">Share — TODO</string>
     <string name="cd_toast_invite">Invite — TODO</string>
     <string name="cd_toast_student_clicked">Student selected — TODO</string>
@@ -360,7 +360,7 @@
     <string name="jc_error_invalid">Invalid code. Please check with your professor.</string>
     <string name="jc_action_join">Join</string>
     <string name="jc_no_code">I don\'t have a code</string>
-    <string name="jc_toast_join">Join class — TODO</string>
+    <string name="jc_toast_joined_format">Classe rejointe : %1$s</string>
     <string name="jc_toast_no_code">Ask your professor for the invitation code</string>
 
     <!-- Student SearchingActivity -->

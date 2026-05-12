@@ -1,5 +1,8 @@
 package com.example.attendble.ui.prof.classes;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,7 +73,7 @@ public class ClassDetailsActivity extends AppCompatActivity {
         getClasseUseCase = ServiceLocator.provideGetClasseUseCase();
 
         findViewById(R.id.btn_back).setOnClickListener(v -> finish());
-        findViewById(R.id.btn_copy).setOnClickListener(v -> toast(R.string.cd_toast_copy));
+        findViewById(R.id.btn_copy).setOnClickListener(v -> copyInvitationCode());
         findViewById(R.id.btn_share).setOnClickListener(v -> toast(R.string.cd_toast_share));
         ((MaterialButton) findViewById(R.id.btn_invite)).setOnClickListener(v -> toast(R.string.cd_toast_invite));
 
@@ -113,6 +116,14 @@ public class ClassDetailsActivity extends AppCompatActivity {
             row.findViewById(R.id.btn_student_more).setOnClickListener(v -> toast(R.string.cd_toast_student_more));
             container.addView(row);
         }
+    }
+
+    private void copyInvitationCode() {
+        CharSequence code = tvInvitationCode.getText();
+        if (code == null || code.length() == 0) return;
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        clipboard.setPrimaryClip(ClipData.newPlainText("invitation_code", code));
+        toast(R.string.cd_toast_copy);
     }
 
     private void toast(int resId) {

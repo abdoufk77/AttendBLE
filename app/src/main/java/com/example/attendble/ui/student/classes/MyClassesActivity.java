@@ -15,6 +15,10 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.attendble.R;
+import com.example.attendble.data.ServiceLocator;
+import com.example.attendble.domain.Callback;
+import com.example.attendble.domain.model.Classe;
+import com.example.attendble.domain.usecase.ListClassesByEtudiantUseCase;
 import com.example.attendble.ui.student.home.HomeActivity;
 import com.example.attendble.ui.student.profil.ProfilActivity;
 import com.example.attendble.ui.student.scan.SearchingActivity;
@@ -22,33 +26,17 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
+import java.util.List;
+import java.util.Locale;
+
 /**
- * Écran "Mes classes" étudiant : liste des classes rejointes via code d'invitation
- * (workflow Google Classroom). Cartes inflées depuis item_course_card. Stubé —
- * à brancher via ClasseRepository + GetEnrolledClassesUseCase.
+ * Écran "Mes classes" étudiant : liste les classes rejointes via code d'invitation.
+ * Une carte démo est conservée en tête pour le visuel ; les vraies classes suivent.
  */
 public class MyClassesActivity extends AppCompatActivity {
 
-    private static class ClasseStub {
-        final int name, meta, room, attendance, progress;
-
-        ClasseStub(int name, int meta, int room, int attendance, int progress) {
-            this.name = name;
-            this.meta = meta;
-            this.room = room;
-            this.attendance = attendance;
-            this.progress = progress;
-        }
-    }
-
-    private final ClasseStub[] stubClasses = new ClasseStub[]{
-            new ClasseStub(R.string.smc_class1_name, R.string.smc_class1_meta,
-                    R.string.smc_class1_room, R.string.smc_class1_attendance, 92),
-            new ClasseStub(R.string.smc_class2_name, R.string.smc_class2_meta,
-                    R.string.smc_class2_room, R.string.smc_class2_attendance, 64),
-            new ClasseStub(R.string.smc_class3_name, R.string.smc_class3_meta,
-                    R.string.smc_class3_room, R.string.smc_class3_attendance, 88)
-    };
+    private LinearLayout cardsContainer;
+    private ListClassesByEtudiantUseCase listClassesUseCase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,31 +50,79 @@ public class MyClassesActivity extends AppCompatActivity {
             return insets;
         });
 
-        populateClassCards();
+        cardsContainer = findViewById(R.id.cards_container);
+        listClassesUseCase = ServiceLocator.provideListClassesByEtudiantUseCase();
+
         bindJoin();
         bindBottomNav();
     }
 
-    private void populateClassCards() {
-        LinearLayout container = findViewById(R.id.cards_container);
-        LayoutInflater inflater = LayoutInflater.from(this);
-        for (ClasseStub c : stubClasses) {
-            View card = inflater.inflate(R.layout.item_course_card, container, false);
-            ((TextView) card.findViewById(R.id.tv_course_name)).setText(c.name);
-            ((TextView) card.findViewById(R.id.tv_course_code)).setText(c.meta);
-            ((TextView) card.findViewById(R.id.tv_course_room)).setText(c.room);
-            ((TextView) card.findViewById(R.id.tv_course_attendance)).setText(c.attendance);
-            ((LinearProgressIndicator) card.findViewById(R.id.progress_attendance))
-                    .setProgressCompat(c.progress, false);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadClasses();
+    }
 
-            // Le côté étudiant n'affiche pas le nombre d'inscrits : on masque la ligne.
+    private void loadClasses() {
+        String etudiantId = ServiceLocator.getAuthRepository().getCurrentUserId();
+        listClassesUseCase.execute(etudiantId, new Callback<List<Classe>>() {
+            @Override
+            public void onSuccess(List<Classe> classes) {
+                renderClasses(classes);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Toast.makeText(MyClassesActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void renderClasses(List<Classe> classes) {
+        cardsContainer.removeAllViews();
+        LayoutInflater inflater = LayoutInflater.from(this);
+
+        // Une seule carte démo conservée en tête (visuel — sera retirée quand le module sera complet).
+        addDemoCard(inflater);
+
+        for (Classe classe : classes) {
+            View card = inflater.inflate(R.layout.item_course_card, cardsContainer, false);
+            ((TextView) card.findViewById(R.id.tv_course_name)).setText(classe.getNom());
+            ((TextView) card.findViewById(R.id.tv_course_code))
+                    .setText(String.format(Locale.getDefault(), "%s · %s",
+                            classe.getMatiere(), classe.getGroupe()));
+            ((TextView) card.findViewById(R.id.tv_course_room))
+                    .setText(String.format(Locale.getDefault(), "%s · %s",
+                            classe.getSalle(), classe.getHoraire()));
+            ((TextView) card.findViewById(R.id.tv_course_attendance)).setText("—");
+            ((LinearProgressIndicator) card.findViewById(R.id.progress_attendance))
+                    .setProgressCompat(0, false);
+
+            // Côté étudiant : on masque le compteur d'inscrits.
             View studentsRow = (View) card.findViewById(R.id.tv_course_students).getParent();
             studentsRow.setVisibility(View.GONE);
 
             card.findViewById(R.id.btn_more).setOnClickListener(v -> toast(R.string.smc_toast_more));
             card.setOnClickListener(v -> toast(R.string.smc_toast_class_clicked));
-            container.addView(card);
+            cardsContainer.addView(card);
         }
+    }
+
+    private void addDemoCard(LayoutInflater inflater) {
+        View card = inflater.inflate(R.layout.item_course_card, cardsContainer, false);
+        ((TextView) card.findViewById(R.id.tv_course_name)).setText(R.string.smc_class1_name);
+        ((TextView) card.findViewById(R.id.tv_course_code)).setText(R.string.smc_class1_meta);
+        ((TextView) card.findViewById(R.id.tv_course_room)).setText(R.string.smc_class1_room);
+        ((TextView) card.findViewById(R.id.tv_course_attendance)).setText(R.string.smc_class1_attendance);
+        ((LinearProgressIndicator) card.findViewById(R.id.progress_attendance))
+                .setProgressCompat(92, false);
+
+        View studentsRow = (View) card.findViewById(R.id.tv_course_students).getParent();
+        studentsRow.setVisibility(View.GONE);
+
+        card.findViewById(R.id.btn_more).setOnClickListener(v -> toast(R.string.smc_toast_more));
+        card.setOnClickListener(v -> toast(R.string.smc_toast_class_clicked));
+        cardsContainer.addView(card);
     }
 
     private void bindJoin() {

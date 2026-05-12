@@ -10,9 +10,11 @@ import com.example.attendble.domain.repository.ClasseRepository;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -28,6 +30,7 @@ public class InMemoryClasseRepository implements ClasseRepository {
 
     private final Map<String, Classe> classesById = new HashMap<>();
     private final Map<String, String> codeIndex = new HashMap<>();
+    private final Map<String, Set<String>> enrollmentsByClasseId = new HashMap<>();
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final SecureRandom random = new SecureRandom();
 
@@ -75,14 +78,52 @@ public class InMemoryClasseRepository implements ClasseRepository {
     @Override
     public void findByCodeInvitation(String codeInvitation, Callback<Classe> callback) {
         handler.postDelayed(() -> {
-            String normalized = codeInvitation == null ? "" : codeInvitation.trim().toUpperCase(Locale.ROOT);
-            String classeId = codeIndex.get(normalized);
-            if (classeId == null) {
+            Classe classe = lookupByCode(codeInvitation);
+            if (classe == null) {
                 callback.onError(new Exception("Code d'invitation invalide"));
                 return;
             }
-            callback.onSuccess(classesById.get(classeId));
+            callback.onSuccess(classe);
         }, FAKE_NETWORK_DELAY_MS);
+    }
+
+    @Override
+    public void joinClasseByCode(String codeInvitation, String etudiantId, Callback<Classe> callback) {
+        handler.postDelayed(() -> {
+            Classe classe = lookupByCode(codeInvitation);
+            if (classe == null) {
+                callback.onError(new Exception("Code d'invitation invalide"));
+                return;
+            }
+            Set<String> members = enrollmentsByClasseId
+                    .computeIfAbsent(classe.getClasseId(), k -> new HashSet<>());
+            if (members.contains(etudiantId)) {
+                callback.onError(new Exception("Vous êtes déjà inscrit à cette classe"));
+                return;
+            }
+            members.add(etudiantId);
+            callback.onSuccess(classe);
+        }, FAKE_NETWORK_DELAY_MS);
+    }
+
+    @Override
+    public void listClassesByEtudiant(String etudiantId, Callback<List<Classe>> callback) {
+        handler.postDelayed(() -> {
+            List<Classe> result = new ArrayList<>();
+            for (Map.Entry<String, Set<String>> entry : enrollmentsByClasseId.entrySet()) {
+                if (entry.getValue().contains(etudiantId)) {
+                    Classe c = classesById.get(entry.getKey());
+                    if (c != null) result.add(c);
+                }
+            }
+            callback.onSuccess(result);
+        }, FAKE_NETWORK_DELAY_MS);
+    }
+
+    private Classe lookupByCode(String codeInvitation) {
+        String normalized = codeInvitation == null ? "" : codeInvitation.trim().toUpperCase(Locale.ROOT);
+        String classeId = codeIndex.get(normalized);
+        return classeId == null ? null : classesById.get(classeId);
     }
 
     /**

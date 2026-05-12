@@ -12,6 +12,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.attendble.R;
+import com.example.attendble.data.ServiceLocator;
+import com.example.attendble.ui.auth.LoginActivity;
 import com.example.attendble.ui.prof.classes.MyClassesActivity;
 import com.example.attendble.ui.prof.home.HomeActivity;
 import com.example.attendble.ui.prof.serve.ServeHomeActivity;
@@ -59,7 +61,13 @@ public class ProfilActivity extends AppCompatActivity {
 
     private void bindLogout() {
         MaterialButton btnLogout = findViewById(R.id.btn_logout);
-        btnLogout.setOnClickListener(v -> toast(R.string.prof_toast_logout));
+        btnLogout.setOnClickListener(v -> {
+            ServiceLocator.getAuthRepository().logout();
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        });
     }
 
     private void bindBottomNav() {
