@@ -369,4 +369,18 @@
     <string name="ss_subtitle">Make sure Bluetooth is on and stay within the classroom.</string>
     <string name="ss_status_bluetooth">Bluetooth active</string>
     <string name="ss_cancel">Cancel</string>
+
+    <!-- Student SessionCodeActivity -->
+    <string name="ssc_back_cd">Back</string>
+    <string name="ssc_chip_detected">Beacon detected nearby</string>
+    <string name="ssc_session_name">Advanced Algorithms</string>
+    <string name="ssc_session_meta">Prof. Hassan · Room 304</string>
+    <string name="ssc_chip_live">Live</string>
+    <string name="ssc_signal">Strong signal</string>
+    <string name="ssc_heading">Enter today\'s code</string>
+    <string name="ssc_subtitle">Type the 4-digit code shown on your professor\'s screen.</string>
+    <string name="ssc_refresh_hint">Code refreshes every 2 minutes</string>
+    <string name="ssc_confirm">Confirm presence</string>
+    <string name="ssc_rescan">Wrong session? Rescan</string>
+    <string name="ssc_toast_confirm">Confirm presence — TODO</string>
 </resources>

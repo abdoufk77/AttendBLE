@@ -61,6 +61,9 @@
         <activity
             android:name=".ui.student.scan.SearchingActivity"
             android:exported="false" />
+        <activity
+            android:name=".ui.student.scan.SessionCodeActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
