@@ -348,4 +348,18 @@
     <string name="smc_toast_class_clicked">Class selected — TODO</string>
     <string name="smc_toast_join">Join class — TODO</string>
     <string name="smc_toast_more">Class options — TODO</string>
+
+    <!-- Student JoinClassActivity -->
+    <string name="jc_title">Join a Class</string>
+    <string name="jc_back_cd">Back</string>
+    <string name="jc_hero_cd">Join class</string>
+    <string name="jc_heading">Enter Invitation Code</string>
+    <string name="jc_subtitle">Ask your professor for the code shared in class (e.g. GL3-ALGO-7X2).</string>
+    <string name="jc_code_label">Class invitation code</string>
+    <string name="jc_code_hint">XXX-XXXX-XXX</string>
+    <string name="jc_error_invalid">Invalid code. Please check with your professor.</string>
+    <string name="jc_action_join">Join</string>
+    <string name="jc_no_code">I don\'t have a code</string>
+    <string name="jc_toast_join">Join class — TODO</string>
+    <string name="jc_toast_no_code">Ask your professor for the invitation code</string>
 </resources>

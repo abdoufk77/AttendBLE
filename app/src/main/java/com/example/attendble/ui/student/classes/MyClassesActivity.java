@@ -89,7 +89,8 @@ public class MyClassesActivity extends AppCompatActivity {
     }
 
     private void bindJoin() {
-        View.OnClickListener joinListener = v -> toast(R.string.smc_toast_join);
+        View.OnClickListener joinListener = v ->
+                startActivity(new Intent(this, JoinClassActivity.class));
         findViewById(R.id.card_join).setOnClickListener(joinListener);
         FloatingActionButton fab = findViewById(R.id.fab_join);
         fab.setOnClickListener(joinListener);
