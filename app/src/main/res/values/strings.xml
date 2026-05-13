@@ -396,6 +396,12 @@
     <string name="fv_on_device">100%% on-device verification — no data sent</string>
     <string name="fv_cancel">Cancel</string>
 
+    <!-- Student FaceVerificationErrorActivity -->
+    <string name="fve_title">Face not recognized</string>
+    <string name="fve_subtitle">Please ensure your face is well-lit and clearly visible.</string>
+    <string name="fve_try_again">Try again</string>
+    <string name="fve_cancel">Cancel</string>
+
     <!-- Student AttendanceSuccessActivity -->
     <string name="as_title">Done</string>
     <string name="as_hero_cd">Attendance recorded</string>
