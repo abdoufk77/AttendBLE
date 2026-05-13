@@ -10,12 +10,15 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import android.content.Intent;
+
 import com.example.attendble.R;
 import com.example.attendble.data.ServiceLocator;
 import com.example.attendble.domain.Callback;
 import com.example.attendble.domain.model.Etudiant;
 import com.example.attendble.domain.model.Professeur;
 import com.example.attendble.domain.usecase.SignupUseCase;
+import com.example.attendble.ui.student.scan.face.FaceEnrollmentActivity;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.textfield.TextInputEditText;
@@ -150,6 +153,9 @@ public class SignupActivity extends AppCompatActivity {
                     Toast.makeText(SignupActivity.this,
                             "Étudiant inscrit : " + etudiant.getNom() + " (uid=" + etudiant.getUid() + ")",
                             Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(SignupActivity.this, FaceEnrollmentActivity.class);
+                    intent.putExtra(FaceEnrollmentActivity.EXTRA_ETUDIANT_UID, etudiant.getUid());
+                    startActivity(intent);
                     finish();
                 }
 

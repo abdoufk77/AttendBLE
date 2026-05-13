@@ -396,6 +396,23 @@
     <string name="fv_on_device">100%% on-device verification — no data sent</string>
     <string name="fv_cancel">Cancel</string>
 
+    <!-- Student FaceEnrollmentActivity -->
+    <string name="fe_back_cd">Back</string>
+    <string name="fe_title">Face Enrollment</string>
+    <string name="fe_step">Step 2 of 2</string>
+    <string name="fe_intro">We need to register your face to secure your attendance. This takes a few seconds and stays 100%% on your device.</string>
+    <string name="fe_scanning">SCANNING</string>
+    <string name="fe_instruction_look">Look straight at the camera</string>
+    <string name="fe_instruction_left">Slowly turn your head to the left</string>
+    <string name="fe_instruction_right">Slowly turn your head to the right</string>
+    <string name="fe_instruction_up">Tilt your head up slightly</string>
+    <string name="fe_instruction_down">Tilt your head down slightly</string>
+    <string name="fe_instruction_hint">Ensure your face is within the guide</string>
+    <string name="fe_progress_default">0 of 5 samples captured</string>
+    <string name="fe_progress_format">%1$d of %2$d samples captured</string>
+    <string name="fe_privacy">Your face data never leaves this device. AttendBLE uses on-device encryption.</string>
+    <string name="fe_finish">Finish</string>
+
     <!-- Student FaceVerificationErrorActivity -->
     <string name="fve_title">Face not recognized</string>
     <string name="fve_subtitle">Please ensure your face is well-lit and clearly visible.</string>
