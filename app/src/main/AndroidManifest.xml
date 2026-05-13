@@ -65,6 +65,9 @@
             android:name=".ui.student.scan.SessionCodeActivity"
             android:exported="false" />
         <activity
+            android:name=".ui.student.scan.face.FaceVerificationActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.student.scan.AttendanceSuccessActivity"
             android:exported="false" />
     </application>

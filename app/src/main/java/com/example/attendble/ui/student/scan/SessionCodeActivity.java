@@ -14,6 +14,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.attendble.R;
+import com.example.attendble.ui.student.scan.face.FaceVerificationActivity;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 
@@ -50,10 +51,10 @@ public class SessionCodeActivity extends AppCompatActivity {
         wireDigitFields();
 
         btnConfirm = findViewById(R.id.btn_confirm);
-        // DEMO: ouvre directement l'écran de succès — à remplacer par
-        // ValiderPresenceUseCase.execute(...) une fois la couche métier branchée.
+        // DEMO: code validé → étape vérification visage. Une fois branché :
+        // ValiderPresenceUseCase puis VerifierVisageUseCase, puis AttendanceSuccess.
         btnConfirm.setOnClickListener(v -> {
-            startActivity(new Intent(this, AttendanceSuccessActivity.class));
+            startActivity(new Intent(this, FaceVerificationActivity.class));
             finish();
         });
 

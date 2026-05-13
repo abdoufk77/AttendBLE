@@ -384,6 +384,18 @@
     <string name="ssc_rescan">Wrong session? Rescan</string>
     <string name="ssc_toast_confirm">Confirm presence — TODO</string>
 
+    <!-- Student FaceVerificationActivity -->
+    <string name="fv_back_cd">Back</string>
+    <string name="fv_title">Face Verification</string>
+    <string name="fv_instruction_look">Look at the camera</string>
+    <string name="fv_instruction_turn">Turn your head slightly</string>
+    <string name="fv_instruction_blink">Blink your eyes</string>
+    <string name="fv_analyzing">Analyzing…</string>
+    <string name="fv_progress_default">0%%</string>
+    <string name="fv_progress_format">%1$d%%</string>
+    <string name="fv_on_device">100%% on-device verification — no data sent</string>
+    <string name="fv_cancel">Cancel</string>
+
     <!-- Student AttendanceSuccessActivity -->
     <string name="as_title">Done</string>
     <string name="as_hero_cd">Attendance recorded</string>
