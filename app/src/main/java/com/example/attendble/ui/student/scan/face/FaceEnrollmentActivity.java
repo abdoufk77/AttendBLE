@@ -1,6 +1,7 @@
 package com.example.attendble.ui.student.scan.face;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -85,7 +86,7 @@ public class FaceEnrollmentActivity extends AppCompatActivity {
 
         btnFinish.setOnClickListener(v -> {
             // TODO: persister faceEmbedding via SignupUseCase.completeFaceEnrollment(uid, embedding)
-            setResult(RESULT_OK);
+            startActivity(new Intent(this, FaceEnrollmentSuccessActivity.class));
             finish();
         });
 

@@ -413,6 +413,19 @@
     <string name="fe_privacy">Your face data never leaves this device. AttendBLE uses on-device encryption.</string>
     <string name="fe_finish">Finish</string>
 
+    <!-- Student FaceEnrollmentErrorActivity -->
+    <string name="fee_title">Couldn\'t capture your face clearly.</string>
+    <string name="fee_subtitle">Make sure you\'re in good lighting and your face is fully visible. Remove any obstructions like masks or heavy eyewear.</string>
+    <string name="fee_tip_lighting">Check Lighting</string>
+    <string name="fee_tip_center">Center Face</string>
+    <string name="fee_retry">Retry</string>
+
+    <!-- Student FaceEnrollmentSuccessActivity -->
+    <string name="fes_title">Face enrolled successfully</string>
+    <string name="fes_subtitle">Your biometric profile is now securely stored locally.</string>
+    <string name="fes_security">Local encryption enabled. No facial data is uploaded to our servers.</string>
+    <string name="fes_finish">Finish</string>
+
     <!-- Student FaceVerificationErrorActivity -->
     <string name="fve_title">Face not recognized</string>
     <string name="fve_subtitle">Please ensure your face is well-lit and clearly visible.</string>

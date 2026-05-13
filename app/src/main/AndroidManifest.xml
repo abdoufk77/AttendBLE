@@ -68,6 +68,12 @@
             android:name=".ui.student.scan.face.FaceEnrollmentActivity"
             android:exported="false" />
         <activity
+            android:name=".ui.student.scan.face.FaceEnrollmentSuccessActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.student.scan.face.FaceEnrollmentErrorActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.student.scan.face.FaceVerificationActivity"
             android:exported="false" />
         <activity
