@@ -11,8 +11,10 @@ import com.example.attendble.domain.enums.PointageStatut;
 import com.example.attendble.domain.enums.SessionStatus;
 import com.example.attendble.domain.enums.UserRole;
 import com.example.attendble.domain.model.Classe;
+import com.example.attendble.domain.model.ClasseWithAttendance;
 import com.example.attendble.domain.model.Etudiant;
 import com.example.attendble.domain.model.EtudiantAttendance;
+import com.example.attendble.domain.model.ProfStats;
 import com.example.attendble.domain.repository.ClasseRepository;
 
 import java.security.SecureRandom;
@@ -232,6 +234,168 @@ public class SqliteClasseRepository implements ClasseRepository {
             }
             return result;
         }, callback);
+    }
+
+    @Override
+    public void getProfStats(String professeurId, Callback<ProfStats> callback) {
+        AsyncRunner.run(() -> {
+            SQLiteDatabase db = helper.getReadableDatabase();
+
+            int totalClasses;
+            try (Cursor c = db.rawQuery(
+                    "SELECT COUNT(*) FROM " + AttendBleDbHelper.T_CLASSES
+                            + " WHERE " + AttendBleDbHelper.C_C_PROFESSEUR_ID + " = ?",
+                    new String[]{professeurId})) {
+                totalClasses = c.moveToFirst() ? c.getInt(0) : 0;
+            }
+
+            int totalStudents;
+            try (Cursor c = db.rawQuery(
+                    "SELECT COUNT(DISTINCT e." + AttendBleDbHelper.C_E_ETUDIANT_ID + ")"
+                            + " FROM " + AttendBleDbHelper.T_ENROLLMENTS + " e"
+                            + " INNER JOIN " + AttendBleDbHelper.T_CLASSES + " c"
+                            + "   ON e." + AttendBleDbHelper.C_E_CLASSE_ID + " = c." + AttendBleDbHelper.C_C_CLASSE_ID
+                            + " WHERE c." + AttendBleDbHelper.C_C_PROFESSEUR_ID + " = ?",
+                    new String[]{professeurId})) {
+                totalStudents = c.moveToFirst() ? c.getInt(0) : 0;
+            }
+
+            // Pointages attendus = (étudiants inscrits par classe) × (sessions FERMEE de la classe)
+            int totalExpected;
+            try (Cursor c = db.rawQuery(
+                    "SELECT COALESCE(SUM(nb_inscrits * nb_sessions), 0) FROM ("
+                            + "  SELECT cls." + AttendBleDbHelper.C_C_CLASSE_ID + ","
+                            + "    (SELECT COUNT(*) FROM " + AttendBleDbHelper.T_ENROLLMENTS + " e"
+                            + "       WHERE e." + AttendBleDbHelper.C_E_CLASSE_ID + " = cls." + AttendBleDbHelper.C_C_CLASSE_ID + ") AS nb_inscrits,"
+                            + "    (SELECT COUNT(*) FROM " + AttendBleDbHelper.T_SESSIONS + " s"
+                            + "       WHERE s." + AttendBleDbHelper.C_S_CLASSE_ID + " = cls." + AttendBleDbHelper.C_C_CLASSE_ID
+                            + "         AND s." + AttendBleDbHelper.C_S_STATUT + " = '" + SessionStatus.FERMEE.name() + "') AS nb_sessions"
+                            + "  FROM " + AttendBleDbHelper.T_CLASSES + " cls"
+                            + "  WHERE cls." + AttendBleDbHelper.C_C_PROFESSEUR_ID + " = ?"
+                            + ")",
+                    new String[]{professeurId})) {
+                totalExpected = c.moveToFirst() ? c.getInt(0) : 0;
+            }
+
+            int totalPresent;
+            try (Cursor c = db.rawQuery(
+                    "SELECT COUNT(*) FROM " + AttendBleDbHelper.T_POINTAGES + " p"
+                            + " INNER JOIN " + AttendBleDbHelper.T_SESSIONS + " s"
+                            + "   ON p." + AttendBleDbHelper.C_P_SESSION_ID + " = s." + AttendBleDbHelper.C_S_SESSION_ID
+                            + " INNER JOIN " + AttendBleDbHelper.T_CLASSES + " cls"
+                            + "   ON s." + AttendBleDbHelper.C_S_CLASSE_ID + " = cls." + AttendBleDbHelper.C_C_CLASSE_ID
+                            + " WHERE cls." + AttendBleDbHelper.C_C_PROFESSEUR_ID + " = ?"
+                            + "   AND p." + AttendBleDbHelper.C_P_STATUT + " = ?"
+                            + "   AND s." + AttendBleDbHelper.C_S_STATUT + " = ?",
+                    new String[]{professeurId, PointageStatut.PRESENT.name(), SessionStatus.FERMEE.name()})) {
+                totalPresent = c.moveToFirst() ? c.getInt(0) : 0;
+            }
+
+            int avg = totalExpected == 0 ? 100 : Math.round(100f * totalPresent / totalExpected);
+            return new ProfStats(totalStudents, avg, totalClasses);
+        }, callback);
+    }
+
+    @Override
+    public void listClassesByProfesseurWithStats(String professeurId, Callback<List<ClasseWithAttendance>> callback) {
+        AsyncRunner.run(() -> {
+            SQLiteDatabase db = helper.getReadableDatabase();
+            List<ClasseWithAttendance> result = new ArrayList<>();
+            try (Cursor c = db.query(AttendBleDbHelper.T_CLASSES, null,
+                    AttendBleDbHelper.C_C_PROFESSEUR_ID + " = ?", new String[]{professeurId},
+                    null, null, AttendBleDbHelper.C_C_DATE_CREATION + " DESC")) {
+                while (c.moveToNext()) {
+                    Classe k = readClasse(c);
+                    int[] stats = computeAvgAttendance(db, k.getClasseId());
+                    result.add(new ClasseWithAttendance(k, stats[0], stats[1]));
+                }
+            }
+            return result;
+        }, callback);
+    }
+
+    @Override
+    public void listClassesByEtudiantWithStats(String etudiantId, Callback<List<ClasseWithAttendance>> callback) {
+        AsyncRunner.run(() -> {
+            SQLiteDatabase db = helper.getReadableDatabase();
+            List<ClasseWithAttendance> result = new ArrayList<>();
+            String sql = "SELECT c.* FROM " + AttendBleDbHelper.T_CLASSES + " c"
+                    + " INNER JOIN " + AttendBleDbHelper.T_ENROLLMENTS + " e"
+                    + " ON c." + AttendBleDbHelper.C_C_CLASSE_ID + " = e." + AttendBleDbHelper.C_E_CLASSE_ID
+                    + " WHERE e." + AttendBleDbHelper.C_E_ETUDIANT_ID + " = ?"
+                    + " ORDER BY e." + AttendBleDbHelper.C_E_DATE + " DESC";
+            try (Cursor c = db.rawQuery(sql, new String[]{etudiantId})) {
+                while (c.moveToNext()) {
+                    Classe k = readClasse(c);
+                    int[] stats = computeStudentAttendance(db, k.getClasseId(), etudiantId);
+                    result.add(new ClasseWithAttendance(k, stats[0], stats[1]));
+                }
+            }
+            return result;
+        }, callback);
+    }
+
+    /** [tauxMoyen, nbSessionsFermees] pour la classe — moyenne sur tous les inscrits. */
+    private int[] computeAvgAttendance(SQLiteDatabase db, String classeId) {
+        int nbSessions;
+        try (Cursor c = db.rawQuery(
+                "SELECT COUNT(*) FROM " + AttendBleDbHelper.T_SESSIONS
+                        + " WHERE " + AttendBleDbHelper.C_S_CLASSE_ID + " = ?"
+                        + " AND " + AttendBleDbHelper.C_S_STATUT + " = ?",
+                new String[]{classeId, SessionStatus.FERMEE.name()})) {
+            nbSessions = c.moveToFirst() ? c.getInt(0) : 0;
+        }
+        if (nbSessions == 0) return new int[]{100, 0};
+
+        int nbInscrits;
+        try (Cursor c = db.rawQuery(
+                "SELECT COUNT(*) FROM " + AttendBleDbHelper.T_ENROLLMENTS
+                        + " WHERE " + AttendBleDbHelper.C_E_CLASSE_ID + " = ?",
+                new String[]{classeId})) {
+            nbInscrits = c.moveToFirst() ? c.getInt(0) : 0;
+        }
+        if (nbInscrits == 0) return new int[]{100, nbSessions};
+
+        int nbPresences;
+        try (Cursor c = db.rawQuery(
+                "SELECT COUNT(*) FROM " + AttendBleDbHelper.T_POINTAGES + " p"
+                        + " INNER JOIN " + AttendBleDbHelper.T_SESSIONS + " s"
+                        + "   ON p." + AttendBleDbHelper.C_P_SESSION_ID + " = s." + AttendBleDbHelper.C_S_SESSION_ID
+                        + " WHERE s." + AttendBleDbHelper.C_S_CLASSE_ID + " = ?"
+                        + "   AND p." + AttendBleDbHelper.C_P_STATUT + " = ?"
+                        + "   AND s." + AttendBleDbHelper.C_S_STATUT + " = ?",
+                new String[]{classeId, PointageStatut.PRESENT.name(), SessionStatus.FERMEE.name()})) {
+            nbPresences = c.moveToFirst() ? c.getInt(0) : 0;
+        }
+        int taux = Math.round(100f * nbPresences / (nbInscrits * nbSessions));
+        return new int[]{taux, nbSessions};
+    }
+
+    /** [tauxEtudiant, nbSessionsFermees] pour cet étudiant dans cette classe. */
+    private int[] computeStudentAttendance(SQLiteDatabase db, String classeId, String etudiantId) {
+        int nbSessions;
+        try (Cursor c = db.rawQuery(
+                "SELECT COUNT(*) FROM " + AttendBleDbHelper.T_SESSIONS
+                        + " WHERE " + AttendBleDbHelper.C_S_CLASSE_ID + " = ?"
+                        + " AND " + AttendBleDbHelper.C_S_STATUT + " = ?",
+                new String[]{classeId, SessionStatus.FERMEE.name()})) {
+            nbSessions = c.moveToFirst() ? c.getInt(0) : 0;
+        }
+        if (nbSessions == 0) return new int[]{100, 0};
+
+        int nbPresences;
+        try (Cursor c = db.rawQuery(
+                "SELECT COUNT(*) FROM " + AttendBleDbHelper.T_POINTAGES + " p"
+                        + " INNER JOIN " + AttendBleDbHelper.T_SESSIONS + " s"
+                        + "   ON p." + AttendBleDbHelper.C_P_SESSION_ID + " = s." + AttendBleDbHelper.C_S_SESSION_ID
+                        + " WHERE s." + AttendBleDbHelper.C_S_CLASSE_ID + " = ?"
+                        + "   AND p." + AttendBleDbHelper.C_P_ETUDIANT_ID + " = ?"
+                        + "   AND p." + AttendBleDbHelper.C_P_STATUT + " = ?"
+                        + "   AND s." + AttendBleDbHelper.C_S_STATUT + " = ?",
+                new String[]{classeId, etudiantId, PointageStatut.PRESENT.name(), SessionStatus.FERMEE.name()})) {
+            nbPresences = c.moveToFirst() ? c.getInt(0) : 0;
+        }
+        return new int[]{Math.round(100f * nbPresences / nbSessions), nbSessions};
     }
 
     private Classe lookupByCode(SQLiteDatabase db, String codeInvitation) {

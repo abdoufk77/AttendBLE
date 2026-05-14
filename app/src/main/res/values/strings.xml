@@ -167,6 +167,11 @@
     <string name="cd_student_no_session">Aucune session</string>
     <string name="serve_empty_today">Aucun cours programmé aujourd\'hui.</string>
     <string name="serve_class_students_format">%1$d étudiants</string>
+    <string name="home_stat_classes_chip">%1$d classes</string>
+    <string name="home_stat_no_session_chip">Pas encore de session</string>
+    <string name="student_progress_value_format">%1$d%%</string>
+    <string name="student_progress_no_session">Aucune session</string>
+    <string name="student_progress_empty">Rejoignez une classe pour voir vos statistiques.</string>
 
     <!-- ServeHomeActivity -->
     <string name="serve_subtitle">Pick the class you\'re teaching right now</string>

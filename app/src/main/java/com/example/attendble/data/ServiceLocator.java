@@ -14,6 +14,9 @@ import com.example.attendble.domain.repository.SessionRepository;
 import com.example.attendble.domain.usecase.CreerClasseUseCase;
 import com.example.attendble.domain.usecase.FermerSessionUseCase;
 import com.example.attendble.domain.usecase.GetClasseUseCase;
+import com.example.attendble.domain.usecase.GetProfStatsUseCase;
+import com.example.attendble.domain.usecase.ListClassesByEtudiantWithStatsUseCase;
+import com.example.attendble.domain.usecase.ListClassesByProfWithStatsUseCase;
 import com.example.attendble.domain.usecase.JoinClasseUseCase;
 import com.example.attendble.domain.usecase.ListClassesByEtudiantUseCase;
 import com.example.attendble.domain.usecase.ListEtudiantsByClasseUseCase;
@@ -102,6 +105,18 @@ public final class ServiceLocator {
 
     public static ListEtudiantsByClasseUseCase provideListEtudiantsByClasseUseCase() {
         return new ListEtudiantsByClasseUseCase(getClasseRepository());
+    }
+
+    public static GetProfStatsUseCase provideGetProfStatsUseCase() {
+        return new GetProfStatsUseCase(getClasseRepository());
+    }
+
+    public static ListClassesByProfWithStatsUseCase provideListClassesByProfWithStatsUseCase() {
+        return new ListClassesByProfWithStatsUseCase(getClasseRepository());
+    }
+
+    public static ListClassesByEtudiantWithStatsUseCase provideListClassesByEtudiantWithStatsUseCase() {
+        return new ListClassesByEtudiantWithStatsUseCase(getClasseRepository());
     }
 
     public static OuvrirSessionUseCase provideOuvrirSessionUseCase() {

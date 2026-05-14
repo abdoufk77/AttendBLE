@@ -19,6 +19,7 @@ import com.example.attendble.data.ServiceLocator;
 import com.example.attendble.domain.Callback;
 import com.example.attendble.domain.enums.UserRole;
 import com.example.attendble.domain.model.Classe;
+import com.example.attendble.domain.model.ProfStats;
 import com.example.attendble.domain.model.User;
 import com.example.attendble.ui.prof.classes.MyClassesActivity;
 import com.example.attendble.ui.prof.profil.ProfilActivity;
@@ -36,6 +37,10 @@ public class HomeActivity extends AppCompatActivity {
     private TextView tvGreeting;
     private TextView tvLecturesCount;
     private TextView tvEmpty;
+    private TextView tvTotalStudentsValue;
+    private TextView tvTotalStudentsChip;
+    private TextView tvAvgAttendanceValue;
+    private TextView tvAvgAttendanceChip;
     private LinearLayout todayContainer;
 
     @Override
@@ -53,6 +58,10 @@ public class HomeActivity extends AppCompatActivity {
         tvGreeting = findViewById(R.id.tv_greeting);
         tvLecturesCount = findViewById(R.id.tv_lectures_count);
         tvEmpty = findViewById(R.id.tv_today_empty);
+        tvTotalStudentsValue = findViewById(R.id.tv_total_students_value);
+        tvTotalStudentsChip = findViewById(R.id.tv_total_students_chip);
+        tvAvgAttendanceValue = findViewById(R.id.tv_avg_attendance_value);
+        tvAvgAttendanceChip = findViewById(R.id.tv_avg_attendance_chip);
         todayContainer = findViewById(R.id.today_container);
 
         findViewById(R.id.btn_view_all).setOnClickListener(v ->
@@ -65,7 +74,28 @@ public class HomeActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         loadGreeting();
+        loadStats();
         loadTodaySchedule();
+    }
+
+    private void loadStats() {
+        String profId = ServiceLocator.getAuthRepository().getCurrentUserId();
+        ServiceLocator.provideGetProfStatsUseCase().execute(profId, new Callback<ProfStats>() {
+            @Override
+            public void onSuccess(ProfStats stats) {
+                tvTotalStudentsValue.setText(String.valueOf(stats.getTotalStudents()));
+                tvTotalStudentsChip.setText(getString(R.string.home_stat_classes_chip, stats.getTotalClasses()));
+                tvAvgAttendanceValue.setText(getString(R.string.student_progress_value_format, stats.getAvgAttendance()));
+                if (stats.getAvgAttendance() == 100 && stats.getTotalStudents() > 0) {
+                    tvAvgAttendanceChip.setText(R.string.home_stat_no_session_chip);
+                } else {
+                    tvAvgAttendanceChip.setText(R.string.home_stat_avg_chip);
+                }
+            }
+
+            @Override
+            public void onError(Exception e) { /* keep defaults */ }
+        });
     }
 
     private void loadGreeting() {

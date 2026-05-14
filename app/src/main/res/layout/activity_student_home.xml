@@ -232,118 +232,20 @@
                     android:orientation="vertical"
                     android:padding="20dp">
 
-                    <!-- Subject 1 -->
                     <LinearLayout
+                        android:id="@+id/progress_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:orientation="vertical" />
 
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/student_progress1_name"
-                            android:textAppearance="?attr/textAppearanceTitleMedium"
-                            android:textColor="?attr/colorOnSurface" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/bg_chip_progress"
-                            android:paddingHorizontal="12dp"
-                            android:paddingVertical="4dp"
-                            android:text="@string/student_progress1_value"
-                            android:textAppearance="?attr/textAppearanceLabelLarge"
-                            android:textColor="?attr/colorPrimary" />
-                    </LinearLayout>
-
-                    <ProgressBar
-                        android:id="@+id/progress_1"
-                        style="?android:attr/progressBarStyleHorizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="4dp"
-                        android:layout_marginTop="8dp"
-                        android:max="100"
-                        android:progress="82"
-                        android:progressTint="?attr/colorPrimary"
-                        android:progressBackgroundTint="?attr/colorSurfaceVariant" />
-
-                    <!-- Subject 2 -->
-                    <LinearLayout
+                    <TextView
+                        android:id="@+id/tv_progress_empty"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/student_progress2_name"
-                            android:textAppearance="?attr/textAppearanceTitleMedium"
-                            android:textColor="?attr/colorOnSurface" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/bg_chip_progress"
-                            android:paddingHorizontal="12dp"
-                            android:paddingVertical="4dp"
-                            android:text="@string/student_progress2_value"
-                            android:textAppearance="?attr/textAppearanceLabelLarge"
-                            android:textColor="?attr/colorPrimary" />
-                    </LinearLayout>
-
-                    <ProgressBar
-                        android:id="@+id/progress_2"
-                        style="?android:attr/progressBarStyleHorizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="4dp"
-                        android:layout_marginTop="8dp"
-                        android:max="100"
-                        android:progress="94"
-                        android:progressTint="?attr/colorPrimary"
-                        android:progressBackgroundTint="?attr/colorSurfaceVariant" />
-
-                    <!-- Subject 3 -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/student_progress3_name"
-                            android:textAppearance="?attr/textAppearanceTitleMedium"
-                            android:textColor="?attr/colorOnSurface" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/bg_chip_progress"
-                            android:paddingHorizontal="12dp"
-                            android:paddingVertical="4dp"
-                            android:text="@string/student_progress3_value"
-                            android:textAppearance="?attr/textAppearanceLabelLarge"
-                            android:textColor="?attr/colorPrimary" />
-                    </LinearLayout>
-
-                    <ProgressBar
-                        android:id="@+id/progress_3"
-                        style="?android:attr/progressBarStyleHorizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="4dp"
-                        android:layout_marginTop="8dp"
-                        android:max="100"
-                        android:progress="98"
-                        android:progressTint="?attr/colorPrimary"
-                        android:progressBackgroundTint="?attr/colorSurfaceVariant" />
+                        android:text="@string/student_progress_empty"
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:visibility="gone" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

@@ -18,7 +18,8 @@ import com.example.attendble.R;
 import com.example.attendble.data.ServiceLocator;
 import com.example.attendble.domain.Callback;
 import com.example.attendble.domain.model.Classe;
-import com.example.attendble.domain.usecase.ListClassesByProfUseCase;
+import com.example.attendble.domain.model.ClasseWithAttendance;
+import com.example.attendble.domain.usecase.ListClassesByProfWithStatsUseCase;
 import com.example.attendble.ui.prof.home.HomeActivity;
 import com.example.attendble.ui.prof.profil.ProfilActivity;
 import com.example.attendble.ui.prof.serve.ServeHomeActivity;
@@ -37,7 +38,7 @@ import java.util.Locale;
 public class MyClassesActivity extends AppCompatActivity {
 
     private LinearLayout cardsContainer;
-    private ListClassesByProfUseCase listClassesUseCase;
+    private ListClassesByProfWithStatsUseCase listClassesUseCase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +53,7 @@ public class MyClassesActivity extends AppCompatActivity {
         });
 
         cardsContainer = findViewById(R.id.cards_container);
-        listClassesUseCase = ServiceLocator.provideListClassesByProfUseCase();
+        listClassesUseCase = ServiceLocator.provideListClassesByProfWithStatsUseCase();
 
         findViewById(R.id.card_create_new)
                 .setOnClickListener(v -> startActivity(new Intent(this, CreerClasseActivity.class)));
@@ -70,10 +71,10 @@ public class MyClassesActivity extends AppCompatActivity {
 
     private void loadClasses() {
         String profId = ServiceLocator.getAuthRepository().getCurrentUserId();
-        listClassesUseCase.execute(profId, new Callback<List<Classe>>() {
+        listClassesUseCase.execute(profId, new Callback<List<ClasseWithAttendance>>() {
             @Override
-            public void onSuccess(List<Classe> classes) {
-                renderClasses(classes);
+            public void onSuccess(List<ClasseWithAttendance> rows) {
+                renderClasses(rows);
             }
 
             @Override
@@ -83,10 +84,11 @@ public class MyClassesActivity extends AppCompatActivity {
         });
     }
 
-    private void renderClasses(List<Classe> classes) {
+    private void renderClasses(List<ClasseWithAttendance> rows) {
         cardsContainer.removeAllViews();
         LayoutInflater inflater = LayoutInflater.from(this);
-        for (Classe classe : classes) {
+        for (ClasseWithAttendance row : rows) {
+            Classe classe = row.getClasse();
             View card = inflater.inflate(R.layout.item_course_card, cardsContainer, false);
             ((TextView) card.findViewById(R.id.tv_course_name))
                     .setText(String.format(Locale.getDefault(), "%s — %s", classe.getNom(), classe.getGroupe()));
@@ -94,9 +96,16 @@ public class MyClassesActivity extends AppCompatActivity {
             ((TextView) card.findViewById(R.id.tv_course_room)).setText(classe.getSalle());
             ((TextView) card.findViewById(R.id.tv_course_students))
                     .setText(String.format(Locale.getDefault(), "%d étudiants", classe.getNbEtudiants()));
-            ((TextView) card.findViewById(R.id.tv_course_attendance)).setText("—");
-            ((LinearProgressIndicator) card.findViewById(R.id.progress_attendance))
-                    .setProgressCompat(0, false);
+
+            TextView tvAttendance = card.findViewById(R.id.tv_course_attendance);
+            LinearProgressIndicator progress = card.findViewById(R.id.progress_attendance);
+            if (row.getNbSessionsFermees() == 0) {
+                tvAttendance.setText(R.string.cd_student_no_session);
+                progress.setProgressCompat(100, false);
+            } else {
+                tvAttendance.setText(getString(R.string.student_progress_value_format, row.getTauxPresence()));
+                progress.setProgressCompat(row.getTauxPresence(), false);
+            }
 
             card.setOnClickListener(v -> {
                 Intent intent = new Intent(this, ClassDetailsActivity.class);

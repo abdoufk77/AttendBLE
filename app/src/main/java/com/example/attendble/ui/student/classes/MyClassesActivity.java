@@ -18,7 +18,8 @@ import com.example.attendble.R;
 import com.example.attendble.data.ServiceLocator;
 import com.example.attendble.domain.Callback;
 import com.example.attendble.domain.model.Classe;
-import com.example.attendble.domain.usecase.ListClassesByEtudiantUseCase;
+import com.example.attendble.domain.model.ClasseWithAttendance;
+import com.example.attendble.domain.usecase.ListClassesByEtudiantWithStatsUseCase;
 import com.example.attendble.ui.student.home.HomeActivity;
 import com.example.attendble.ui.student.profil.ProfilActivity;
 import com.example.attendble.ui.student.scan.SearchingActivity;
@@ -36,7 +37,7 @@ import java.util.Locale;
 public class MyClassesActivity extends AppCompatActivity {
 
     private LinearLayout cardsContainer;
-    private ListClassesByEtudiantUseCase listClassesUseCase;
+    private ListClassesByEtudiantWithStatsUseCase listClassesUseCase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +52,7 @@ public class MyClassesActivity extends AppCompatActivity {
         });
 
         cardsContainer = findViewById(R.id.cards_container);
-        listClassesUseCase = ServiceLocator.provideListClassesByEtudiantUseCase();
+        listClassesUseCase = ServiceLocator.provideListClassesByEtudiantWithStatsUseCase();
 
         bindJoin();
         bindBottomNav();
@@ -65,10 +66,10 @@ public class MyClassesActivity extends AppCompatActivity {
 
     private void loadClasses() {
         String etudiantId = ServiceLocator.getAuthRepository().getCurrentUserId();
-        listClassesUseCase.execute(etudiantId, new Callback<List<Classe>>() {
+        listClassesUseCase.execute(etudiantId, new Callback<List<ClasseWithAttendance>>() {
             @Override
-            public void onSuccess(List<Classe> classes) {
-                renderClasses(classes);
+            public void onSuccess(List<ClasseWithAttendance> rows) {
+                renderClasses(rows);
             }
 
             @Override
@@ -78,14 +79,12 @@ public class MyClassesActivity extends AppCompatActivity {
         });
     }
 
-    private void renderClasses(List<Classe> classes) {
+    private void renderClasses(List<ClasseWithAttendance> rows) {
         cardsContainer.removeAllViews();
         LayoutInflater inflater = LayoutInflater.from(this);
 
-        // Une seule carte démo conservée en tête (visuel — sera retirée quand le module sera complet).
-        addDemoCard(inflater);
-
-        for (Classe classe : classes) {
+        for (ClasseWithAttendance row : rows) {
+            Classe classe = row.getClasse();
             View card = inflater.inflate(R.layout.item_course_card, cardsContainer, false);
             ((TextView) card.findViewById(R.id.tv_course_name)).setText(classe.getNom());
             ((TextView) card.findViewById(R.id.tv_course_code))
@@ -94,9 +93,16 @@ public class MyClassesActivity extends AppCompatActivity {
             ((TextView) card.findViewById(R.id.tv_course_room))
                     .setText(String.format(Locale.getDefault(), "%s · %s",
                             classe.getSalle(), classe.getHoraire()));
-            ((TextView) card.findViewById(R.id.tv_course_attendance)).setText("—");
-            ((LinearProgressIndicator) card.findViewById(R.id.progress_attendance))
-                    .setProgressCompat(0, false);
+
+            TextView tvAttendance = card.findViewById(R.id.tv_course_attendance);
+            LinearProgressIndicator progress = card.findViewById(R.id.progress_attendance);
+            if (row.getNbSessionsFermees() == 0) {
+                tvAttendance.setText(R.string.cd_student_no_session);
+                progress.setProgressCompat(100, false);
+            } else {
+                tvAttendance.setText(getString(R.string.student_progress_value_format, row.getTauxPresence()));
+                progress.setProgressCompat(row.getTauxPresence(), false);
+            }
 
             // Côté étudiant : on masque le compteur d'inscrits.
             View studentsRow = (View) card.findViewById(R.id.tv_course_students).getParent();
@@ -106,23 +112,6 @@ public class MyClassesActivity extends AppCompatActivity {
             card.setOnClickListener(v -> toast(R.string.smc_toast_class_clicked));
             cardsContainer.addView(card);
         }
-    }
-
-    private void addDemoCard(LayoutInflater inflater) {
-        View card = inflater.inflate(R.layout.item_course_card, cardsContainer, false);
-        ((TextView) card.findViewById(R.id.tv_course_name)).setText(R.string.smc_class1_name);
-        ((TextView) card.findViewById(R.id.tv_course_code)).setText(R.string.smc_class1_meta);
-        ((TextView) card.findViewById(R.id.tv_course_room)).setText(R.string.smc_class1_room);
-        ((TextView) card.findViewById(R.id.tv_course_attendance)).setText(R.string.smc_class1_attendance);
-        ((LinearProgressIndicator) card.findViewById(R.id.progress_attendance))
-                .setProgressCompat(92, false);
-
-        View studentsRow = (View) card.findViewById(R.id.tv_course_students).getParent();
-        studentsRow.setVisibility(View.GONE);
-
-        card.findViewById(R.id.btn_more).setOnClickListener(v -> toast(R.string.smc_toast_more));
-        card.setOnClickListener(v -> toast(R.string.smc_toast_class_clicked));
-        cardsContainer.addView(card);
     }
 
     private void bindJoin() {

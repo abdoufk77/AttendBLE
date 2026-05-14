@@ -2,7 +2,9 @@ package com.example.attendble.domain.repository;
 
 import com.example.attendble.domain.Callback;
 import com.example.attendble.domain.model.Classe;
+import com.example.attendble.domain.model.ClasseWithAttendance;
 import com.example.attendble.domain.model.EtudiantAttendance;
+import com.example.attendble.domain.model.ProfStats;
 
 import java.util.List;
 
@@ -38,4 +40,13 @@ public interface ClasseRepository {
 
     /** Étudiants inscrits à une classe + stats de présence (pour l'écran prof "détails classe"). */
     void listEtudiantsByClasse(String classeId, Callback<List<EtudiantAttendance>> callback);
+
+    /** Stats globales du prof (total étudiants distincts + taux moyen de présence). */
+    void getProfStats(String professeurId, Callback<ProfStats> callback);
+
+    /** Classes du prof + taux de présence moyen par classe. */
+    void listClassesByProfesseurWithStats(String professeurId, Callback<List<ClasseWithAttendance>> callback);
+
+    /** Classes de l'étudiant + son propre taux de présence dans chaque. */
+    void listClassesByEtudiantWithStats(String etudiantId, Callback<List<ClasseWithAttendance>> callback);
 }

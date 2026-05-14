@@ -166,6 +166,7 @@
                         </LinearLayout>
 
                         <TextView
+                            android:id="@+id/tv_total_students_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
@@ -175,6 +176,7 @@
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/tv_total_students_chip"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
@@ -227,6 +229,7 @@
                         </LinearLayout>
 
                         <TextView
+                            android:id="@+id/tv_avg_attendance_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
@@ -236,6 +239,7 @@
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/tv_avg_attendance_chip"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"

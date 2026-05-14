@@ -19,6 +19,7 @@ import com.example.attendble.data.ServiceLocator;
 import com.example.attendble.domain.Callback;
 import com.example.attendble.domain.enums.UserRole;
 import com.example.attendble.domain.model.Classe;
+import com.example.attendble.domain.model.ClasseWithAttendance;
 import com.example.attendble.domain.model.User;
 import com.example.attendble.ui.student.classes.MyClassesActivity;
 import com.example.attendble.ui.student.profil.ProfilActivity;
@@ -35,7 +36,9 @@ public class HomeActivity extends AppCompatActivity {
 
     private TextView tvGreeting;
     private TextView tvEmpty;
+    private TextView tvProgressEmpty;
     private LinearLayout todayContainer;
+    private LinearLayout progressContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +54,9 @@ public class HomeActivity extends AppCompatActivity {
 
         tvGreeting = findViewById(R.id.tv_greeting);
         tvEmpty = findViewById(R.id.tv_today_empty);
+        tvProgressEmpty = findViewById(R.id.tv_progress_empty);
         todayContainer = findViewById(R.id.today_container);
+        progressContainer = findViewById(R.id.progress_container);
 
         findViewById(R.id.btn_view_schedule).setOnClickListener(v ->
                 Toast.makeText(this, R.string.student_toast_view_schedule, Toast.LENGTH_SHORT).show());
@@ -67,6 +72,54 @@ public class HomeActivity extends AppCompatActivity {
         super.onResume();
         loadGreeting();
         loadTodaySchedule();
+        loadProgress();
+    }
+
+    private void loadProgress() {
+        String userId = ServiceLocator.getAuthRepository().getCurrentUserId();
+        ServiceLocator.provideListClassesByEtudiantWithStatsUseCase().execute(userId,
+                new Callback<List<ClasseWithAttendance>>() {
+                    @Override
+                    public void onSuccess(List<ClasseWithAttendance> rows) {
+                        renderProgress(rows);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        renderProgress(java.util.Collections.emptyList());
+                    }
+                });
+    }
+
+    private void renderProgress(List<ClasseWithAttendance> rows) {
+        progressContainer.removeAllViews();
+        if (rows.isEmpty()) {
+            tvProgressEmpty.setVisibility(View.VISIBLE);
+            return;
+        }
+        tvProgressEmpty.setVisibility(View.GONE);
+
+        LayoutInflater inflater = LayoutInflater.from(this);
+        for (int i = 0; i < rows.size(); i++) {
+            ClasseWithAttendance row = rows.get(i);
+            View item = inflater.inflate(R.layout.item_attendance_row, progressContainer, false);
+            if (i > 0) {
+                LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) item.getLayoutParams();
+                lp.topMargin = (int) (20 * getResources().getDisplayMetrics().density);
+                item.setLayoutParams(lp);
+            }
+            ((TextView) item.findViewById(R.id.tv_subject)).setText(row.getClasse().getNom());
+            TextView tvValue = item.findViewById(R.id.tv_value);
+            android.widget.ProgressBar progress = item.findViewById(R.id.progress);
+            if (row.getNbSessionsFermees() == 0) {
+                tvValue.setText(R.string.student_progress_no_session);
+                progress.setProgress(100);
+            } else {
+                tvValue.setText(getString(R.string.student_progress_value_format, row.getTauxPresence()));
+                progress.setProgress(row.getTauxPresence());
+            }
+            progressContainer.addView(item);
+        }
     }
 
     private void loadGreeting() {
