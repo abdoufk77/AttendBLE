@@ -120,4 +120,18 @@ public class InMemoryAuthRepository implements AuthRepository {
     public boolean isLoggedIn() {
         return currentUserId != null;
     }
+
+    @Override
+    public void updateFaceEmbedding(String uid, float[] embedding, Callback<Void> callback) {
+        handler.postDelayed(() -> {
+            for (Record r : usersByEmail.values()) {
+                if (r.user.getUid().equals(uid) && r.user instanceof Etudiant) {
+                    ((Etudiant) r.user).setFaceEmbedding(embedding);
+                    callback.onSuccess(null);
+                    return;
+                }
+            }
+            callback.onError(new Exception("Étudiant introuvable : " + uid));
+        }, FAKE_NETWORK_DELAY_MS);
+    }
 }

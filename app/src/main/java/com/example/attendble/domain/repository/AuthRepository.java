@@ -23,4 +23,7 @@ public interface AuthRepository {
     String getCurrentUserId();
 
     boolean isLoggedIn();
+
+    /** Persiste le template visage (moyenne L2-normalisée des 5 captures d'enrôlement). */
+    void updateFaceEmbedding(String uid, float[] embedding, Callback<Void> callback);
 }

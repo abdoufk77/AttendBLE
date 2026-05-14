@@ -412,6 +412,11 @@
     <string name="fe_progress_format">%1$d of %2$d samples captured</string>
     <string name="fe_privacy">Your face data never leaves this device. AttendBLE uses on-device encryption.</string>
     <string name="fe_finish">Finish</string>
+    <string name="fe_permission_required">Camera permission is required for face enrollment.</string>
+    <string name="fe_no_face">No face detected. Please center your face in the frame.</string>
+    <string name="fe_multiple_faces">Only one person should be in the frame.</string>
+    <string name="fe_persisting">Saving your face template…</string>
+    <string name="fe_persist_failed">Couldn\'t save your face template. Please retry.</string>
 
     <!-- Student FaceEnrollmentErrorActivity -->
     <string name="fee_title">Couldn\'t capture your face clearly.</string>

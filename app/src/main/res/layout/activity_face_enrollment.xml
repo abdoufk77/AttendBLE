@@ -106,15 +106,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="6dp"
-                    android:background="@drawable/bg_face_preview_inner_enroll">
+                    android:background="@drawable/bg_face_preview_inner_enroll"
+                    android:clipToOutline="true">
 
-                    <ImageView
-                        android:id="@+id/iv_camera_preview"
+                    <androidx.camera.view.PreviewView
+                        android:id="@+id/camera_preview"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:alpha="0.8"
-                        android:contentDescription="@null"
-                        android:scaleType="centerCrop" />
+                        app:scaleType="fillCenter" />
 
                     <View
                         android:layout_width="180dp"
