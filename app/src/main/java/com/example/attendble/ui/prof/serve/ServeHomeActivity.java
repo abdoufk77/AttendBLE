@@ -15,35 +15,26 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.attendble.R;
+import com.example.attendble.data.ServiceLocator;
+import com.example.attendble.domain.Callback;
+import com.example.attendble.domain.enums.UserRole;
+import com.example.attendble.domain.model.Classe;
 import com.example.attendble.ui.prof.classes.MyClassesActivity;
 import com.example.attendble.ui.prof.home.HomeActivity;
 import com.example.attendble.ui.prof.profil.ProfilActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 
+import java.util.List;
+
 /**
- * Écran "Serve" : le prof choisit une classe pour lancer une session BLE (Advertiser).
- * Le tap "Start" ouvrira plus tard ActiveSessionActivity avec code 4-chiffres + timer.
+ * Écran "Serve" : affiche uniquement les classes du prof programmées aujourd'hui.
+ * Tap "Start" lance ActiveSessionActivity (BLE Advertiser + code 4 chiffres).
  */
 public class ServeHomeActivity extends AppCompatActivity {
 
-    private static class ClassStub {
-        final int name, code, room, students;
-
-        ClassStub(int name, int code, int room, int students) {
-            this.name = name;
-            this.code = code;
-            this.room = room;
-            this.students = students;
-        }
-    }
-
-    private final ClassStub[] stubClasses = new ClassStub[]{
-            new ClassStub(R.string.serve_course1_name, R.string.serve_course1_code,
-                    R.string.serve_course1_room, R.string.serve_course1_students),
-            new ClassStub(R.string.serve_course2_name, R.string.serve_course2_code,
-                    R.string.serve_course2_room, R.string.serve_course2_students)
-    };
+    private LinearLayout container;
+    private TextView tvEmpty;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,22 +48,58 @@ public class ServeHomeActivity extends AppCompatActivity {
             return insets;
         });
 
-        populateClasses();
+        container = findViewById(R.id.classes_container);
+        tvEmpty = findViewById(R.id.tv_classes_empty);
+
         bindBottomNav();
     }
 
-    private void populateClasses() {
-        LinearLayout container = findViewById(R.id.classes_container);
-        LayoutInflater inflater = LayoutInflater.from(this);
-        for (ClassStub clazz : stubClasses) {
-            View card = inflater.inflate(R.layout.item_serve_class, container, false);
-            ((TextView) card.findViewById(R.id.tv_class_name)).setText(clazz.name);
-            ((TextView) card.findViewById(R.id.tv_class_code)).setText(clazz.code);
-            ((TextView) card.findViewById(R.id.tv_class_room)).setText(clazz.room);
-            ((TextView) card.findViewById(R.id.tv_class_students)).setText(clazz.students);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadTodayClasses();
+    }
 
+    private void loadTodayClasses() {
+        String profId = ServiceLocator.getAuthRepository().getCurrentUserId();
+        ServiceLocator.provideListTodayCoursesUseCase().execute(profId, UserRole.PROFESSEUR,
+                new Callback<List<Classe>>() {
+                    @Override
+                    public void onSuccess(List<Classe> classes) {
+                        render(classes);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        render(java.util.Collections.emptyList());
+                    }
+                });
+    }
+
+    private void render(List<Classe> classes) {
+        container.removeAllViews();
+        if (classes.isEmpty()) {
+            tvEmpty.setVisibility(View.VISIBLE);
+            return;
+        }
+        tvEmpty.setVisibility(View.GONE);
+
+        LayoutInflater inflater = LayoutInflater.from(this);
+        for (Classe c : classes) {
+            View card = inflater.inflate(R.layout.item_serve_class, container, false);
+            ((TextView) card.findViewById(R.id.tv_class_name)).setText(c.getNom());
+            ((TextView) card.findViewById(R.id.tv_class_code)).setText(c.getCodeInvitation());
+            ((TextView) card.findViewById(R.id.tv_class_room)).setText(c.getSalle());
+            ((TextView) card.findViewById(R.id.tv_class_students))
+                    .setText(getString(R.string.serve_class_students_format, c.getNbEtudiants()));
+
+            final String classeId = c.getClasseId();
             MaterialButton btnStart = card.findViewById(R.id.btn_start);
-            btnStart.setOnClickListener(v -> startActivity(new Intent(this, ActiveSessionActivity.class)));
+            btnStart.setOnClickListener(v -> {
+                Intent i = new Intent(this, ActiveSessionActivity.class);
+                i.putExtra("classeId", classeId);
+                startActivity(i);
+            });
             container.addView(card);
         }
     }

@@ -165,6 +165,8 @@
     <string name="cd_students_empty">Aucun étudiant inscrit pour le moment.</string>
     <string name="cd_student_attendance_format">%1$d%% (%2$d/%3$d)</string>
     <string name="cd_student_no_session">Aucune session</string>
+    <string name="serve_empty_today">Aucun cours programmé aujourd\'hui.</string>
+    <string name="serve_class_students_format">%1$d étudiants</string>
 
     <!-- ServeHomeActivity -->
     <string name="serve_subtitle">Pick the class you\'re teaching right now</string>
