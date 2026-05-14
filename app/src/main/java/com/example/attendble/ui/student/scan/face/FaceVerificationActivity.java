@@ -309,7 +309,10 @@ public class FaceVerificationActivity extends AppCompatActivity {
 
     private void goToSuccess() {
         if (isFinishing() || isDestroyed()) return;
-        startActivity(new Intent(this, AttendanceSuccessActivity.class));
+        Intent intent = new Intent(this, AttendanceSuccessActivity.class);
+        intent.putExtra(AttendanceSuccessActivity.EXTRA_BEACON_UUID,
+                getIntent().getStringExtra(AttendanceSuccessActivity.EXTRA_BEACON_UUID));
+        startActivity(intent);
         finish();
     }
 

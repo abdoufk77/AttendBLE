@@ -6,6 +6,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,13 +20,18 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 
 /**
- * Écran de saisie du code de session (étape 2 du flow scan étudiant) : beacon détecté +
- * 4 chiffres à saisir. À brancher via ValiderPresenceUseCase(sessionId, etudiantId, code).
+ * Saisie du code 4 chiffres. Le code attendu est passé en extra ({@link #EXTRA_EXPECTED_CODE})
+ * depuis SearchingActivity (extrait du payload BLE). Match → FaceVerification, sinon toast.
  */
 public class SessionCodeActivity extends AppCompatActivity {
 
+    public static final String EXTRA_EXPECTED_CODE = "extra_expected_code";
+    public static final String EXTRA_BEACON_UUID = "extra_beacon_uuid";
+
     private EditText[] digits;
     private MaterialButton btnConfirm;
+    private String expectedCode;
+    private String beaconUUID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +45,9 @@ public class SessionCodeActivity extends AppCompatActivity {
             return insets;
         });
 
+        expectedCode = getIntent().getStringExtra(EXTRA_EXPECTED_CODE);
+        beaconUUID = getIntent().getStringExtra(EXTRA_BEACON_UUID);
+
         MaterialToolbar topbar = findViewById(R.id.topbar);
         topbar.setNavigationOnClickListener(v -> finish());
 
@@ -51,15 +60,38 @@ public class SessionCodeActivity extends AppCompatActivity {
         wireDigitFields();
 
         btnConfirm = findViewById(R.id.btn_confirm);
-        // DEMO: code validé → étape vérification visage. Une fois branché :
-        // ValiderPresenceUseCase puis VerifierVisageUseCase, puis AttendanceSuccess.
-        btnConfirm.setOnClickListener(v -> {
-            startActivity(new Intent(this, FaceVerificationActivity.class));
-            finish();
-        });
+        btnConfirm.setOnClickListener(v -> onConfirm());
 
         findViewById(R.id.btn_rescan).setOnClickListener(v -> finish());
 
+        digits[0].requestFocus();
+    }
+
+    private void onConfirm() {
+        String typed = readCode();
+        if (expectedCode == null) {
+            Toast.makeText(this, R.string.sc_no_session, Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (!expectedCode.equals(typed)) {
+            Toast.makeText(this, R.string.sc_invalid_code, Toast.LENGTH_SHORT).show();
+            clearDigits();
+            return;
+        }
+        Intent intent = new Intent(this, FaceVerificationActivity.class);
+        intent.putExtra(EXTRA_BEACON_UUID, beaconUUID);
+        startActivity(intent);
+        finish();
+    }
+
+    private String readCode() {
+        StringBuilder sb = new StringBuilder(4);
+        for (EditText d : digits) sb.append(d.getText());
+        return sb.toString();
+    }
+
+    private void clearDigits() {
+        for (EditText d : digits) d.setText("");
         digits[0].requestFocus();
     }
 

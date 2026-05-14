@@ -197,6 +197,17 @@
     <string name="as_end_session">End Session</string>
     <string name="as_end_hint">Closing the session will generate the final attendance report.</string>
     <string name="as_toast_end">End session — TODO</string>
+    <string name="as_perm_denied">Permissions Bluetooth refusées</string>
+    <string name="as_ble_unsupported">BLE Advertise non supporté sur cet appareil</string>
+    <string name="as_bt_required">Bluetooth requis pour lancer la session</string>
+    <string name="searching_perm_denied">Permissions Bluetooth refusées</string>
+    <string name="searching_bt_required">Bluetooth requis pour scanner</string>
+    <string name="searching_ble_unsupported">BLE Scan non supporté sur cet appareil</string>
+    <string name="sc_invalid_code">Code invalide</string>
+    <string name="sc_no_session">Aucune session détectée</string>
+    <string name="as_live_present">Étudiant présent</string>
+    <string name="as_live_counter_dynamic">%1$d présent(s)</string>
+    <string name="as_live_id">N° %1$d</string>
 
     <!-- SessionClosedActivity -->
     <string name="sc_title">Session Summary</string>
