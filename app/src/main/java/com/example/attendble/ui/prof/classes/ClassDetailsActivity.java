@@ -20,10 +20,13 @@ import com.example.attendble.R;
 import com.example.attendble.data.ServiceLocator;
 import com.example.attendble.domain.Callback;
 import com.example.attendble.domain.model.Classe;
+import com.example.attendble.domain.model.EtudiantAttendance;
 import com.example.attendble.domain.usecase.GetClasseUseCase;
+import com.example.attendble.domain.usecase.ListEtudiantsByClasseUseCase;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -34,24 +37,11 @@ public class ClassDetailsActivity extends AppCompatActivity {
 
     public static final String EXTRA_CLASSE_ID = "extra_classe_id";
 
-    private static class StudentStub {
-        final int name, attendance, progress;
-
-        StudentStub(int name, int attendance, int progress) {
-            this.name = name;
-            this.attendance = attendance;
-            this.progress = progress;
-        }
-    }
-
-    private final StudentStub[] stubStudents = new StudentStub[]{
-            new StudentStub(R.string.cd_student1_name, R.string.cd_student1_attendance, 96),
-            new StudentStub(R.string.cd_student2_name, R.string.cd_student2_attendance, 88),
-            new StudentStub(R.string.cd_student3_name, R.string.cd_student3_attendance, 92)
-    };
-
-    private TextView tvClassName, tvClassGroup, tvClassRoom, tvInvitationCode;
+    private TextView tvClassName, tvClassGroup, tvClassRoom, tvInvitationCode, tvStudentsEmpty;
+    private LinearLayout studentsContainer;
+    private String classeId;
     private GetClasseUseCase getClasseUseCase;
+    private ListEtudiantsByClasseUseCase listEtudiantsUseCase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,8 +59,13 @@ public class ClassDetailsActivity extends AppCompatActivity {
         tvClassGroup = findViewById(R.id.tv_class_group);
         tvClassRoom = findViewById(R.id.tv_class_room);
         tvInvitationCode = findViewById(R.id.tv_invitation_code);
+        tvStudentsEmpty = findViewById(R.id.tv_students_empty);
+        studentsContainer = findViewById(R.id.students_container);
 
         getClasseUseCase = ServiceLocator.provideGetClasseUseCase();
+        listEtudiantsUseCase = ServiceLocator.provideListEtudiantsByClasseUseCase();
+
+        classeId = getIntent().getStringExtra(EXTRA_CLASSE_ID);
 
         findViewById(R.id.btn_back).setOnClickListener(v -> finish());
         findViewById(R.id.btn_copy).setOnClickListener(v -> copyInvitationCode());
@@ -78,11 +73,10 @@ public class ClassDetailsActivity extends AppCompatActivity {
         ((MaterialButton) findViewById(R.id.btn_invite)).setOnClickListener(v -> toast(R.string.cd_toast_invite));
 
         loadClasse();
-        populateStudents();
+        loadStudents();
     }
 
     private void loadClasse() {
-        String classeId = getIntent().getStringExtra(EXTRA_CLASSE_ID);
         getClasseUseCase.execute(classeId, new Callback<Classe>() {
             @Override
             public void onSuccess(Classe classe) {
@@ -102,19 +96,47 @@ public class ClassDetailsActivity extends AppCompatActivity {
         });
     }
 
-    private void populateStudents() {
-        LinearLayout container = findViewById(R.id.students_container);
-        LayoutInflater inflater = LayoutInflater.from(this);
-        for (StudentStub student : stubStudents) {
-            View row = inflater.inflate(R.layout.item_student_row, container, false);
-            ((TextView) row.findViewById(R.id.tv_student_name)).setText(student.name);
-            ((TextView) row.findViewById(R.id.tv_student_attendance)).setText(student.attendance);
-            ((LinearProgressIndicator) row.findViewById(R.id.progress_student))
-                    .setProgressCompat(student.progress, false);
+    private void loadStudents() {
+        listEtudiantsUseCase.execute(classeId, new Callback<List<EtudiantAttendance>>() {
+            @Override
+            public void onSuccess(List<EtudiantAttendance> rows) {
+                renderStudents(rows);
+            }
 
-            row.setOnClickListener(v -> toast(R.string.cd_toast_student_clicked));
-            row.findViewById(R.id.btn_student_more).setOnClickListener(v -> toast(R.string.cd_toast_student_more));
-            container.addView(row);
+            @Override
+            public void onError(Exception e) {
+                renderStudents(java.util.Collections.emptyList());
+                Toast.makeText(ClassDetailsActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void renderStudents(List<EtudiantAttendance> rows) {
+        studentsContainer.removeAllViews();
+        if (rows.isEmpty()) {
+            tvStudentsEmpty.setVisibility(View.VISIBLE);
+            return;
+        }
+        tvStudentsEmpty.setVisibility(View.GONE);
+
+        LayoutInflater inflater = LayoutInflater.from(this);
+        for (EtudiantAttendance row : rows) {
+            View item = inflater.inflate(R.layout.item_student_row, studentsContainer, false);
+            ((TextView) item.findViewById(R.id.tv_student_name)).setText(row.getEtudiant().getNom());
+            int taux = row.getTauxPresence();
+            TextView tvAttendance = item.findViewById(R.id.tv_student_attendance);
+            if (row.getNbSessionsFermees() == 0) {
+                tvAttendance.setText(R.string.cd_student_no_session);
+            } else {
+                tvAttendance.setText(getString(R.string.cd_student_attendance_format,
+                        taux, row.getNbPresences(), row.getNbSessionsFermees()));
+            }
+            ((LinearProgressIndicator) item.findViewById(R.id.progress_student))
+                    .setProgressCompat(taux, false);
+
+            item.setOnClickListener(v -> toast(R.string.cd_toast_student_clicked));
+            item.findViewById(R.id.btn_student_more).setOnClickListener(v -> toast(R.string.cd_toast_student_more));
+            studentsContainer.addView(item);
         }
     }
 

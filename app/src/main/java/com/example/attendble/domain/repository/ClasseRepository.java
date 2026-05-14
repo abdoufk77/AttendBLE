@@ -2,12 +2,13 @@ package com.example.attendble.domain.repository;
 
 import com.example.attendble.domain.Callback;
 import com.example.attendble.domain.model.Classe;
+import com.example.attendble.domain.model.EtudiantAttendance;
 
 import java.util.List;
 
 /**
  * Contrat de gestion des classes côté professeur et étudiant.
- * Implémentations : {@code InMemoryClasseRepository} (actuel), {@code FirebaseClasseRepository} (futur).
+ * Implémentations : {@code SqliteClasseRepository} (actuel), {@code RetrofitClasseRepository} (futur).
  */
 public interface ClasseRepository {
 
@@ -28,4 +29,13 @@ public interface ClasseRepository {
 
     /** Liste les classes dans lesquelles un étudiant est inscrit. */
     void listClassesByEtudiant(String etudiantId, Callback<List<Classe>> callback);
+
+    /** Cours du jour pour un prof (filtre {@code jourSemaine}, tri par heureDebut). */
+    void listTodayByProfesseur(String professeurId, int jourSemaine, Callback<List<Classe>> callback);
+
+    /** Cours du jour pour un étudiant (filtre {@code jourSemaine}, tri par heureDebut). */
+    void listTodayByEtudiant(String etudiantId, int jourSemaine, Callback<List<Classe>> callback);
+
+    /** Étudiants inscrits à une classe + stats de présence (pour l'écran prof "détails classe"). */
+    void listEtudiantsByClasse(String classeId, Callback<List<EtudiantAttendance>> callback);
 }

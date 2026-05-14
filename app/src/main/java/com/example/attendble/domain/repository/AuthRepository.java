@@ -7,7 +7,7 @@ import com.example.attendble.domain.model.User;
 
 /**
  * Contrat d'authentification (login/signup/logout).
- * Implémentations : {@code InMemoryAuthRepository} (actuel), {@code FirebaseAuthRepository} (futur).
+ * Implémentations : {@code SqliteAuthRepository} (actuel), {@code RetrofitAuthRepository} (futur).
  * Le domain ne dépend d'aucune techno — on swap juste l'impl dans {@code ServiceLocator}.
  */
 public interface AuthRepository {

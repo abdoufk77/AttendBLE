@@ -16,20 +16,37 @@ import com.example.attendble.domain.Callback;
 import com.example.attendble.domain.model.Classe;
 import com.example.attendble.domain.usecase.CreerClasseUseCase;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.android.material.timepicker.MaterialTimePicker;
+import com.google.android.material.timepicker.TimeFormat;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 /**
- * Formulaire de création d'une classe. Le {@code codeInvitation} est généré et garanti
- * unique par le repository — l'UI n'a rien à faire pour ça.
+ * Formulaire de création d'une classe. Horaire saisi via Material DatePicker (date → jourSemaine)
+ * + Material TimePickers (heureDebut / heureFin). Le {@code codeInvitation} est généré côté repo.
  */
 public class CreerClasseActivity extends AppCompatActivity {
 
-    private TextInputLayout tilCourseName, tilSubject, tilGroup, tilRoom, tilSchedule, tilTotalStudents;
-    private TextInputEditText etCourseName, etSubject, etGroup, etRoom, etSchedule, etTotalStudents;
+    private TextInputLayout tilCourseName, tilSubject, tilGroup, tilRoom,
+            tilScheduleDate, tilScheduleStart, tilScheduleEnd, tilTotalStudents;
+    private TextInputEditText etCourseName, etSubject, etGroup, etRoom,
+            etScheduleDate, etScheduleStart, etScheduleEnd, etTotalStudents;
     private MaterialButton btnCreate;
 
     private CreerClasseUseCase creerClasseUseCase;
+
+    private Long selectedDateUtcMillis;
+    private Integer jourSemaineIso;
+    private Integer startHour, startMinute, endHour, endMinute;
+
+    private final SimpleDateFormat displayDateFmt = new SimpleDateFormat("EEEE d MMM yyyy", Locale.FRENCH);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +65,13 @@ public class CreerClasseActivity extends AppCompatActivity {
         bindViews();
         findViewById(R.id.btn_back).setOnClickListener(v -> finish());
         btnCreate.setOnClickListener(v -> attemptCreate());
+
+        etScheduleDate.setOnClickListener(v -> showDatePicker());
+        tilScheduleDate.setEndIconOnClickListener(v -> showDatePicker());
+        etScheduleStart.setOnClickListener(v -> showTimePicker(true));
+        tilScheduleStart.setEndIconOnClickListener(v -> showTimePicker(true));
+        etScheduleEnd.setOnClickListener(v -> showTimePicker(false));
+        tilScheduleEnd.setEndIconOnClickListener(v -> showTimePicker(false));
     }
 
     private void bindViews() {
@@ -55,17 +79,67 @@ public class CreerClasseActivity extends AppCompatActivity {
         tilSubject = findViewById(R.id.til_subject);
         tilGroup = findViewById(R.id.til_group);
         tilRoom = findViewById(R.id.til_room);
-        tilSchedule = findViewById(R.id.til_schedule);
+        tilScheduleDate = findViewById(R.id.til_schedule_date);
+        tilScheduleStart = findViewById(R.id.til_schedule_start);
+        tilScheduleEnd = findViewById(R.id.til_schedule_end);
         tilTotalStudents = findViewById(R.id.til_total_students);
 
         etCourseName = findViewById(R.id.et_course_name);
         etSubject = findViewById(R.id.et_subject);
         etGroup = findViewById(R.id.et_group);
         etRoom = findViewById(R.id.et_room);
-        etSchedule = findViewById(R.id.et_schedule);
+        etScheduleDate = findViewById(R.id.et_schedule_date);
+        etScheduleStart = findViewById(R.id.et_schedule_start);
+        etScheduleEnd = findViewById(R.id.et_schedule_end);
         etTotalStudents = findViewById(R.id.et_total_students);
 
         btnCreate = findViewById(R.id.btn_create);
+    }
+
+    private void showDatePicker() {
+        MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker()
+                .setTitleText(R.string.cc_picker_date_title);
+        if (selectedDateUtcMillis != null) builder.setSelection(selectedDateUtcMillis);
+        MaterialDatePicker<Long> picker = builder.build();
+        picker.addOnPositiveButtonClickListener(utcMillis -> {
+            selectedDateUtcMillis = utcMillis;
+            Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+            cal.setTimeInMillis(utcMillis);
+            int dow = cal.get(Calendar.DAY_OF_WEEK);
+            jourSemaineIso = dow == Calendar.SUNDAY ? 7 : dow - 1;
+            displayDateFmt.setTimeZone(TimeZone.getTimeZone("UTC"));
+            etScheduleDate.setText(displayDateFmt.format(new Date(utcMillis)));
+            tilScheduleDate.setError(null);
+        });
+        picker.show(getSupportFragmentManager(), "date_picker");
+    }
+
+    private void showTimePicker(boolean isStart) {
+        int hour = isStart ? (startHour != null ? startHour : 9)
+                : (endHour != null ? endHour : 11);
+        int minute = isStart ? (startMinute != null ? startMinute : 0)
+                : (endMinute != null ? endMinute : 0);
+        MaterialTimePicker picker = new MaterialTimePicker.Builder()
+                .setTimeFormat(TimeFormat.CLOCK_24H)
+                .setHour(hour)
+                .setMinute(minute)
+                .setTitleText(isStart ? R.string.cc_picker_start_title : R.string.cc_picker_end_title)
+                .build();
+        picker.addOnPositiveButtonClickListener(v -> {
+            int h = picker.getHour();
+            int m = picker.getMinute();
+            String formatted = String.format(Locale.ROOT, "%02d:%02d", h, m);
+            if (isStart) {
+                startHour = h; startMinute = m;
+                etScheduleStart.setText(formatted);
+                tilScheduleStart.setError(null);
+            } else {
+                endHour = h; endMinute = m;
+                etScheduleEnd.setText(formatted);
+                tilScheduleEnd.setError(null);
+            }
+        });
+        picker.show(getSupportFragmentManager(), isStart ? "start_picker" : "end_picker");
     }
 
     private void attemptCreate() {
@@ -75,7 +149,6 @@ public class CreerClasseActivity extends AppCompatActivity {
         String matiere = textOf(etSubject);
         String groupe = textOf(etGroup);
         String salle = textOf(etRoom);
-        String horaire = textOf(etSchedule);
         String nbEtu = textOf(etTotalStudents);
 
         boolean valid = true;
@@ -83,14 +156,26 @@ public class CreerClasseActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(matiere)) { tilSubject.setError(getString(R.string.cc_error_required)); valid = false; }
         if (TextUtils.isEmpty(groupe)) { tilGroup.setError(getString(R.string.cc_error_required)); valid = false; }
         if (TextUtils.isEmpty(salle)) { tilRoom.setError(getString(R.string.cc_error_required)); valid = false; }
-        if (TextUtils.isEmpty(horaire)) { tilSchedule.setError(getString(R.string.cc_error_required)); valid = false; }
+        if (jourSemaineIso == null) { tilScheduleDate.setError(getString(R.string.cc_error_required)); valid = false; }
+        if (startHour == null) { tilScheduleStart.setError(getString(R.string.cc_error_required)); valid = false; }
+        if (endHour == null) { tilScheduleEnd.setError(getString(R.string.cc_error_required)); valid = false; }
         if (TextUtils.isEmpty(nbEtu)) { tilTotalStudents.setError(getString(R.string.cc_error_required)); valid = false; }
         if (!valid) return;
 
-        String profId = ServiceLocator.getAuthRepository().getCurrentUserId();
+        int startMin = startHour * 60 + startMinute;
+        int endMin = endHour * 60 + endMinute;
+        if (endMin <= startMin) {
+            tilScheduleEnd.setError(getString(R.string.cc_error_end_before_start));
+            return;
+        }
 
+        String heureDebut = String.format(Locale.ROOT, "%02d:%02d", startHour, startMinute);
+        String heureFin = String.format(Locale.ROOT, "%02d:%02d", endHour, endMinute);
+
+        String profId = ServiceLocator.getAuthRepository().getCurrentUserId();
         btnCreate.setEnabled(false);
-        creerClasseUseCase.execute(nom, matiere, groupe, salle, horaire, nbEtu, profId,
+        creerClasseUseCase.execute(nom, matiere, groupe, salle,
+                jourSemaineIso, heureDebut, heureFin, nbEtu, profId,
                 new Callback<Classe>() {
                     @Override
                     public void onSuccess(Classe classe) {
@@ -118,7 +203,9 @@ public class CreerClasseActivity extends AppCompatActivity {
         tilSubject.setError(null);
         tilGroup.setError(null);
         tilRoom.setError(null);
-        tilSchedule.setError(null);
+        tilScheduleDate.setError(null);
+        tilScheduleStart.setError(null);
+        tilScheduleEnd.setError(null);
         tilTotalStudents.setError(null);
     }
 }

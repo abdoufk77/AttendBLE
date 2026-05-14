@@ -101,6 +101,7 @@
                 android:paddingHorizontal="16dp">
 
                 <TextView
+                    android:id="@+id/tv_greeting"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/home_greeting"
@@ -108,6 +109,7 @@
                     android:textColor="?attr/colorOnSurface" />
 
                 <TextView
+                    android:id="@+id/tv_lectures_count"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
@@ -278,8 +280,21 @@
                     android:textColor="?attr/colorPrimary" />
             </LinearLayout>
 
-            <!-- Horizontal scroll of course cards -->
+            <!-- Empty state -->
+            <TextView
+                android:id="@+id/tv_today_empty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:paddingHorizontal="16dp"
+                android:text="@string/home_today_empty"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:visibility="gone" />
+
+            <!-- Horizontal scroll of course cards (dynamic) -->
             <HorizontalScrollView
+                android:id="@+id/today_scroll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
@@ -288,264 +303,11 @@
                 android:scrollbars="none">
 
                 <LinearLayout
+                    android:id="@+id/today_container"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <!-- Card 1 -->
-                    <com.google.android.material.card.MaterialCardView
-                        style="?attr/materialCardViewOutlinedStyle"
-                        android:layout_width="280dp"
-                        android:layout_height="200dp"
-                        app:cardCornerRadius="12dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical"
-                            android:padding="20dp">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/home_course1_name"
-                                android:textAppearance="?attr/textAppearanceTitleMedium" />
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:orientation="horizontal">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:background="?attr/colorSurfaceVariant"
-                                    android:paddingHorizontal="6dp"
-                                    android:paddingVertical="2dp"
-                                    android:text="@string/home_course1_group"
-                                    android:textAppearance="?attr/textAppearanceLabelSmall"
-                                    android:textColor="?attr/colorOnSurfaceVariant" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="6dp"
-                                    android:background="?attr/colorSurfaceVariant"
-                                    android:paddingHorizontal="6dp"
-                                    android:paddingVertical="2dp"
-                                    android:text="@string/home_course1_room"
-                                    android:textAppearance="?attr/textAppearanceLabelSmall"
-                                    android:textColor="?attr/colorOnSurfaceVariant" />
-                            </LinearLayout>
-
-                            <View
-                                android:layout_width="match_parent"
-                                android:layout_height="0dp"
-                                android:layout_weight="1" />
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal">
-
-                                <ImageView
-                                    android:layout_width="18dp"
-                                    android:layout_height="18dp"
-                                    android:contentDescription="@null"
-                                    android:src="@drawable/ic_schedule" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="4dp"
-                                    android:text="@string/home_course1_time"
-                                    android:textAppearance="?attr/textAppearanceLabelLarge"
-                                    android:textColor="?attr/colorOnSurfaceVariant" />
-                            </LinearLayout>
-
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btn_start_session_1"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:text="@string/home_course1_action"
-                                app:cornerRadius="8dp" />
-                        </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <!-- Card 2 -->
-                    <com.google.android.material.card.MaterialCardView
-                        style="?attr/materialCardViewOutlinedStyle"
-                        android:layout_width="280dp"
-                        android:layout_height="200dp"
-                        android:layout_marginStart="12dp"
-                        app:cardCornerRadius="12dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical"
-                            android:padding="20dp">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/home_course2_name"
-                                android:textAppearance="?attr/textAppearanceTitleMedium" />
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:orientation="horizontal">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:background="?attr/colorSurfaceVariant"
-                                    android:paddingHorizontal="6dp"
-                                    android:paddingVertical="2dp"
-                                    android:text="@string/home_course2_group"
-                                    android:textAppearance="?attr/textAppearanceLabelSmall"
-                                    android:textColor="?attr/colorOnSurfaceVariant" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="6dp"
-                                    android:background="?attr/colorSurfaceVariant"
-                                    android:paddingHorizontal="6dp"
-                                    android:paddingVertical="2dp"
-                                    android:text="@string/home_course2_room"
-                                    android:textAppearance="?attr/textAppearanceLabelSmall"
-                                    android:textColor="?attr/colorOnSurfaceVariant" />
-                            </LinearLayout>
-
-                            <View
-                                android:layout_width="match_parent"
-                                android:layout_height="0dp"
-                                android:layout_weight="1" />
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal">
-
-                                <ImageView
-                                    android:layout_width="18dp"
-                                    android:layout_height="18dp"
-                                    android:contentDescription="@null"
-                                    android:src="@drawable/ic_schedule" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="4dp"
-                                    android:text="@string/home_course2_time"
-                                    android:textAppearance="?attr/textAppearanceLabelLarge"
-                                    android:textColor="?attr/colorOnSurfaceVariant" />
-                            </LinearLayout>
-
-                            <com.google.android.material.button.MaterialButton
-                                style="@style/Widget.Material3.Button.OutlinedButton"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:text="@string/home_course_upcoming"
-                                android:textColor="?attr/colorPrimary"
-                                app:cornerRadius="8dp"
-                                app:strokeColor="?attr/colorPrimary" />
-                        </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <!-- Card 3 -->
-                    <com.google.android.material.card.MaterialCardView
-                        style="?attr/materialCardViewOutlinedStyle"
-                        android:layout_width="280dp"
-                        android:layout_height="200dp"
-                        android:layout_marginStart="12dp"
-                        app:cardCornerRadius="12dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical"
-                            android:padding="20dp">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/home_course3_name"
-                                android:textAppearance="?attr/textAppearanceTitleMedium" />
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:orientation="horizontal">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:background="?attr/colorSurfaceVariant"
-                                    android:paddingHorizontal="6dp"
-                                    android:paddingVertical="2dp"
-                                    android:text="@string/home_course3_group"
-                                    android:textAppearance="?attr/textAppearanceLabelSmall"
-                                    android:textColor="?attr/colorOnSurfaceVariant" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="6dp"
-                                    android:background="?attr/colorSurfaceVariant"
-                                    android:paddingHorizontal="6dp"
-                                    android:paddingVertical="2dp"
-                                    android:text="@string/home_course3_room"
-                                    android:textAppearance="?attr/textAppearanceLabelSmall"
-                                    android:textColor="?attr/colorOnSurfaceVariant" />
-                            </LinearLayout>
-
-                            <View
-                                android:layout_width="match_parent"
-                                android:layout_height="0dp"
-                                android:layout_weight="1" />
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal">
-
-                                <ImageView
-                                    android:layout_width="18dp"
-                                    android:layout_height="18dp"
-                                    android:contentDescription="@null"
-                                    android:src="@drawable/ic_schedule" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginStart="4dp"
-                                    android:text="@string/home_course3_time"
-                                    android:textAppearance="?attr/textAppearanceLabelLarge"
-                                    android:textColor="?attr/colorOnSurfaceVariant" />
-                            </LinearLayout>
-
-                            <com.google.android.material.button.MaterialButton
-                                style="@style/Widget.Material3.Button.OutlinedButton"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:text="@string/home_course_upcoming"
-                                android:textColor="?attr/colorPrimary"
-                                app:cornerRadius="8dp"
-                                app:strokeColor="?attr/colorPrimary" />
-                        </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
                 </LinearLayout>
             </HorizontalScrollView>
 

@@ -150,11 +150,21 @@
     <string name="cc_hint_group">Groupe</string>
     <string name="cc_hint_room">Salle</string>
     <string name="cc_hint_schedule">Horaire (ex. Lun 09:00)</string>
+    <string name="cc_hint_schedule_date">Date du cours</string>
+    <string name="cc_hint_schedule_start">Heure début</string>
+    <string name="cc_hint_schedule_end">Heure fin</string>
+    <string name="cc_picker_date_title">Choisir la date du cours</string>
+    <string name="cc_picker_start_title">Heure de début</string>
+    <string name="cc_picker_end_title">Heure de fin</string>
+    <string name="cc_error_end_before_start">L\'heure de fin doit être après l\'heure de début</string>
     <string name="cc_hint_total_students">Nombre d\'étudiants</string>
     <string name="cc_info">Un code d\'invitation unique sera généré pour que vos étudiants rejoignent la classe.</string>
     <string name="cc_action_create">Créer la classe</string>
     <string name="cc_created_format">Classe créée — code: %1$s</string>
     <string name="cc_error_required">Champ requis</string>
+    <string name="cd_students_empty">Aucun étudiant inscrit pour le moment.</string>
+    <string name="cd_student_attendance_format">%1$d%% (%2$d/%3$d)</string>
+    <string name="cd_student_no_session">Aucune session</string>
 
     <!-- ServeHomeActivity -->
     <string name="serve_subtitle">Pick the class you\'re teaching right now</string>
@@ -240,6 +250,13 @@
     <string name="home_stat_avg_value">94%</string>
     <string name="home_stat_avg_chip">+2% this week</string>
     <string name="home_today_title">Today\'s Schedule</string>
+    <string name="home_today_empty">No classes scheduled for today.</string>
+    <string name="home_lectures_count_format">You have %1$d %2$s scheduled for today.</string>
+    <string name="home_lectures_count_singular">lecture</string>
+    <string name="home_lectures_count_plural">lectures</string>
+    <string name="home_greeting_format">Hello, Prof. %1$s</string>
+    <string name="student_today_empty">No classes scheduled for today.</string>
+    <string name="student_greeting_format">Hi, %1$s!</string>
     <string name="home_view_all">View All</string>
 
     <string name="home_course1_name">Distributed Systems</string>
