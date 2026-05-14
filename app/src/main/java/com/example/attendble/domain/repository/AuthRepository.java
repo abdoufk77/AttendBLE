@@ -24,6 +24,9 @@ public interface AuthRepository {
 
     boolean isLoggedIn();
 
+    /** Renvoie le User en mémoire associé au {@code currentUserId}, ou onError si pas loggé. */
+    void getCurrentUser(Callback<User> callback);
+
     /** Persiste le template visage (moyenne L2-normalisée des 5 captures d'enrôlement). */
     void updateFaceEmbedding(String uid, float[] embedding, Callback<Void> callback);
 }

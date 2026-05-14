@@ -395,6 +395,10 @@
     <string name="fv_progress_format">%1$d%%</string>
     <string name="fv_on_device">100%% on-device verification — no data sent</string>
     <string name="fv_cancel">Cancel</string>
+    <string name="fv_permission_required">Camera permission is required for face verification.</string>
+    <string name="fv_instruction_hint">Hold still inside the guide</string>
+    <string name="fv_no_template">No face template found. Please enroll first.</string>
+    <string name="fv_timeout">Couldn\'t verify in time.</string>
 
     <!-- Student FaceEnrollmentActivity -->
     <string name="fe_back_cd">Back</string>

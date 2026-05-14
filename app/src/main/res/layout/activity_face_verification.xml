@@ -76,20 +76,19 @@
                 android:alpha="0.8"
                 android:background="@drawable/bg_face_preview_ring" />
 
-            <!-- Inner preview area -->
+            <!-- Inner preview area (clippé au cercle via clipToOutline + background oval) -->
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="8dp"
-                android:background="@drawable/bg_face_preview_inner">
+                android:background="@drawable/bg_face_preview_inner"
+                android:clipToOutline="true">
 
-                <!-- Camera feed placeholder (à remplacer par PreviewView CameraX) -->
-                <ImageView
-                    android:id="@+id/iv_camera_preview"
+                <androidx.camera.view.PreviewView
+                    android:id="@+id/camera_preview"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:contentDescription="@null"
-                    android:scaleType="centerCrop" />
+                    app:scaleType="fillCenter" />
 
                 <!-- Oval face guide overlay -->
                 <View

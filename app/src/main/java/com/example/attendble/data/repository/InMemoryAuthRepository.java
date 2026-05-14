@@ -122,6 +122,23 @@ public class InMemoryAuthRepository implements AuthRepository {
     }
 
     @Override
+    public void getCurrentUser(Callback<User> callback) {
+        handler.postDelayed(() -> {
+            if (currentUserId == null) {
+                callback.onError(new Exception("Pas d'utilisateur connecté"));
+                return;
+            }
+            for (Record r : usersByEmail.values()) {
+                if (r.user.getUid().equals(currentUserId)) {
+                    callback.onSuccess(r.user);
+                    return;
+                }
+            }
+            callback.onError(new Exception("Utilisateur introuvable : " + currentUserId));
+        }, FAKE_NETWORK_DELAY_MS);
+    }
+
+    @Override
     public void updateFaceEmbedding(String uid, float[] embedding, Callback<Void> callback) {
         handler.postDelayed(() -> {
             for (Record r : usersByEmail.values()) {
