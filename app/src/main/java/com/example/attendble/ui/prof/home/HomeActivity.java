@@ -200,12 +200,45 @@ public class HomeActivity extends AppCompatActivity {
 
             MaterialButton btn = card.findViewById(R.id.btn_start_session);
             final String classeId = c.getClasseId();
+            final String hDebut = c.getHeureDebut();
+            final String hFin = c.getHeureFin();
+            boolean inSchedule = isWithinSchedule(hDebut, hFin);
+            // Grisé visuellement mais cliquable, pour expliquer pourquoi (cohérent avec Serve).
+            card.setAlpha(inSchedule ? 1f : 0.5f);
             btn.setOnClickListener(v -> {
-                Intent i2 = new Intent(this, ActiveSessionActivity.class);
-                i2.putExtra("classeId", classeId);
-                startActivity(i2);
+                if (inSchedule) {
+                    Intent i2 = new Intent(this, ActiveSessionActivity.class);
+                    i2.putExtra("classeId", classeId);
+                    startActivity(i2);
+                } else {
+                    java.util.Calendar now = java.util.Calendar.getInstance();
+                    String nowStr = String.format(java.util.Locale.US, "%02d:%02d",
+                            now.get(java.util.Calendar.HOUR_OF_DAY), now.get(java.util.Calendar.MINUTE));
+                    Toast.makeText(this,
+                            "Hors créneau : maintenant " + nowStr + " · cours " + hDebut + "–" + hFin,
+                            Toast.LENGTH_LONG).show();
+                }
             });
             todayContainer.addView(card);
+        }
+    }
+
+    private boolean isWithinSchedule(String hDebut, String hFin) {
+        Integer debut = parseMinutes(hDebut);
+        Integer fin = parseMinutes(hFin);
+        if (debut == null || fin == null) return true;
+        java.util.Calendar now = java.util.Calendar.getInstance();
+        int nowMin = now.get(java.util.Calendar.HOUR_OF_DAY) * 60 + now.get(java.util.Calendar.MINUTE);
+        return nowMin >= debut && nowMin < fin;
+    }
+
+    private Integer parseMinutes(String hhmm) {
+        if (hhmm == null || hhmm.length() < 4 || !hhmm.contains(":")) return null;
+        try {
+            String[] parts = hhmm.split(":");
+            return Integer.parseInt(parts[0]) * 60 + Integer.parseInt(parts[1]);
+        } catch (Exception e) {
+            return null;
         }
     }
 
