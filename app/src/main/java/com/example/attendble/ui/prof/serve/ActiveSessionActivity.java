@@ -31,7 +31,9 @@ import com.example.attendble.ble.BleConstants;
 import com.example.attendble.ble.Scanner;
 import com.example.attendble.data.ServiceLocator;
 import com.example.attendble.domain.Callback;
+import com.example.attendble.domain.enums.SessionStatus;
 import com.example.attendble.domain.model.EtudiantAttendance;
+import com.example.attendble.domain.model.Session;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
@@ -143,6 +145,36 @@ public class ActiveSessionActivity extends AppCompatActivity {
         }
     }
 
+    /** Enregistre la session sur le backend (fire-and-forget) pour que les étudiants puissent
+     * résoudre beaconUUID → classeId quand ils détectent le beacon. Si l'appel échoue (offline),
+     * la session BLE marche quand même mais l'étudiant verra juste "Session detected" générique. */
+    private void registerSessionOnBackend() {
+        String classeId = getIntent().getStringExtra("classeId");
+        if (classeId == null) {
+            Log.w(TAG, "Pas de classeId : session non enregistrée backend");
+            return;
+        }
+        long now = System.currentTimeMillis();
+        Session s = new Session(
+                null, classeId, currentCode,
+                now + SESSION_TTL_MS,
+                beaconUUID.toString(),
+                SessionStatus.ACTIVE,
+                now, null);
+        ServiceLocator.getSessionRepository().ouvrirSession(s, new Callback<Session>() {
+            @Override
+            public void onSuccess(Session opened) {
+                Log.i(TAG, "Session enregistrée backend sessionId=" + opened.getSessionId()
+                        + " beaconUUID=" + opened.getBeaconUUID());
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Log.w(TAG, "Échec enregistrement session backend: " + e.getMessage());
+            }
+        });
+    }
+
     /** Précharge la table {numEtud → nom} via le backend pour qu'on puisse afficher
      * un vrai nom dans la liste live (offline pendant le pointage : tout est en mémoire). */
     private void preloadClasseMembers() {
@@ -201,6 +233,7 @@ public class ActiveSessionActivity extends AppCompatActivity {
     private void startAdvertisingAndTimer() {
         currentCode = generateCode();
         tvCode.setText(currentCode);
+        registerSessionOnBackend();
 
         advertiser.start(beaconUUID, currentCode, new Advertiser.Listener() {
             @Override
