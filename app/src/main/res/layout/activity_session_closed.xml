@@ -176,6 +176,7 @@
                             android:textColor="?attr/colorOnSurface" />
 
                         <TextView
+                            android:id="@+id/tv_stat_present_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
@@ -210,6 +211,7 @@
                             android:textColor="?attr/colorOnSurface" />
 
                         <TextView
+                            android:id="@+id/tv_stat_absent_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
@@ -243,6 +245,7 @@
                             android:textColor="?attr/colorOnSurface" />
 
                         <TextView
+                            android:id="@+id/tv_stat_rate_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
@@ -261,140 +264,12 @@
                 android:text="@string/sc_students_label"
                 android:textAppearance="?attr/textAppearanceTitleMedium" />
 
-            <!-- Student row 1: Present -->
-            <com.google.android.material.card.MaterialCardView
-                style="?attr/materialCardViewOutlinedStyle"
+            <!-- Container peuplé dynamiquement avec les étudiants inscrits + leur statut. -->
+            <LinearLayout
+                android:id="@+id/students_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                app:cardCornerRadius="12dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="16dp">
-
-                    <com.google.android.material.imageview.ShapeableImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:background="?attr/colorSurfaceVariant"
-                        android:contentDescription="@null"
-                        android:scaleType="centerCrop"
-                        android:src="@mipmap/ic_launcher_round"
-                        app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_weight="1"
-                        android:text="@string/sc_student1_name"
-                        android:textAppearance="?attr/textAppearanceTitleMedium" />
-
-                    <TextView
-                        android:background="@drawable/bg_chip_present"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingHorizontal="16dp"
-                        android:paddingVertical="6dp"
-                        android:text="@string/sc_chip_present"
-                        android:textColor="?attr/colorPrimary"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Student row 2: Absent -->
-            <com.google.android.material.card.MaterialCardView
-                style="?attr/materialCardViewOutlinedStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                app:cardCornerRadius="12dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="16dp">
-
-                    <com.google.android.material.imageview.ShapeableImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:background="?attr/colorSurfaceVariant"
-                        android:contentDescription="@null"
-                        android:scaleType="centerCrop"
-                        android:src="@mipmap/ic_launcher_round"
-                        app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_weight="1"
-                        android:text="@string/sc_student2_name"
-                        android:textAppearance="?attr/textAppearanceTitleMedium" />
-
-                    <TextView
-                        android:background="@drawable/bg_chip_absent"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingHorizontal="16dp"
-                        android:paddingVertical="6dp"
-                        android:text="@string/sc_chip_absent"
-                        android:textColor="?attr/colorError"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Student row 3: Present -->
-            <com.google.android.material.card.MaterialCardView
-                style="?attr/materialCardViewOutlinedStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                app:cardCornerRadius="12dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="16dp">
-
-                    <com.google.android.material.imageview.ShapeableImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:background="?attr/colorSurfaceVariant"
-                        android:contentDescription="@null"
-                        android:scaleType="centerCrop"
-                        android:src="@mipmap/ic_launcher_round"
-                        app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_weight="1"
-                        android:text="@string/sc_student3_name"
-                        android:textAppearance="?attr/textAppearanceTitleMedium" />
-
-                    <TextView
-                        android:background="@drawable/bg_chip_present"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingHorizontal="16dp"
-                        android:paddingVertical="6dp"
-                        android:text="@string/sc_chip_present"
-                        android:textColor="?attr/colorPrimary"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+                android:orientation="vertical" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

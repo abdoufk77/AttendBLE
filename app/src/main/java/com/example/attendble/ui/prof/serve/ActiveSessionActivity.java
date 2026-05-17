@@ -235,7 +235,13 @@ public class ActiveSessionActivity extends AppCompatActivity {
 
     private void endSession() {
         stopBleAndTimer();
-        startActivity(new Intent(this, SessionClosedActivity.class));
+        Intent i = new Intent(this, SessionClosedActivity.class);
+        i.putExtra(SessionClosedActivity.EXTRA_CLASSE_ID, getIntent().getStringExtra("classeId"));
+        int[] arr = new int[detectedNumEtuds.size()];
+        int k = 0;
+        for (Integer n : detectedNumEtuds) arr[k++] = n;
+        i.putExtra(SessionClosedActivity.EXTRA_DETECTED_NUM_ETUDS, arr);
+        startActivity(i);
         finish();
     }
 
