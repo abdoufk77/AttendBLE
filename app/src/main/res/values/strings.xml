@@ -330,9 +330,14 @@
     <!-- Student ProfilActivity -->
     <string name="sp_name">Abdou Foukahy</string>
     <string name="sp_id">ID: STU-88294-2024</string>
+    <string name="sp_id_format">ID: %1$s</string>
     <string name="sp_chip_total">Total: 124</string>
+    <string name="sp_chip_total_format">Total: %1$d</string>
     <string name="sp_chip_absences">Absences: 08</string>
+    <string name="sp_chip_absences_format">Absences: %1$d</string>
     <string name="sp_chip_attendance">Attendance: 94%%</string>
+    <string name="sp_chip_attendance_format">Attendance: %1$d%%</string>
+    <string name="sp_subject_meta_format">%1$d sessions · %2$d présents</string>
     <string name="sp_verified_cd">Verified account</string>
 
     <string name="sp_overall_title">Overall Attendance</string>

@@ -6,6 +6,7 @@ import com.example.attendble.data.remote.dto.AuthResponseDto;
 import com.example.attendble.data.remote.dto.FaceEmbeddingRequestDto;
 import com.example.attendble.data.remote.dto.LoginRequestDto;
 import com.example.attendble.data.remote.dto.SignupRequestDto;
+import com.example.attendble.data.remote.dto.UserDto;
 import com.example.attendble.domain.Callback;
 import com.example.attendble.domain.enums.UserRole;
 import com.example.attendble.domain.model.Etudiant;
@@ -126,25 +127,25 @@ public class RetrofitAuthRepository implements AuthRepository {
 
     @Override
     public void getCurrentUser(Callback<User> callback) {
-        // Sans endpoint /api/auth/me, on reconstruit un User minimal depuis le TokenStore.
-        // À enrichir quand le backend exposera /api/users/me.
-        String uid = tokenStore.getUid();
-        String role = tokenStore.getRole();
-        if (uid == null || role == null) {
+        if (!tokenStore.isLoggedIn()) {
             callback.onError(new Exception("Pas d'utilisateur connecté"));
             return;
         }
-        User u;
-        if (UserRole.PROFESSEUR.name().equals(role)) {
-            Professeur p = new Professeur();
-            p.setUid(uid);
-            u = p;
-        } else {
-            Etudiant e = new Etudiant();
-            e.setUid(uid);
-            u = e;
-        }
-        callback.onSuccess(u);
+        api.getMe().enqueue(new retrofit2.Callback<>() {
+            @Override
+            public void onResponse(Call<UserDto> call, Response<UserDto> response) {
+                if (!response.isSuccessful() || response.body() == null) {
+                    callback.onError(new Exception(httpErrorMessage(response, "Profil indisponible")));
+                    return;
+                }
+                callback.onSuccess(response.body().toDomain());
+            }
+
+            @Override
+            public void onFailure(Call<UserDto> call, Throwable t) {
+                callback.onError(asException(t));
+            }
+        });
     }
 
     @Override

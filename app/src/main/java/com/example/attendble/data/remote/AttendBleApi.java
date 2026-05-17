@@ -16,6 +16,7 @@ import com.example.attendble.data.remote.dto.ProfStatsDto;
 import com.example.attendble.data.remote.dto.RefreshCodeRequestDto;
 import com.example.attendble.data.remote.dto.SessionDto;
 import com.example.attendble.data.remote.dto.SignupRequestDto;
+import com.example.attendble.data.remote.dto.UserDto;
 
 import java.util.List;
 import java.util.Map;
@@ -38,6 +39,9 @@ public interface AttendBleApi {
 
     @POST("api/auth/signup")
     Call<AuthResponseDto> signup(@Body SignupRequestDto body);
+
+    @GET("api/users/me")
+    Call<UserDto> getMe();
 
     // --- Étudiant ---
     @PUT("api/etudiants/me/face-embedding")

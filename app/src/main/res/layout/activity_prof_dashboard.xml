@@ -158,6 +158,7 @@
                             android:textColor="?attr/colorOnSurfaceVariant" />
 
                         <TextView
+                            android:id="@+id/tv_stats_classes_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/prof_stats_value_classes"
@@ -189,6 +190,7 @@
                             android:textColor="?attr/colorOnSurfaceVariant" />
 
                         <TextView
+                            android:id="@+id/tv_stats_students_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/prof_stats_value_students"
@@ -222,6 +224,7 @@
                             android:textColor="@color/white" />
 
                         <TextView
+                            android:id="@+id/tv_stats_attendance_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/prof_stats_value_attendance"
@@ -264,6 +267,7 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/tv_course1_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/prof_course1_name"
@@ -277,6 +281,7 @@
                             android:orientation="horizontal">
 
                             <TextView
+                                android:id="@+id/tv_course1_code"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:background="?attr/colorSurfaceVariant"
@@ -287,6 +292,7 @@
                                 android:textColor="?attr/colorOnSurfaceVariant" />
 
                             <TextView
+                                android:id="@+id/tv_course1_room"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="8dp"
@@ -297,6 +303,7 @@
                     </LinearLayout>
 
                     <TextView
+                        android:id="@+id/tv_course1_rate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/prof_course1_rate"
@@ -329,6 +336,7 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/tv_course2_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/prof_course2_name"
@@ -342,6 +350,7 @@
                             android:orientation="horizontal">
 
                             <TextView
+                                android:id="@+id/tv_course2_code"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:background="?attr/colorSurfaceVariant"
@@ -352,6 +361,7 @@
                                 android:textColor="?attr/colorOnSurfaceVariant" />
 
                             <TextView
+                                android:id="@+id/tv_course2_room"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="8dp"
@@ -362,6 +372,7 @@
                     </LinearLayout>
 
                     <TextView
+                        android:id="@+id/tv_course2_rate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/prof_course2_rate"

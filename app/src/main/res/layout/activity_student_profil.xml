@@ -134,6 +134,7 @@
             </FrameLayout>
 
             <TextView
+                android:id="@+id/tv_profile_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -144,6 +145,7 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/tv_profile_id"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -177,6 +179,7 @@
                         app:tint="?attr/colorOnSurface" />
 
                     <TextView
+                        android:id="@+id/tv_chip_total"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="6dp"
@@ -205,6 +208,7 @@
                         app:tint="@color/brand_on_error_container" />
 
                     <TextView
+                        android:id="@+id/tv_chip_absences"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="6dp"
@@ -235,6 +239,7 @@
                     app:tint="@color/white" />
 
                 <TextView
+                    android:id="@+id/tv_chip_attendance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="6dp"
@@ -272,6 +277,7 @@
                         android:layout_marginTop="24dp">
 
                         <com.google.android.material.progressindicator.CircularProgressIndicator
+                            android:id="@+id/progress_overall"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:indeterminate="false"
@@ -289,6 +295,7 @@
                             android:orientation="vertical">
 
                             <TextView
+                                android:id="@+id/tv_overall_value"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/sp_overall_value"
@@ -375,12 +382,14 @@
                             android:orientation="vertical">
 
                             <TextView
+                                android:id="@+id/tv_subject1_name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/sp_subject1_name"
                                 android:textAppearance="?attr/textAppearanceTitleMedium" />
 
                             <TextView
+                                android:id="@+id/tv_subject1_meta"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/sp_subject1_meta"
@@ -389,6 +398,7 @@
                         </LinearLayout>
 
                         <TextView
+                            android:id="@+id/tv_subject1_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
@@ -399,6 +409,7 @@
                     </LinearLayout>
 
                     <ProgressBar
+                        android:id="@+id/progress_subject1"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="match_parent"
                         android:layout_height="4dp"
@@ -422,12 +433,14 @@
                             android:orientation="vertical">
 
                             <TextView
+                                android:id="@+id/tv_subject2_name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/sp_subject2_name"
                                 android:textAppearance="?attr/textAppearanceTitleMedium" />
 
                             <TextView
+                                android:id="@+id/tv_subject2_meta"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/sp_subject2_meta"
@@ -436,6 +449,7 @@
                         </LinearLayout>
 
                         <TextView
+                            android:id="@+id/tv_subject2_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
@@ -446,6 +460,7 @@
                     </LinearLayout>
 
                     <ProgressBar
+                        android:id="@+id/progress_subject2"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="match_parent"
                         android:layout_height="4dp"
@@ -469,12 +484,14 @@
                             android:orientation="vertical">
 
                             <TextView
+                                android:id="@+id/tv_subject3_name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/sp_subject3_name"
                                 android:textAppearance="?attr/textAppearanceTitleMedium" />
 
                             <TextView
+                                android:id="@+id/tv_subject3_meta"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/sp_subject3_meta"
@@ -483,6 +500,7 @@
                         </LinearLayout>
 
                         <TextView
+                            android:id="@+id/tv_subject3_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
@@ -493,6 +511,7 @@
                     </LinearLayout>
 
                     <ProgressBar
+                        android:id="@+id/progress_subject3"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="match_parent"
                         android:layout_height="4dp"
@@ -516,12 +535,14 @@
                             android:orientation="vertical">
 
                             <TextView
+                                android:id="@+id/tv_subject4_name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/sp_subject4_name"
                                 android:textAppearance="?attr/textAppearanceTitleMedium" />
 
                             <TextView
+                                android:id="@+id/tv_subject4_meta"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/sp_subject4_meta"
@@ -530,6 +551,7 @@
                         </LinearLayout>
 
                         <TextView
+                            android:id="@+id/tv_subject4_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
@@ -540,6 +562,7 @@
                     </LinearLayout>
 
                     <ProgressBar
+                        android:id="@+id/progress_subject4"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="match_parent"
                         android:layout_height="4dp"
