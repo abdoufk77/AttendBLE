@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Placeholder Material 3 : rectangle arrondi en colorSurfaceVariant. Animé via Skeleton.pulse(). -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="?attr/colorSurfaceVariant" />
+    <corners android:radius="6dp" />
+</shape>

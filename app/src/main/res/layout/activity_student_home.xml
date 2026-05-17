@@ -194,6 +194,16 @@
                     android:textColor="?attr/colorPrimary" />
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/skeleton_today"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="vertical">
+
+                <include layout="@layout/view_skeleton_classes" />
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/tv_today_empty"
                 android:layout_width="match_parent"
@@ -208,7 +218,8 @@
                 android:id="@+id/today_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" />
+                android:orientation="vertical"
+                android:visibility="gone" />
 
             <!-- Attendance Progress -->
             <TextView
@@ -235,10 +246,20 @@
                     android:padding="20dp">
 
                     <LinearLayout
+                        android:id="@+id/skeleton_progress"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <include layout="@layout/view_skeleton_progress" />
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:id="@+id/progress_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical" />
+                        android:orientation="vertical"
+                        android:visibility="gone" />
 
                     <TextView
                         android:id="@+id/tv_progress_empty"

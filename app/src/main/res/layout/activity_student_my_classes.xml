@@ -103,10 +103,21 @@
                 android:textAppearance="?attr/textAppearanceHeadlineSmall" />
 
             <LinearLayout
+                android:id="@+id/skeleton_classes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="vertical">
+
+                <include layout="@layout/view_skeleton_classes" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/cards_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" />
+                android:orientation="vertical"
+                android:visibility="gone" />
 
             <!-- Join a Class placeholder (dashed) -->
             <LinearLayout

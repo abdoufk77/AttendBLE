@@ -1,7 +1,9 @@
 package com.example.attendble.ui.student.profil;
 
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +21,7 @@ import com.example.attendble.domain.model.ClasseWithAttendance;
 import com.example.attendble.domain.model.Etudiant;
 import com.example.attendble.domain.model.User;
 import com.example.attendble.ui.auth.LoginActivity;
+import com.example.attendble.ui.common.Skeleton;
 import com.example.attendble.ui.student.classes.MyClassesActivity;
 import com.example.attendble.ui.student.home.HomeActivity;
 import com.example.attendble.ui.student.scan.SearchingActivity;
@@ -41,6 +44,12 @@ public class ProfilActivity extends AppCompatActivity {
     private TextView tvChipAttendance;
     private TextView tvOverallValue;
     private CircularProgressIndicator progressOverall;
+    private View skeletonSubjects;
+    private View subjectsContainer;
+    private View skeletonProfileTop;
+    private View profileTopReal;
+    private ObjectAnimator subjectsPulse;
+    private ObjectAnimator topPulse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +70,10 @@ public class ProfilActivity extends AppCompatActivity {
         tvChipAttendance = findViewById(R.id.tv_chip_attendance);
         tvOverallValue = findViewById(R.id.tv_overall_value);
         progressOverall = findViewById(R.id.progress_overall);
+        skeletonSubjects = findViewById(R.id.skeleton_subjects);
+        subjectsContainer = findViewById(R.id.subjects_container);
+        skeletonProfileTop = findViewById(R.id.skeleton_profile_top);
+        profileTopReal = findViewById(R.id.profile_top_real);
 
         MaterialButton btnLogout = findViewById(R.id.btn_logout);
         btnLogout.setOnClickListener(v -> {
@@ -98,18 +111,38 @@ public class ProfilActivity extends AppCompatActivity {
     }
 
     private void loadClassesStats() {
+        Skeleton.stop(subjectsPulse);
+        Skeleton.stop(topPulse);
+        subjectsPulse = Skeleton.pulse(skeletonSubjects);
+        topPulse = Skeleton.pulse(skeletonProfileTop);
+        skeletonSubjects.setVisibility(View.VISIBLE);
+        skeletonProfileTop.setVisibility(View.VISIBLE);
+        subjectsContainer.setVisibility(View.GONE);
+        profileTopReal.setVisibility(View.GONE);
         String uid = ServiceLocator.getAuthRepository().getCurrentUserId();
         ServiceLocator.provideListClassesByEtudiantWithStatsUseCase().execute(uid,
                 new Callback<List<ClasseWithAttendance>>() {
                     @Override
                     public void onSuccess(List<ClasseWithAttendance> classes) {
+                        stopTopAndSubjectsSkeletons();
                         applyChipsAndOverall(classes);
                         applySubjects(classes);
                     }
 
                     @Override
-                    public void onError(Exception e) { /* silencieux */ }
+                    public void onError(Exception e) {
+                        stopTopAndSubjectsSkeletons();
+                    }
                 });
+    }
+
+    private void stopTopAndSubjectsSkeletons() {
+        Skeleton.stop(subjectsPulse);
+        Skeleton.stop(topPulse);
+        skeletonSubjects.setVisibility(View.GONE);
+        skeletonProfileTop.setVisibility(View.GONE);
+        subjectsContainer.setVisibility(View.VISIBLE);
+        profileTopReal.setVisibility(View.VISIBLE);
     }
 
     private void applyChipsAndOverall(List<ClasseWithAttendance> classes) {

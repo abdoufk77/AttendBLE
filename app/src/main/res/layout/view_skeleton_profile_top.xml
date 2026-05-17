@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Skeleton pour le bloc supérieur du profil étudiant : nom + ID + 3 chips + cercle overall. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <!-- nom -->
+    <View
+        android:layout_width="180dp"
+        android:layout_height="22dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_skeleton" />
+
+    <!-- ID étudiant -->
+    <View
+        android:layout_width="140dp"
+        android:layout_height="14dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_skeleton" />
+
+    <!-- chips row 1 -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="80dp"
+            android:layout_height="28dp"
+            android:background="@drawable/bg_skeleton" />
+
+        <View
+            android:layout_width="100dp"
+            android:layout_height="28dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_skeleton" />
+    </LinearLayout>
+
+    <!-- chip attendance -->
+    <View
+        android:layout_width="140dp"
+        android:layout_height="28dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_skeleton" />
+
+    <!-- overall card -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/bg_skeleton_card"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <View
+            android:layout_width="160dp"
+            android:layout_height="16dp"
+            android:background="@drawable/bg_skeleton" />
+
+        <View
+            android:layout_width="192dp"
+            android:layout_height="192dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/bg_skeleton" />
+    </LinearLayout>
+</LinearLayout>

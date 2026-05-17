@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Carte fantôme compacte (style item_today_course_prof) : titre + meta sur 2 lignes. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="220dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_skeleton_card"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <View
+        android:layout_width="140dp"
+        android:layout_height="14dp"
+        android:background="@drawable/bg_skeleton" />
+
+    <View
+        android:layout_width="90dp"
+        android:layout_height="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_skeleton" />
+
+    <View
+        android:layout_width="80dp"
+        android:layout_height="10dp"
+        android:layout_marginTop="6dp"
+        android:background="@drawable/bg_skeleton" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:layout_marginTop="14dp"
+        android:background="@drawable/bg_skeleton" />
+</LinearLayout>

@@ -296,6 +296,19 @@
                 android:textColor="?attr/colorOnSurfaceVariant"
                 android:visibility="gone" />
 
+            <!-- Skeleton placeholder (horizontal, pulsé pendant le chargement) -->
+            <HorizontalScrollView
+                android:id="@+id/skeleton_today"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:clipToPadding="false"
+                android:paddingHorizontal="16dp"
+                android:scrollbars="none">
+
+                <include layout="@layout/view_skeleton_today_horizontal" />
+            </HorizontalScrollView>
+
             <!-- Horizontal scroll of course cards (dynamic) -->
             <HorizontalScrollView
                 android:id="@+id/today_scroll"
@@ -304,7 +317,8 @@
                 android:layout_marginTop="12dp"
                 android:clipToPadding="false"
                 android:paddingHorizontal="16dp"
-                android:scrollbars="none">
+                android:scrollbars="none"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:id="@+id/today_container"

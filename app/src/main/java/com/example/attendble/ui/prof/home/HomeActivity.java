@@ -14,6 +14,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import android.animation.ObjectAnimator;
+
 import com.example.attendble.R;
 import com.example.attendble.data.ServiceLocator;
 import com.example.attendble.domain.Callback;
@@ -21,6 +23,7 @@ import com.example.attendble.domain.enums.UserRole;
 import com.example.attendble.domain.model.Classe;
 import com.example.attendble.domain.model.ProfStats;
 import com.example.attendble.domain.model.User;
+import com.example.attendble.ui.common.Skeleton;
 import com.example.attendble.ui.prof.classes.MyClassesActivity;
 import com.example.attendble.ui.prof.profil.ProfilActivity;
 import com.example.attendble.ui.prof.serve.ActiveSessionActivity;
@@ -42,6 +45,9 @@ public class HomeActivity extends AppCompatActivity {
     private TextView tvAvgAttendanceValue;
     private TextView tvAvgAttendanceChip;
     private LinearLayout todayContainer;
+    private View todayScroll;
+    private View skeletonToday;
+    private ObjectAnimator todayPulse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +69,8 @@ public class HomeActivity extends AppCompatActivity {
         tvAvgAttendanceValue = findViewById(R.id.tv_avg_attendance_value);
         tvAvgAttendanceChip = findViewById(R.id.tv_avg_attendance_chip);
         todayContainer = findViewById(R.id.today_container);
+        todayScroll = findViewById(R.id.today_scroll);
+        skeletonToday = findViewById(R.id.skeleton_today);
 
         findViewById(R.id.btn_view_all).setOnClickListener(v ->
                 startActivity(new Intent(this, MyClassesActivity.class)));
@@ -75,7 +83,22 @@ public class HomeActivity extends AppCompatActivity {
         super.onResume();
         loadGreeting();
         loadStats();
+        startSkeleton();
         loadTodaySchedule();
+    }
+
+    private void startSkeleton() {
+        skeletonToday.setVisibility(View.VISIBLE);
+        todayScroll.setVisibility(View.GONE);
+        tvEmpty.setVisibility(View.GONE);
+        Skeleton.stop(todayPulse);
+        todayPulse = Skeleton.pulse(skeletonToday);
+    }
+
+    private void stopSkeleton() {
+        Skeleton.stop(todayPulse);
+        skeletonToday.setVisibility(View.GONE);
+        todayScroll.setVisibility(View.VISIBLE);
     }
 
     private void loadStats() {
@@ -127,6 +150,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void renderToday(List<Classe> classes) {
+        stopSkeleton();
         todayContainer.removeAllViews();
         int count = classes.size();
         String unit = getString(count == 1

@@ -110,11 +110,22 @@
                 android:textColor="?attr/colorOnSurfaceVariant" />
 
             <LinearLayout
+                android:id="@+id/skeleton_classes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical">
+
+                <include layout="@layout/view_skeleton_classes" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/classes_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:orientation="vertical" />
+                android:orientation="vertical"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/tv_classes_empty"

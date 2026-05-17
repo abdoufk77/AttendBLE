@@ -12,6 +12,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import android.animation.ObjectAnimator;
+
 import com.example.attendble.R;
 import com.example.attendble.data.ServiceLocator;
 import com.example.attendble.domain.Callback;
@@ -20,6 +22,7 @@ import com.example.attendble.domain.model.Professeur;
 import com.example.attendble.domain.model.ProfStats;
 import com.example.attendble.domain.model.User;
 import com.example.attendble.ui.auth.LoginActivity;
+import com.example.attendble.ui.common.Skeleton;
 import com.example.attendble.ui.prof.classes.ClassDetailsActivity;
 import com.example.attendble.ui.prof.classes.MyClassesActivity;
 import com.example.attendble.ui.prof.home.HomeActivity;
@@ -43,6 +46,8 @@ public class ProfilActivity extends AppCompatActivity {
     private TextView tvStatsAttendance;
     private MaterialCardView card1;
     private MaterialCardView card2;
+    private View skeletonCourses;
+    private ObjectAnimator coursesPulse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +68,7 @@ public class ProfilActivity extends AppCompatActivity {
         tvStatsAttendance = findViewById(R.id.tv_stats_attendance_value);
         card1 = findViewById(R.id.card_course_1);
         card2 = findViewById(R.id.card_course_2);
+        skeletonCourses = findViewById(R.id.skeleton_courses);
 
         bindSettingsRows();
         bindLogout();
@@ -106,11 +112,18 @@ public class ProfilActivity extends AppCompatActivity {
     }
 
     private void loadCourses() {
+        Skeleton.stop(coursesPulse);
+        coursesPulse = Skeleton.pulse(skeletonCourses);
+        skeletonCourses.setVisibility(View.VISIBLE);
+        card1.setVisibility(View.GONE);
+        card2.setVisibility(View.GONE);
         String uid = ServiceLocator.getAuthRepository().getCurrentUserId();
         ServiceLocator.provideListClassesByProfWithStatsUseCase().execute(uid,
                 new Callback<List<ClasseWithAttendance>>() {
                     @Override
                     public void onSuccess(List<ClasseWithAttendance> classes) {
+                        Skeleton.stop(coursesPulse);
+                        skeletonCourses.setVisibility(View.GONE);
                         bindCourseCard(card1, R.id.tv_course1_name, R.id.tv_course1_code,
                                 R.id.tv_course1_room, R.id.tv_course1_rate,
                                 classes.size() > 0 ? classes.get(0) : null);
@@ -120,7 +133,10 @@ public class ProfilActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onError(Exception e) { /* silencieux */ }
+                    public void onError(Exception e) {
+                        Skeleton.stop(coursesPulse);
+                        skeletonCourses.setVisibility(View.GONE);
+                    }
                 });
     }
 

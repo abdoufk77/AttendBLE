@@ -14,11 +14,14 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import android.animation.ObjectAnimator;
+
 import com.example.attendble.R;
 import com.example.attendble.data.ServiceLocator;
 import com.example.attendble.domain.Callback;
 import com.example.attendble.domain.enums.UserRole;
 import com.example.attendble.domain.model.Classe;
+import com.example.attendble.ui.common.Skeleton;
 import com.example.attendble.ui.prof.classes.MyClassesActivity;
 import com.example.attendble.ui.prof.home.HomeActivity;
 import com.example.attendble.ui.prof.profil.ProfilActivity;
@@ -36,6 +39,8 @@ public class ServeHomeActivity extends AppCompatActivity {
 
     private LinearLayout container;
     private TextView tvEmpty;
+    private View skeleton;
+    private ObjectAnimator skeletonPulse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +56,7 @@ public class ServeHomeActivity extends AppCompatActivity {
 
         container = findViewById(R.id.classes_container);
         tvEmpty = findViewById(R.id.tv_classes_empty);
+        skeleton = findViewById(R.id.skeleton_classes);
 
         bindBottomNav();
     }
@@ -58,7 +64,22 @@ public class ServeHomeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        startSkeleton();
         loadTodayClasses();
+    }
+
+    private void startSkeleton() {
+        skeleton.setVisibility(View.VISIBLE);
+        container.setVisibility(View.GONE);
+        tvEmpty.setVisibility(View.GONE);
+        Skeleton.stop(skeletonPulse);
+        skeletonPulse = Skeleton.pulse(skeleton);
+    }
+
+    private void stopSkeleton() {
+        Skeleton.stop(skeletonPulse);
+        skeleton.setVisibility(View.GONE);
+        container.setVisibility(View.VISIBLE);
     }
 
     private void loadTodayClasses() {
@@ -78,6 +99,7 @@ public class ServeHomeActivity extends AppCompatActivity {
     }
 
     private void render(List<Classe> classes) {
+        stopSkeleton();
         container.removeAllViews();
         if (classes.isEmpty()) {
             tvEmpty.setVisibility(View.VISIBLE);

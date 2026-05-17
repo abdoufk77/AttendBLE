@@ -133,6 +133,22 @@
                 </FrameLayout>
             </FrameLayout>
 
+            <LinearLayout
+                android:id="@+id/skeleton_profile_top"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <include layout="@layout/view_skeleton_profile_top" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/profile_top_real"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
             <TextView
                 android:id="@+id/tv_profile_name"
                 android:layout_width="wrap_content"
@@ -348,6 +364,9 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            </LinearLayout>
+            <!-- /profile_top_real -->
+
             <!-- Subject breakdown -->
             <com.google.android.material.card.MaterialCardView
                 style="?attr/materialCardViewOutlinedStyle"
@@ -367,6 +386,25 @@
                         android:layout_height="wrap_content"
                         android:text="@string/sp_subjects_title"
                         android:textAppearance="?attr/textAppearanceTitleMedium" />
+
+                    <!-- Skeleton (avant chargement réseau) -->
+                    <LinearLayout
+                        android:id="@+id/skeleton_subjects"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:orientation="vertical">
+
+                        <include layout="@layout/view_skeleton_progress" />
+                    </LinearLayout>
+
+                    <!-- Subjects réels (cachés tant que la liste n'est pas arrivée) -->
+                    <LinearLayout
+                        android:id="@+id/subjects_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
 
                     <!-- Subject 1 -->
                     <LinearLayout
@@ -571,6 +609,7 @@
                         android:progress="91"
                         android:progressBackgroundTint="?attr/colorSurfaceVariant"
                         android:progressTint="?attr/colorPrimary" />
+                    </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

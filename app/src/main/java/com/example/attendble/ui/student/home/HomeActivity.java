@@ -14,6 +14,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import android.animation.ObjectAnimator;
+
 import com.example.attendble.R;
 import com.example.attendble.data.ServiceLocator;
 import com.example.attendble.domain.Callback;
@@ -21,6 +23,7 @@ import com.example.attendble.domain.enums.UserRole;
 import com.example.attendble.domain.model.Classe;
 import com.example.attendble.domain.model.ClasseWithAttendance;
 import com.example.attendble.domain.model.User;
+import com.example.attendble.ui.common.Skeleton;
 import com.example.attendble.ui.student.classes.MyClassesActivity;
 import com.example.attendble.ui.student.profil.ProfilActivity;
 import com.example.attendble.ui.student.scan.SearchingActivity;
@@ -39,6 +42,10 @@ public class HomeActivity extends AppCompatActivity {
     private TextView tvProgressEmpty;
     private LinearLayout todayContainer;
     private LinearLayout progressContainer;
+    private View skeletonToday;
+    private View skeletonProgress;
+    private ObjectAnimator todayPulse;
+    private ObjectAnimator progressPulse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +64,8 @@ public class HomeActivity extends AppCompatActivity {
         tvProgressEmpty = findViewById(R.id.tv_progress_empty);
         todayContainer = findViewById(R.id.today_container);
         progressContainer = findViewById(R.id.progress_container);
+        skeletonToday = findViewById(R.id.skeleton_today);
+        skeletonProgress = findViewById(R.id.skeleton_progress);
 
         findViewById(R.id.btn_view_schedule).setOnClickListener(v ->
                 Toast.makeText(this, R.string.student_toast_view_schedule, Toast.LENGTH_SHORT).show());
@@ -71,8 +80,35 @@ public class HomeActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         loadGreeting();
+        startSkeletons();
         loadTodaySchedule();
         loadProgress();
+    }
+
+    private void startSkeletons() {
+        skeletonToday.setVisibility(View.VISIBLE);
+        todayContainer.setVisibility(View.GONE);
+        tvEmpty.setVisibility(View.GONE);
+        Skeleton.stop(todayPulse);
+        todayPulse = Skeleton.pulse(skeletonToday);
+
+        skeletonProgress.setVisibility(View.VISIBLE);
+        progressContainer.setVisibility(View.GONE);
+        tvProgressEmpty.setVisibility(View.GONE);
+        Skeleton.stop(progressPulse);
+        progressPulse = Skeleton.pulse(skeletonProgress);
+    }
+
+    private void stopSkeletonToday() {
+        Skeleton.stop(todayPulse);
+        skeletonToday.setVisibility(View.GONE);
+        todayContainer.setVisibility(View.VISIBLE);
+    }
+
+    private void stopSkeletonProgress() {
+        Skeleton.stop(progressPulse);
+        skeletonProgress.setVisibility(View.GONE);
+        progressContainer.setVisibility(View.VISIBLE);
     }
 
     private void loadProgress() {
@@ -92,6 +128,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void renderProgress(List<ClasseWithAttendance> rows) {
+        stopSkeletonProgress();
         progressContainer.removeAllViews();
         if (rows.isEmpty()) {
             tvProgressEmpty.setVisibility(View.VISIBLE);
@@ -151,6 +188,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void renderToday(List<Classe> classes) {
+        stopSkeletonToday();
         todayContainer.removeAllViews();
         if (classes.isEmpty()) {
             tvEmpty.setVisibility(View.VISIBLE);

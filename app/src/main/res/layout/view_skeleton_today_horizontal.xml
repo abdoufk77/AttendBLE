@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Skeleton horizontal pour la liste "Today" du prof : 2 cartes compactes côte à côte. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <include layout="@layout/item_skeleton_card_compact" />
+
+    <Space
+        android:layout_width="12dp"
+        android:layout_height="match_parent" />
+
+    <include layout="@layout/item_skeleton_card_compact" />
+</LinearLayout>
