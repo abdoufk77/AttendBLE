@@ -12,13 +12,18 @@ public class UserDto {
     public String nom;
     public String photoUrl;
     public UserRole role;
-    public String department; // PROFESSEUR
-    public String numEtud;    // ETUDIANT
+    public String department;     // PROFESSEUR
+    public String numEtud;        // ETUDIANT
+    public float[] faceEmbedding; // ETUDIANT (template MobileFaceNet 192 floats)
 
     public User toDomain() {
         if (role == UserRole.PROFESSEUR) {
             return new Professeur(uid, email, nom, photoUrl, department);
         }
-        return new Etudiant(uid, email, nom, photoUrl, numEtud);
+        Etudiant e = new Etudiant(uid, email, nom, photoUrl, numEtud);
+        if (faceEmbedding != null && faceEmbedding.length > 0) {
+            e.setFaceEmbedding(faceEmbedding);
+        }
+        return e;
     }
 }

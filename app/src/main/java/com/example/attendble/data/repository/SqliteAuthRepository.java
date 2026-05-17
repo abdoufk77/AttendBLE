@@ -3,6 +3,7 @@ package com.example.attendble.data.repository;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.example.attendble.data.local.AsyncRunner;
 import com.example.attendble.data.local.AttendBleDbHelper;
@@ -135,6 +136,8 @@ public class SqliteAuthRepository implements AuthRepository {
                     AttendBleDbHelper.C_U_UID + " = ? AND " + AttendBleDbHelper.C_U_ROLE + " = ?",
                     new String[]{uid, UserRole.ETUDIANT.name()});
             if (updated == 0) throw new Exception("Étudiant introuvable : " + uid);
+            Log.i("SqliteAuthRepo", "updateFaceEmbedding uid=" + uid
+                    + " bytes=" + (embedding.length * 4) + " rowsUpdated=" + updated);
             return null;
         }, callback);
     }

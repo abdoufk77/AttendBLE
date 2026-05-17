@@ -382,17 +382,22 @@ public class FaceEnrollmentActivity extends AppCompatActivity {
             goToSuccess();
             return;
         }
+        Log.i(TAG, "Persisting face template for uid=" + etudiantUid + " length=" + template.length);
         authRepository.updateFaceEmbedding(etudiantUid, template, new Callback<Void>() {
             @Override
             public void onSuccess(Void unused) {
+                Log.i(TAG, "Face template persisted for uid=" + etudiantUid);
                 goToSuccess();
             }
 
             @Override
             public void onError(Exception e) {
-                Log.e(TAG, "Persist failed", e);
+                Log.e(TAG, "Persist failed for uid=" + etudiantUid, e);
                 btnFinish.setEnabled(true);
                 tvHint.setText(R.string.fe_persist_failed);
+                Toast.makeText(FaceEnrollmentActivity.this,
+                        getString(R.string.fe_persist_failed) + " : " + e.getMessage(),
+                        Toast.LENGTH_LONG).show();
             }
         });
     }

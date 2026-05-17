@@ -150,7 +150,10 @@ public class FaceVerificationActivity extends AppCompatActivity {
                     goToError();
                     return;
                 }
-                float[] tpl = ((Etudiant) user).getFaceEmbedding();
+                Etudiant etu = (Etudiant) user;
+                float[] tpl = etu.getFaceEmbedding();
+                Log.i(TAG, "Loaded current user uid=" + etu.getUid()
+                        + " embedding=" + (tpl == null ? "null" : "len=" + tpl.length));
                 if (tpl == null || tpl.length == 0) {
                     tvInstruction.setText(R.string.fv_no_template);
                     Toast.makeText(FaceVerificationActivity.this,
