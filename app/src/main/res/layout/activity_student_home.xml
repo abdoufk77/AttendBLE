@@ -114,7 +114,8 @@
                 android:textAppearance="?attr/textAppearanceBodyLarge"
                 android:textColor="?attr/colorOnSurfaceVariant" />
 
-            <!-- Warning banner -->
+            <!-- Warning banner (statique) commenté en attendant une vraie source dynamique
+                 (ex. alerter si taux de présence < seuil sur les classes de l'étudiant).
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -162,6 +163,7 @@
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
+            -->
 
             <!-- Today's Courses header -->
             <LinearLayout
