@@ -25,6 +25,7 @@ import com.example.attendble.ui.prof.profil.ProfilActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -92,15 +93,58 @@ public class ServeHomeActivity extends AppCompatActivity {
             ((TextView) card.findViewById(R.id.tv_class_room)).setText(c.getSalle());
             ((TextView) card.findViewById(R.id.tv_class_students))
                     .setText(getString(R.string.serve_class_students_format, c.getNbEtudiants()));
+            ((TextView) card.findViewById(R.id.tv_class_schedule))
+                    .setText(formatSchedule(c.getHeureDebut(), c.getHeureFin()));
 
             final String classeId = c.getClasseId();
+            final String hDebut = c.getHeureDebut();
+            final String hFin = c.getHeureFin();
             MaterialButton btnStart = card.findViewById(R.id.btn_start);
+            boolean inSchedule = isWithinSchedule(hDebut, hFin);
+            // Visuellement grisé, mais cliquable pour montrer pourquoi (UX > setEnabled).
+            card.setAlpha(inSchedule ? 1f : 0.5f);
             btnStart.setOnClickListener(v -> {
-                Intent i = new Intent(this, ActiveSessionActivity.class);
-                i.putExtra("classeId", classeId);
-                startActivity(i);
+                if (inSchedule) {
+                    Intent i = new Intent(this, ActiveSessionActivity.class);
+                    i.putExtra("classeId", classeId);
+                    startActivity(i);
+                } else {
+                    Calendar now = Calendar.getInstance();
+                    String nowStr = String.format(java.util.Locale.US, "%02d:%02d",
+                            now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE));
+                    Toast.makeText(this,
+                            "Hors créneau : maintenant " + nowStr
+                                    + " · cours " + hDebut + "–" + hFin,
+                            Toast.LENGTH_LONG).show();
+                }
             });
             container.addView(card);
+        }
+    }
+
+    private String formatSchedule(String hDebut, String hFin) {
+        if (hDebut == null || hFin == null) return "";
+        return hDebut + "–" + hFin;
+    }
+
+    // Compare l'heure courante à [heureDebut, heureFin] (format "HH:mm"). Si l'un est null
+    // ou mal formé, on considère la classe disponible (fallback permissif).
+    private boolean isWithinSchedule(String hDebut, String hFin) {
+        Integer debut = parseMinutes(hDebut);
+        Integer fin = parseMinutes(hFin);
+        if (debut == null || fin == null) return true;
+        Calendar now = Calendar.getInstance();
+        int nowMin = now.get(Calendar.HOUR_OF_DAY) * 60 + now.get(Calendar.MINUTE);
+        return nowMin >= debut && nowMin < fin;
+    }
+
+    private Integer parseMinutes(String hhmm) {
+        if (hhmm == null || hhmm.length() < 4 || !hhmm.contains(":")) return null;
+        try {
+            String[] parts = hhmm.split(":");
+            return Integer.parseInt(parts[0]) * 60 + Integer.parseInt(parts[1]);
+        } catch (Exception e) {
+            return null;
         }
     }
 

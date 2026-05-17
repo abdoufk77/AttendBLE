@@ -178,6 +178,7 @@
     <string name="serve_description">The BLE scanner will automatically activate once you start a session.</string>
     <string name="serve_action_start">Start</string>
     <string name="serve_toast_start">Start session — TODO</string>
+    <string name="serve_toast_out_of_schedule">Hors créneau horaire</string>
     <string name="serve_dot">·</string>
 
     <string name="serve_course1_name">Advanced Algorithms</string>
