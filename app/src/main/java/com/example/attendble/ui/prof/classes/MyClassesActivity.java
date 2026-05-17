@@ -14,12 +14,15 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import android.animation.ObjectAnimator;
+
 import com.example.attendble.R;
 import com.example.attendble.data.ServiceLocator;
 import com.example.attendble.domain.Callback;
 import com.example.attendble.domain.model.Classe;
 import com.example.attendble.domain.model.ClasseWithAttendance;
 import com.example.attendble.domain.usecase.ListClassesByProfWithStatsUseCase;
+import com.example.attendble.ui.common.Skeleton;
 import com.example.attendble.ui.prof.home.HomeActivity;
 import com.example.attendble.ui.prof.profil.ProfilActivity;
 import com.example.attendble.ui.prof.serve.ServeHomeActivity;
@@ -38,6 +41,8 @@ import java.util.Locale;
 public class MyClassesActivity extends AppCompatActivity {
 
     private LinearLayout cardsContainer;
+    private View skeleton;
+    private ObjectAnimator skeletonPulse;
     private ListClassesByProfWithStatsUseCase listClassesUseCase;
 
     @Override
@@ -53,6 +58,7 @@ public class MyClassesActivity extends AppCompatActivity {
         });
 
         cardsContainer = findViewById(R.id.cards_container);
+        skeleton = findViewById(R.id.skeleton_classes);
         listClassesUseCase = ServiceLocator.provideListClassesByProfWithStatsUseCase();
 
         findViewById(R.id.card_create_new)
@@ -70,6 +76,10 @@ public class MyClassesActivity extends AppCompatActivity {
     }
 
     private void loadClasses() {
+        Skeleton.stop(skeletonPulse);
+        skeletonPulse = Skeleton.pulse(skeleton);
+        skeleton.setVisibility(View.VISIBLE);
+        cardsContainer.setVisibility(View.GONE);
         String profId = ServiceLocator.getAuthRepository().getCurrentUserId();
         listClassesUseCase.execute(profId, new Callback<List<ClasseWithAttendance>>() {
             @Override
@@ -79,12 +89,20 @@ public class MyClassesActivity extends AppCompatActivity {
 
             @Override
             public void onError(Exception e) {
+                stopSkeleton();
                 Toast.makeText(MyClassesActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
 
+    private void stopSkeleton() {
+        Skeleton.stop(skeletonPulse);
+        skeleton.setVisibility(View.GONE);
+        cardsContainer.setVisibility(View.VISIBLE);
+    }
+
     private void renderClasses(List<ClasseWithAttendance> rows) {
+        stopSkeleton();
         cardsContainer.removeAllViews();
         LayoutInflater inflater = LayoutInflater.from(this);
         for (ClasseWithAttendance row : rows) {

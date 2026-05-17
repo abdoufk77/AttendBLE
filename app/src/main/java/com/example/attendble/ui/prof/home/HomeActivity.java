@@ -47,7 +47,10 @@ public class HomeActivity extends AppCompatActivity {
     private LinearLayout todayContainer;
     private View todayScroll;
     private View skeletonToday;
+    private View statsRow;
+    private View skeletonStats;
     private ObjectAnimator todayPulse;
+    private ObjectAnimator statsPulse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +74,8 @@ public class HomeActivity extends AppCompatActivity {
         todayContainer = findViewById(R.id.today_container);
         todayScroll = findViewById(R.id.today_scroll);
         skeletonToday = findViewById(R.id.skeleton_today);
+        statsRow = findViewById(R.id.stats_row);
+        skeletonStats = findViewById(R.id.skeleton_stats);
 
         findViewById(R.id.btn_view_all).setOnClickListener(v ->
                 startActivity(new Intent(this, MyClassesActivity.class)));
@@ -102,10 +107,15 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void loadStats() {
+        Skeleton.stop(statsPulse);
+        statsPulse = Skeleton.pulse(skeletonStats);
+        skeletonStats.setVisibility(View.VISIBLE);
+        statsRow.setVisibility(View.GONE);
         String profId = ServiceLocator.getAuthRepository().getCurrentUserId();
         ServiceLocator.provideGetProfStatsUseCase().execute(profId, new Callback<ProfStats>() {
             @Override
             public void onSuccess(ProfStats stats) {
+                stopStatsSkeleton();
                 tvTotalStudentsValue.setText(String.valueOf(stats.getTotalStudents()));
                 tvTotalStudentsChip.setText(getString(R.string.home_stat_classes_chip, stats.getTotalClasses()));
                 tvAvgAttendanceValue.setText(getString(R.string.student_progress_value_format, stats.getAvgAttendance()));
@@ -117,8 +127,16 @@ public class HomeActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onError(Exception e) { /* keep defaults */ }
+            public void onError(Exception e) {
+                stopStatsSkeleton();
+            }
         });
+    }
+
+    private void stopStatsSkeleton() {
+        Skeleton.stop(statsPulse);
+        skeletonStats.setVisibility(View.GONE);
+        statsRow.setVisibility(View.VISIBLE);
     }
 
     private void loadGreeting() {

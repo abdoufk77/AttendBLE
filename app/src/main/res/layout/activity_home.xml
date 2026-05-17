@@ -118,13 +118,26 @@
                     android:textColor="?attr/colorOnSurfaceVariant" />
             </LinearLayout>
 
+            <!-- Skeleton placeholder (pulsé pendant le chargement) -->
+            <LinearLayout
+                android:id="@+id/skeleton_stats"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:orientation="vertical">
+
+                <include layout="@layout/view_skeleton_stats" />
+            </LinearLayout>
+
             <!-- Stats row: 2 cards -->
             <LinearLayout
+                android:id="@+id/stats_row"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:orientation="horizontal"
-                android:paddingHorizontal="16dp">
+                android:paddingHorizontal="16dp"
+                android:visibility="gone">
 
                 <!-- Total Students -->
                 <com.google.android.material.card.MaterialCardView
