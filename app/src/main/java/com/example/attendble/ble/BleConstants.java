@@ -13,8 +13,10 @@ public final class BleConstants {
     public static final UUID RESPONSE_UUID =
             UUID.fromString("aabbccdd-1234-5678-9abc-def012345678");
 
-    /** Durée pendant laquelle l'étudiant diffuse son pointage après succès. */
-    public static final long RESPONSE_BROADCAST_MS = 8_000L;
+    /** Durée pendant laquelle l'étudiant diffuse son pointage après succès.
+     * Long pour maximiser les chances que le scanner du prof (qui partage le radio
+     * avec son propre advertise) le capte. */
+    public static final long RESPONSE_BROADCAST_MS = 45_000L;
 
     /** Taille du payload pointage : 2 bytes sessionShortId + 4 bytes numEtud. */
     public static final int RESPONSE_PAYLOAD_LEN = 6;

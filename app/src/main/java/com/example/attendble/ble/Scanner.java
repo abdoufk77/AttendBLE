@@ -5,12 +5,15 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
+import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.content.Context;
 import android.os.ParcelUuid;
 import android.util.Log;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -50,6 +53,14 @@ public class Scanner {
 
     @SuppressLint("MissingPermission")
     public void start(Listener listener) {
+        start(null, listener);
+    }
+
+    /** Variante filtrée : ne reporte que les beacons portant le ServiceData {@code filterUuid}.
+     * Un filtre côté radio est BEAUCOUP plus fiable que de filtrer dans le callback
+     * (Android peut dédupliquer/throttler agressivement les résultats non filtrés). */
+    @SuppressLint("MissingPermission")
+    public void start(UUID filterUuid, Listener listener) {
         if (!isSupported()) {
             listener.onError("BLE Scan non supporté sur cet appareil");
             return;
@@ -63,9 +74,26 @@ public class Scanner {
         }
         scanner = adapter.getBluetoothLeScanner();
 
-        ScanSettings settings = new ScanSettings.Builder()
+        ScanSettings.Builder settingsBuilder = new ScanSettings.Builder()
                 .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
-                .build();
+                .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES)
+                .setReportDelay(0L);
+        // Mode "agressif" : remonter même un match faible (utile quand le prof
+        // advertise et scanne en même temps, le radio est partagé).
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            settingsBuilder
+                    .setMatchMode(ScanSettings.MATCH_MODE_AGGRESSIVE)
+                    .setNumOfMatches(ScanSettings.MATCH_NUM_MAX_ADVERTISEMENT);
+        }
+        ScanSettings settings = settingsBuilder.build();
+
+        List<ScanFilter> filters = null;
+        if (filterUuid != null) {
+            ScanFilter f = new ScanFilter.Builder()
+                    .setServiceData(new ParcelUuid(filterUuid), new byte[0], new byte[0])
+                    .build();
+            filters = Collections.singletonList(f);
+        }
 
         currentCallback = new ScanCallback() {
             @Override
@@ -91,9 +119,9 @@ public class Scanner {
             }
         };
 
-        scanner.startScan(null, settings, currentCallback);
+        scanner.startScan(filters, settings, currentCallback);
         scanning = true;
-        Log.d(TAG, "Scanning started");
+        Log.d(TAG, "Scanning started, filterUuid=" + filterUuid);
     }
 
     @SuppressLint("MissingPermission")

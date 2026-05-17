@@ -64,15 +64,23 @@ public class AttendanceSuccessActivity extends AppCompatActivity {
         try {
             beaconUUID = UUID.fromString(beaconUUIDStr);
         } catch (IllegalArgumentException e) {
+            Log.w(TAG, "beaconUUID invalide: " + beaconUUIDStr);
             return;
         }
         byte[] shortId = BleConstants.sessionShortId(beaconUUID);
+        int shortIdInt = ((shortId[0] & 0xFF) << 8) | (shortId[1] & 0xFF);
+        Log.i(TAG, "Préparation broadcast: beaconUUID=" + beaconUUID + " shortId=" + shortIdInt);
 
         ServiceLocator.getAuthRepository().getCurrentUser(new Callback<User>() {
             @Override
             public void onSuccess(User user) {
-                if (!(user instanceof Etudiant)) return;
+                if (!(user instanceof Etudiant)) {
+                    Log.w(TAG, "User courant n'est pas un Etudiant, abandon broadcast");
+                    return;
+                }
                 String numEtud = ((Etudiant) user).getNumEtud();
+                Log.i(TAG, "Broadcast pour numEtud=" + numEtud + " pendant "
+                        + BleConstants.RESPONSE_BROADCAST_MS + "ms");
                 byte[] payload = BleConstants.encodeResponse(shortId, numEtud);
                 startBroadcast(payload);
             }

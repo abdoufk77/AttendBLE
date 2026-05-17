@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -28,14 +29,20 @@ import com.example.attendble.R;
 import com.example.attendble.ble.Advertiser;
 import com.example.attendble.ble.BleConstants;
 import com.example.attendble.ble.Scanner;
+import com.example.attendble.data.ServiceLocator;
+import com.example.attendble.domain.Callback;
+import com.example.attendble.domain.model.EtudiantAttendance;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
@@ -45,6 +52,8 @@ import java.util.UUID;
  * "réponse" des étudiants (RESPONSE_UUID + sessionShortId + numEtud) pour la liste live.
  */
 public class ActiveSessionActivity extends AppCompatActivity {
+
+    private static final String TAG = "AttendBLE/ActiveSession";
 
     // Durée totale d'une session : 5 min. À l'expiration, la session se ferme
     // automatiquement (un seul code émis, pas de rotation).
@@ -65,6 +74,9 @@ public class ActiveSessionActivity extends AppCompatActivity {
     private String currentCode;
 
     private final Set<Integer> detectedNumEtuds = new HashSet<>();
+    /** numEtud (int) → nom complet. Préchargé au démarrage de la session pour permettre
+     * de résoudre les beacons reçus en noms sans appel réseau pendant le pointage. */
+    private final Map<Integer, String> numEtudToName = new HashMap<>();
     private boolean liveListInitialized;
     private final Handler ui = new Handler(Looper.getMainLooper());
 
@@ -117,11 +129,44 @@ public class ActiveSessionActivity extends AppCompatActivity {
         byte[] shortIdBytes = BleConstants.sessionShortId(beaconUUID);
         sessionShortId = ((shortIdBytes[0] & 0xFF) << 8) | (shortIdBytes[1] & 0xFF);
 
+        preloadClasseMembers();
+
         if (hasBlePermissions()) {
             ensureBluetoothOnThenStart();
         } else {
             blePermLauncher.launch(requiredBlePermissions());
         }
+    }
+
+    /** Précharge la table {numEtud → nom} via le backend pour qu'on puisse afficher
+     * un vrai nom dans la liste live (offline pendant le pointage : tout est en mémoire). */
+    private void preloadClasseMembers() {
+        String classeId = getIntent().getStringExtra("classeId");
+        if (classeId == null) {
+            Log.w(TAG, "Pas de classeId : impossible de précharger les membres");
+            return;
+        }
+        ServiceLocator.provideListEtudiantsByClasseUseCase().execute(classeId,
+                new Callback<List<EtudiantAttendance>>() {
+                    @Override
+                    public void onSuccess(List<EtudiantAttendance> list) {
+                        for (EtudiantAttendance ea : list) {
+                            String numStr = ea.getEtudiant().getNumEtud();
+                            if (numStr == null) continue;
+                            try {
+                                int num = Integer.parseInt(numStr.trim());
+                                numEtudToName.put(num, ea.getEtudiant().getNom());
+                            } catch (NumberFormatException ignored) {
+                            }
+                        }
+                        Log.i(TAG, "Préchargé " + numEtudToName.size() + " membre(s) pour classeId=" + classeId);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Log.w(TAG, "Échec préchargement membres: " + e.getMessage());
+                    }
+                });
     }
 
     private void ensureBluetoothOnThenStart() {
@@ -188,18 +233,31 @@ public class ActiveSessionActivity extends AppCompatActivity {
     private void startResponseScan() {
         responseScanner = new Scanner(this);
         if (!responseScanner.isSupported()) return;
-        responseScanner.start(new Scanner.Listener() {
+        Log.i(TAG, "Starting response scan: filter=" + BleConstants.RESPONSE_UUID
+                + " mySessionShortId=" + sessionShortId);
+        // Filtre radio sur RESPONSE_UUID : beaucoup plus fiable que filtrer après coup
+        // (Android dédup/throttle quand on scanne sans filtre).
+        responseScanner.start(BleConstants.RESPONSE_UUID, new Scanner.Listener() {
             @Override
             public void onBeaconDetected(UUID serviceUuid, byte[] data, int rssi) {
                 if (!BleConstants.RESPONSE_UUID.equals(serviceUuid)) return;
                 BleConstants.ResponsePayload p = BleConstants.decodeResponse(data);
-                if (p == null) return;
-                if (p.sessionShortId != sessionShortId) return;
+                if (p == null) {
+                    Log.w(TAG, "Response payload mal formé, len=" + (data == null ? 0 : data.length));
+                    return;
+                }
+                if (p.sessionShortId != sessionShortId) {
+                    Log.d(TAG, "Response ignorée (autre session) shortId=" + p.sessionShortId
+                            + " numEtud=" + p.numEtud);
+                    return;
+                }
+                Log.i(TAG, "Response OK numEtud=" + p.numEtud + " rssi=" + rssi);
                 ui.post(() -> addDetected(p.numEtud));
             }
 
             @Override
             public void onError(String message) {
+                Log.e(TAG, "Scanner error: " + message);
                 ui.post(() -> Toast.makeText(ActiveSessionActivity.this, message, Toast.LENGTH_SHORT).show());
             }
         });
@@ -233,6 +291,13 @@ public class ActiveSessionActivity extends AppCompatActivity {
         attendanceCardRoot.addView(divider);
 
         View row = LayoutInflater.from(this).inflate(R.layout.item_live_attendance, attendanceCardRoot, false);
+        String name = numEtudToName.get(numEtud);
+        TextView tvName = row.findViewById(R.id.tv_row_name);
+        if (name != null && !name.isEmpty()) {
+            tvName.setText(name);
+        }
+        // Si pas trouvé (étudiant pas inscrit ou backend down au start), garde le texte
+        // "Étudiant présent" par défaut du layout — on a au moins le numEtud.
         ((TextView) row.findViewById(R.id.tv_row_id)).setText(getString(R.string.as_live_id, numEtud));
         ((TextView) row.findViewById(R.id.tv_row_time))
                 .setText(LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")));
