@@ -46,7 +46,9 @@ import java.util.UUID;
  */
 public class ActiveSessionActivity extends AppCompatActivity {
 
-    private static final long CODE_TTL_MS = 2 * 60 * 1000L;
+    // Durée totale d'une session : 5 min. À l'expiration, la session se ferme
+    // automatiquement (un seul code émis, pas de rotation).
+    private static final long SESSION_TTL_MS = 5 * 60 * 1000L;
     private static final long TICK_MS = 1000L;
 
     private TextView tvCode;
@@ -140,11 +142,13 @@ public class ActiveSessionActivity extends AppCompatActivity {
         if (advertiser == null) {
             advertiser = new Advertiser(this);
         }
-        rotateCodeAndAdvertise();
+        startAdvertisingAndTimer();
         startResponseScan();
     }
 
-    private void rotateCodeAndAdvertise() {
+    // Émet un code unique pour toute la session et démarre le compte à rebours global.
+    // À l'expiration, la session se ferme automatiquement (pas de rotation de code).
+    private void startAdvertisingAndTimer() {
         currentCode = generateCode();
         tvCode.setText(currentCode);
 
@@ -163,18 +167,20 @@ public class ActiveSessionActivity extends AppCompatActivity {
         if (countdown != null) {
             countdown.cancel();
         }
-        countdown = new CountDownTimer(CODE_TTL_MS, TICK_MS) {
+        countdown = new CountDownTimer(SESSION_TTL_MS, TICK_MS) {
             @Override
             public void onTick(long msLeft) {
                 int sec = (int) (msLeft / 1000L);
                 tvTimer.setText(String.format(Locale.US, "%d:%02d", sec / 60, sec % 60));
-                int pct = (int) (msLeft * 100L / CODE_TTL_MS);
+                int pct = (int) (msLeft * 100L / SESSION_TTL_MS);
                 progressTimer.setProgressCompat(pct, true);
             }
 
             @Override
             public void onFinish() {
-                rotateCodeAndAdvertise();
+                tvTimer.setText("0:00");
+                progressTimer.setProgressCompat(0, true);
+                endSession();
             }
         }.start();
     }
