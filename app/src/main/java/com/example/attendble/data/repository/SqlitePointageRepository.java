@@ -25,7 +25,8 @@ public class SqlitePointageRepository implements PointageRepository {
     }
 
     @Override
-    public void validerPresence(Pointage pointage, Callback<Pointage> callback) {
+    public void validerPresence(Pointage pointage, String codeSaisi, Callback<Pointage> callback) {
+        // codeSaisi ignoré : la validation locale a déjà eu lieu dans ValiderPresenceUseCase.
         AsyncRunner.run(() -> {
             SQLiteDatabase db = helper.getWritableDatabase();
             if (pointage.getPointageId() == null) pointage.setPointageId(UUID.randomUUID().toString());

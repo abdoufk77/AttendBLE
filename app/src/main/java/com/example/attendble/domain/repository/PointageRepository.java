@@ -8,8 +8,9 @@ import java.util.List;
 /** Contrat de gestion des pointages (validation présence, lecture par session/étudiant). */
 public interface PointageRepository {
 
-    /** Insère un pointage PRESENT. Erreur si déjà pointé pour cette session. */
-    void validerPresence(Pointage pointage, Callback<Pointage> callback);
+    /** Insère un pointage PRESENT. {@code codeSaisi} transporte le code 4 chiffres jusqu'au backend
+     *  (revérifié serveur-side pour défense en profondeur). Ignoré par l'impl SQLite. */
+    void validerPresence(Pointage pointage, String codeSaisi, Callback<Pointage> callback);
 
     /** Liste les pointages d'une session (live pendant la session, rapport après). */
     void listBySession(String sessionId, Callback<List<Pointage>> callback);

@@ -7,6 +7,8 @@ import com.example.attendble.data.remote.RetrofitClient;
 import com.example.attendble.data.remote.TokenStore;
 import com.example.attendble.data.repository.RetrofitAuthRepository;
 import com.example.attendble.data.repository.RetrofitClasseRepository;
+import com.example.attendble.data.repository.RetrofitPointageRepository;
+import com.example.attendble.data.repository.RetrofitSessionRepository;
 import com.example.attendble.data.repository.SqliteAuthRepository;
 import com.example.attendble.data.repository.SqliteClasseRepository;
 import com.example.attendble.data.repository.SqlitePointageRepository;
@@ -42,12 +44,12 @@ import com.example.attendble.domain.usecase.ValiderPresenceUseCase;
  */
 public final class ServiceLocator {
 
-    // Bascule entre SQLite local (true) et backend Spring Boot via Retrofit (false).
-    // Mettre à false dès que le backend est démarré et que tu veux tester l'intégration.
-    // Auth + Classes ont une impl Retrofit ; Session/Pointage restent SQLite tant que
-    // RetrofitSessionRepository / RetrofitPointageRepository ne sont pas créés.
+    // Bascule entre SQLite local (true) et backend Spring Boot via Retrofit (false), par module.
+    // Toutes les couches ont leur impl Retrofit. Bascule individuelle utile pour debug.
     private static final boolean USE_LOCAL_SQLITE_FOR_AUTH = false;
     private static final boolean USE_LOCAL_SQLITE_FOR_CLASSE = false;
+    private static final boolean USE_LOCAL_SQLITE_FOR_SESSION = false;
+    private static final boolean USE_LOCAL_SQLITE_FOR_POINTAGE = false;
 
     private static AuthRepository authRepository;
     private static ClasseRepository classeRepository;
@@ -76,8 +78,17 @@ public final class ServiceLocator {
             classeRepository = new RetrofitClasseRepository(api);
         }
 
-        sessionRepository = new SqliteSessionRepository(helper);
-        pointageRepository = new SqlitePointageRepository(helper);
+        if (USE_LOCAL_SQLITE_FOR_SESSION) {
+            sessionRepository = new SqliteSessionRepository(helper);
+        } else {
+            sessionRepository = new RetrofitSessionRepository(api);
+        }
+
+        if (USE_LOCAL_SQLITE_FOR_POINTAGE) {
+            pointageRepository = new SqlitePointageRepository(helper);
+        } else {
+            pointageRepository = new RetrofitPointageRepository(api);
+        }
     }
 
     public static AuthRepository getAuthRepository() {

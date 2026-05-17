@@ -55,7 +55,7 @@ public class ValiderPresenceUseCase {
                 Pointage pointage = new Pointage(
                         null, sessionId, etudiantId, System.currentTimeMillis(),
                         PointageStatut.PRESENT, true, true);
-                pointageRepository.validerPresence(pointage, callback);
+                pointageRepository.validerPresence(pointage, codeSaisi.trim(), callback);
             }
 
             @Override
