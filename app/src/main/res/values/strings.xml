@@ -226,6 +226,7 @@
     <string name="as_live_present">Étudiant présent</string>
     <string name="as_live_counter_dynamic">%1$d présent(s)</string>
     <string name="as_live_id">N° %1$d</string>
+    <string name="as_attendance_empty">En attente de pointages…</string>
 
     <!-- SessionClosedActivity -->
     <string name="sc_title">Session Summary</string>

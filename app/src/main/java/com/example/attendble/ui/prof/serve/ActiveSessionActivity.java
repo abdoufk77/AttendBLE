@@ -202,17 +202,18 @@ public class ActiveSessionActivity extends AppCompatActivity {
     private void addDetected(int numEtud) {
         if (!detectedNumEtuds.add(numEtud)) return;
         if (!liveListInitialized) {
-            clearStubRows();
+            clearEmptyState();
             liveListInitialized = true;
         }
         appendStudentRow(numEtud);
         tvLiveCounter.setText(getString(R.string.as_live_counter_dynamic, detectedNumEtuds.size()));
     }
 
-    /** Supprime les 3 rangées stub + leurs séparateurs (tout sauf le header à l'index 0). */
-    private void clearStubRows() {
-        while (attendanceCardRoot.getChildCount() > 1) {
-            attendanceCardRoot.removeViewAt(1);
+    /** Retire le placeholder "En attente…" avant d'insérer la première vraie ligne. */
+    private void clearEmptyState() {
+        View empty = findViewById(R.id.tv_attendance_empty);
+        if (empty != null) {
+            attendanceCardRoot.removeView(empty);
         }
     }
 
