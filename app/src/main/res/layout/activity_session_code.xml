@@ -121,17 +121,19 @@
                             android:orientation="vertical">
 
                             <TextView
+                                android:id="@+id/tv_session_name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/ssc_session_name"
+                                android:text="@string/ssc_session_generic"
                                 android:textAppearance="?attr/textAppearanceTitleMedium"
                                 android:textColor="?attr/colorOnSurface" />
 
                             <TextView
+                                android:id="@+id/tv_session_meta"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
-                                android:text="@string/ssc_session_meta"
+                                android:text="@string/ssc_session_unknown_meta"
                                 android:textAppearance="?attr/textAppearanceBodyMedium"
                                 android:textColor="?attr/colorOnSurfaceVariant" />
                         </LinearLayout>
@@ -203,28 +205,44 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Establish connection button (locks code entry until clicked) -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_establish"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="20dp"
+                android:text="@string/ssc_establish"
+                android:textAppearance="?attr/textAppearanceLabelLarge"
+                app:cornerRadius="9999dp" />
+
             <!-- Code entry heading -->
             <TextView
+                android:id="@+id/tv_code_heading"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
+                android:alpha="0.4"
                 android:text="@string/ssc_heading"
                 android:textAppearance="?attr/textAppearanceHeadlineSmall"
                 android:textColor="?attr/colorOnSurface" />
 
             <TextView
+                android:id="@+id/tv_code_subtitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
+                android:alpha="0.4"
                 android:text="@string/ssc_subtitle"
                 android:textAppearance="?attr/textAppearanceBodyMedium"
                 android:textColor="?attr/colorOnSurfaceVariant" />
 
             <!-- Code cells -->
             <LinearLayout
+                android:id="@+id/code_cells_row"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
+                android:alpha="0.4"
                 android:orientation="horizontal"
                 android:weightSum="4">
 

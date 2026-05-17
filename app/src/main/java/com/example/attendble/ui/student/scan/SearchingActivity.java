@@ -23,12 +23,18 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.attendble.R;
 import com.example.attendble.ble.Scanner;
+import com.example.attendble.data.ServiceLocator;
+import com.example.attendble.domain.Callback;
+import com.example.attendble.domain.enums.UserRole;
+import com.example.attendble.domain.model.Classe;
 import com.example.attendble.ui.student.classes.MyClassesActivity;
 import com.example.attendble.ui.student.home.HomeActivity;
 import com.example.attendble.ui.student.profil.ProfilActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 
+import java.time.LocalTime;
+import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -43,6 +49,9 @@ public class SearchingActivity extends AppCompatActivity {
     private Scanner scanner;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private boolean beaconHandled;
+    /** Cours du jour de l'étudiant, préchargés au démarrage pour pouvoir afficher
+     * la vraie classe/salle quand un beacon est détecté, sans appel réseau supplémentaire. */
+    private volatile List<Classe> todayClasses;
 
     private final ActivityResultLauncher<String[]> blePermLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
@@ -87,12 +96,60 @@ public class SearchingActivity extends AppCompatActivity {
         startPulse(findViewById(R.id.ring_outer), 1200L);
 
         bindBottomNav();
+        preloadTodayClasses();
 
         if (hasBlePermissions()) {
             ensureBluetoothOnThenScan();
         } else {
             blePermLauncher.launch(requiredBlePermissions());
         }
+    }
+
+    /** Précharge les cours du jour de l'étudiant (1 appel HTTP) pour avoir le nom/salle
+     * sous la main quand un beacon est détecté. Si l'appel échoue, on continue sans
+     * (l'écran suivant affichera "Session detected" en générique). */
+    private void preloadTodayClasses() {
+        String uid = ServiceLocator.getAuthRepository().getCurrentUserId();
+        if (uid == null) return;
+        ServiceLocator.provideListTodayCoursesUseCase().execute(uid, UserRole.ETUDIANT,
+                new Callback<List<Classe>>() {
+                    @Override
+                    public void onSuccess(List<Classe> classes) {
+                        todayClasses = classes;
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        // Pas grave, on continuera sans
+                    }
+                });
+    }
+
+    /** Choisit le cours du jour le plus probable selon l'heure actuelle :
+     * d'abord celui dont l'heure courante tombe dans [heureDebut..heureFin],
+     * sinon le plus proche dans le temps, sinon null. */
+    private Classe pickCurrentClasse() {
+        List<Classe> classes = todayClasses;
+        if (classes == null || classes.isEmpty()) return null;
+        LocalTime now = LocalTime.now();
+        Classe best = null;
+        long bestDelta = Long.MAX_VALUE;
+        for (Classe c : classes) {
+            try {
+                LocalTime start = LocalTime.parse(c.getHeureDebut());
+                LocalTime end = LocalTime.parse(c.getHeureFin());
+                if (!now.isBefore(start) && now.isBefore(end)) {
+                    return c; // match exact
+                }
+                long delta = Math.abs(java.time.Duration.between(now, start).toMinutes());
+                if (delta < bestDelta) {
+                    bestDelta = delta;
+                    best = c;
+                }
+            } catch (Exception ignored) {
+            }
+        }
+        return best;
     }
 
     private void ensureBluetoothOnThenScan() {
@@ -139,6 +196,19 @@ public class SearchingActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SessionCodeActivity.class);
         intent.putExtra(SessionCodeActivity.EXTRA_BEACON_UUID, beaconUUID.toString());
         intent.putExtra(SessionCodeActivity.EXTRA_EXPECTED_CODE, code);
+        Classe match = pickCurrentClasse();
+        if (match != null) {
+            intent.putExtra(SessionCodeActivity.EXTRA_CLASSE_NAME, match.getNom());
+            StringBuilder meta = new StringBuilder();
+            if (match.getMatiere() != null) meta.append(match.getMatiere());
+            if (match.getSalle() != null && !match.getSalle().isEmpty()) {
+                if (meta.length() > 0) meta.append(" · ");
+                meta.append("Salle ").append(match.getSalle());
+            }
+            if (meta.length() > 0) {
+                intent.putExtra(SessionCodeActivity.EXTRA_CLASSE_META, meta.toString());
+            }
+        }
         startActivity(intent);
         finish();
     }

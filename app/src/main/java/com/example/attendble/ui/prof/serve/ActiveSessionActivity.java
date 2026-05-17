@@ -77,6 +77,11 @@ public class ActiveSessionActivity extends AppCompatActivity {
     /** numEtud (int) → nom complet. Préchargé au démarrage de la session pour permettre
      * de résoudre les beacons reçus en noms sans appel réseau pendant le pointage. */
     private final Map<Integer, String> numEtudToName = new HashMap<>();
+    /** numEtud → row View pour pouvoir basculer "pending → confirmed" (gris → vert)
+     * quand l'étudiant termine sa face verif. */
+    private final Map<Integer, View> rowByNumEtud = new HashMap<>();
+    /** numEtud déjà passés en CONFIRMED — évite de re-basculer (et n'incrémente le compteur qu'une fois). */
+    private final Set<Integer> confirmedNumEtuds = new HashSet<>();
     private boolean liveListInitialized;
     private final Handler ui = new Handler(Looper.getMainLooper());
 
@@ -251,8 +256,8 @@ public class ActiveSessionActivity extends AppCompatActivity {
                             + " numEtud=" + p.numEtud);
                     return;
                 }
-                Log.i(TAG, "Response OK numEtud=" + p.numEtud + " rssi=" + rssi);
-                ui.post(() -> addDetected(p.numEtud));
+                Log.i(TAG, "Response OK numEtud=" + p.numEtud + " status=" + p.status + " rssi=" + rssi);
+                ui.post(() -> handleResponse(p.numEtud, p.status));
             }
 
             @Override
@@ -263,14 +268,22 @@ public class ActiveSessionActivity extends AppCompatActivity {
         });
     }
 
-    private void addDetected(int numEtud) {
-        if (!detectedNumEtuds.add(numEtud)) return;
-        if (!liveListInitialized) {
-            clearEmptyState();
-            liveListInitialized = true;
+    /** Gère un beacon réponse : nouveau pending → on ajoute une ligne grisée ; confirmation
+     * d'une ligne existante → on la passe en vert ; pending déjà vu → no-op. */
+    private void handleResponse(int numEtud, int status) {
+        boolean newlyDetected = detectedNumEtuds.add(numEtud);
+        if (newlyDetected) {
+            if (!liveListInitialized) {
+                clearEmptyState();
+                liveListInitialized = true;
+            }
+            appendStudentRow(numEtud, status);
         }
-        appendStudentRow(numEtud);
-        tvLiveCounter.setText(getString(R.string.as_live_counter_dynamic, detectedNumEtuds.size()));
+        if (status == BleConstants.STATUS_CONFIRMED && confirmedNumEtuds.add(numEtud)) {
+            promoteRowToConfirmed(numEtud);
+        }
+        // Compteur live : on ne compte que les confirmés (pending ≠ encore "présent").
+        tvLiveCounter.setText(getString(R.string.as_live_counter_dynamic, confirmedNumEtuds.size()));
     }
 
     /** Retire le placeholder "En attente…" avant d'insérer la première vraie ligne. */
@@ -281,7 +294,7 @@ public class ActiveSessionActivity extends AppCompatActivity {
         }
     }
 
-    private void appendStudentRow(int numEtud) {
+    private void appendStudentRow(int numEtud, int status) {
         View divider = new View(this);
         LinearLayout.LayoutParams dp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, (int) (1 * getResources().getDisplayMetrics().density));
@@ -296,21 +309,44 @@ public class ActiveSessionActivity extends AppCompatActivity {
         if (name != null && !name.isEmpty()) {
             tvName.setText(name);
         }
-        // Si pas trouvé (étudiant pas inscrit ou backend down au start), garde le texte
-        // "Étudiant présent" par défaut du layout — on a au moins le numEtud.
         ((TextView) row.findViewById(R.id.tv_row_id)).setText(getString(R.string.as_live_id, numEtud));
         ((TextView) row.findViewById(R.id.tv_row_time))
                 .setText(LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")));
+        // En pending : ligne grisée + texte "En cours de pointage…"
+        if (status != BleConstants.STATUS_CONFIRMED) {
+            row.setAlpha(0.5f);
+            tvName.setText(getString(R.string.as_live_pending,
+                    name != null && !name.isEmpty() ? name : ""));
+        }
         attendanceCardRoot.addView(row);
+        rowByNumEtud.put(numEtud, row);
+    }
+
+    /** Passe la ligne pending → confirmée (opacité 1 + nom plein + icône verte déjà dans le layout). */
+    private void promoteRowToConfirmed(int numEtud) {
+        View row = rowByNumEtud.get(numEtud);
+        if (row == null) return;
+        row.setAlpha(1f);
+        TextView tvName = row.findViewById(R.id.tv_row_name);
+        String name = numEtudToName.get(numEtud);
+        if (name != null && !name.isEmpty()) {
+            tvName.setText(name);
+        } else {
+            tvName.setText(R.string.as_live_present);
+        }
+        ((TextView) row.findViewById(R.id.tv_row_time))
+                .setText(LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")));
     }
 
     private void endSession() {
         stopBleAndTimer();
         Intent i = new Intent(this, SessionClosedActivity.class);
         i.putExtra(SessionClosedActivity.EXTRA_CLASSE_ID, getIntent().getStringExtra("classeId"));
-        int[] arr = new int[detectedNumEtuds.size()];
+        // Seuls les CONFIRMED (code + face validés) comptent comme présents. Les pending
+        // qui n'ont jamais reçu de confirmation sont considérés comme absents.
+        int[] arr = new int[confirmedNumEtuds.size()];
         int k = 0;
-        for (Integer n : detectedNumEtuds) arr[k++] = n;
+        for (Integer n : confirmedNumEtuds) arr[k++] = n;
         i.putExtra(SessionClosedActivity.EXTRA_DETECTED_NUM_ETUDS, arr);
         startActivity(i);
         finish();

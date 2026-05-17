@@ -226,6 +226,7 @@
     <string name="as_live_present">Étudiant présent</string>
     <string name="as_live_counter_dynamic">%1$d présent(s)</string>
     <string name="as_live_id">N° %1$d</string>
+    <string name="as_live_pending">%1$s · En cours de pointage…</string>
     <string name="as_attendance_empty">En attente de pointages…</string>
 
     <!-- SessionClosedActivity -->
@@ -425,6 +426,11 @@
     <string name="ssc_confirm">Confirm presence</string>
     <string name="ssc_rescan">Wrong session? Rescan</string>
     <string name="ssc_toast_confirm">Confirm presence — TODO</string>
+    <string name="ssc_establish">Establish connection</string>
+    <string name="ssc_establishing">Connecting…</string>
+    <string name="ssc_established">Connected ✓</string>
+    <string name="ssc_session_generic">Session detected</string>
+    <string name="ssc_session_unknown_meta">No class info available</string>
 
     <!-- Student FaceVerificationActivity -->
     <string name="fv_back_cd">Back</string>
