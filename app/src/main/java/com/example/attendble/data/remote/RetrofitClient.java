@@ -1,5 +1,7 @@
 package com.example.attendble.data.remote;
 
+import com.example.attendble.BuildConfig;
+
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -8,14 +10,14 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 // Construit une instance unique de Retrofit pointant vers le backend Spring Boot.
-//
-// BASE_URL :
-//   - Émulateur Android Studio  → http://10.0.2.2:8080/  (10.0.2.2 = localhost du PC hôte)
-//   - Vrai téléphone sur LAN    → http://<IP-PC>:8080/   (à mettre à jour selon ton réseau)
-//   - Prod Azure                → https://api.attendble.<domaine>/
+// BASE_URL est injectée depuis local.properties (clés attendble.backend.host / port)
+// via build.gradle.kts → BuildConfig.BACKEND_BASE_URL. Pour changer de Wi-Fi/hotspot :
+//   1. ipconfig pour récupérer la nouvelle IP
+//   2. édite local.properties (clé attendble.backend.host)
+//   3. rebuild — aucune autre modif de code/XML nécessaire.
 public final class RetrofitClient {
 
-    public static final String BASE_URL = "http://192.168.0.103:8080/";
+    public static final String BASE_URL = BuildConfig.BACKEND_BASE_URL;
 
     private static volatile AttendBleApi api;
 

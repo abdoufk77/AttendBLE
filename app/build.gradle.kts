@@ -1,6 +1,21 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
 }
+
+// Lecture de local.properties (gitignoré, propre à chaque machine de dev).
+// Tu peux y mettre :
+//   attendble.backend.host=192.168.0.103
+//   attendble.backend.port=8080
+// → injecté ci-dessous dans BuildConfig.BACKEND_BASE_URL utilisé par RetrofitClient.
+val localProps = Properties().apply {
+    val f = rootProject.file("local.properties")
+    if (f.exists()) f.inputStream().use { load(it) }
+}
+val backendHost: String = localProps.getProperty("attendble.backend.host", "10.0.2.2")
+val backendPort: String = localProps.getProperty("attendble.backend.port", "8080")
+val backendBaseUrl: String = "http://$backendHost:$backendPort/"
 
 android {
     namespace = "com.example.attendble"
@@ -18,6 +33,12 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "BACKEND_BASE_URL", "\"$backendBaseUrl\"")
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 
     buildTypes {

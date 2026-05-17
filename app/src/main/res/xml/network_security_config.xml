@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Autorise le trafic HTTP en clair vers le backend local en dev (émulateur + vrai device sur LAN).
-     Pour la prod (HTTPS Azure) ce fichier pourra être réduit ou supprimé. -->
+<!--
+  Config réseau DEV : autorise le trafic HTTP cleartext pour TOUT host.
+  Plus besoin de mettre à jour cette config quand l'IP du backend change
+  (LAN café, hotspot mobile, etc.) — l'IP/port sont gérés dans local.properties.
+
+  À durcir avant la prod (Azure HTTPS) : retirer base-config et lister
+  uniquement les domaines de prod.
+-->
 <network-security-config>
-    <domain-config cleartextTrafficPermitted="true">
-        <domain includeSubdomains="true">10.0.2.2</domain>      <!-- émulateur → host -->
-        <domain includeSubdomains="true">localhost</domain>
-        <domain includeSubdomains="true">127.0.0.1</domain>
-        <domain includeSubdomains="true">192.168.0.103</domain> <!-- IP LAN du PC dev -->
-    </domain-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
 </network-security-config>

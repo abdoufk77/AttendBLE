@@ -102,3 +102,5 @@ Thumbs.db
 
 # claude
 CLAUDE.md
+# Notes locales (config réseau, etc.) — propres à ta machine
+network.md
