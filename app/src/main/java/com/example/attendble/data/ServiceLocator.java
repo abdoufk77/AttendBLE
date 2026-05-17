@@ -6,6 +6,7 @@ import com.example.attendble.data.local.AttendBleDbHelper;
 import com.example.attendble.data.remote.RetrofitClient;
 import com.example.attendble.data.remote.TokenStore;
 import com.example.attendble.data.repository.RetrofitAuthRepository;
+import com.example.attendble.data.repository.RetrofitClasseRepository;
 import com.example.attendble.data.repository.SqliteAuthRepository;
 import com.example.attendble.data.repository.SqliteClasseRepository;
 import com.example.attendble.data.repository.SqlitePointageRepository;
@@ -43,10 +44,10 @@ public final class ServiceLocator {
 
     // Bascule entre SQLite local (true) et backend Spring Boot via Retrofit (false).
     // Mettre à false dès que le backend est démarré et que tu veux tester l'intégration.
-    // Pour l'instant : seul Auth a une impl Retrofit ; les autres restent SQLite tant que
-    // RetrofitClasseRepository / RetrofitSessionRepository / RetrofitPointageRepository
-    // ne sont pas créés.
+    // Auth + Classes ont une impl Retrofit ; Session/Pointage restent SQLite tant que
+    // RetrofitSessionRepository / RetrofitPointageRepository ne sont pas créés.
     private static final boolean USE_LOCAL_SQLITE_FOR_AUTH = false;
+    private static final boolean USE_LOCAL_SQLITE_FOR_CLASSE = false;
 
     private static AuthRepository authRepository;
     private static ClasseRepository classeRepository;
@@ -60,14 +61,21 @@ public final class ServiceLocator {
         if (authRepository != null) return;
         AttendBleDbHelper helper = AttendBleDbHelper.getInstance(context);
 
+        TokenStore tokenStore = new TokenStore(context);
+        var api = RetrofitClient.getApi(tokenStore);
+
         if (USE_LOCAL_SQLITE_FOR_AUTH) {
             authRepository = new SqliteAuthRepository(helper);
         } else {
-            TokenStore tokenStore = new TokenStore(context);
-            authRepository = new RetrofitAuthRepository(RetrofitClient.getApi(tokenStore), tokenStore);
+            authRepository = new RetrofitAuthRepository(api, tokenStore);
         }
 
-        classeRepository = new SqliteClasseRepository(helper);
+        if (USE_LOCAL_SQLITE_FOR_CLASSE) {
+            classeRepository = new SqliteClasseRepository(helper);
+        } else {
+            classeRepository = new RetrofitClasseRepository(api);
+        }
+
         sessionRepository = new SqliteSessionRepository(helper);
         pointageRepository = new SqlitePointageRepository(helper);
     }
