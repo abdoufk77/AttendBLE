@@ -45,6 +45,11 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.constraintlayout)
 
+    // Retrofit + OkHttp (couche réseau vers Spring Boot)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.gson)
+    implementation(libs.okhttp.logging)
+
     // ML Kit Face Detection (on-device, offline)
     implementation("com.google.mlkit:face-detection:16.1.7")
 

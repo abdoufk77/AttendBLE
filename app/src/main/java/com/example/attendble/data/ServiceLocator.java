@@ -3,6 +3,9 @@ package com.example.attendble.data;
 import android.content.Context;
 
 import com.example.attendble.data.local.AttendBleDbHelper;
+import com.example.attendble.data.remote.RetrofitClient;
+import com.example.attendble.data.remote.TokenStore;
+import com.example.attendble.data.repository.RetrofitAuthRepository;
 import com.example.attendble.data.repository.SqliteAuthRepository;
 import com.example.attendble.data.repository.SqliteClasseRepository;
 import com.example.attendble.data.repository.SqlitePointageRepository;
@@ -38,6 +41,13 @@ import com.example.attendble.domain.usecase.ValiderPresenceUseCase;
  */
 public final class ServiceLocator {
 
+    // Bascule entre SQLite local (true) et backend Spring Boot via Retrofit (false).
+    // Mettre à false dès que le backend est démarré et que tu veux tester l'intégration.
+    // Pour l'instant : seul Auth a une impl Retrofit ; les autres restent SQLite tant que
+    // RetrofitClasseRepository / RetrofitSessionRepository / RetrofitPointageRepository
+    // ne sont pas créés.
+    private static final boolean USE_LOCAL_SQLITE_FOR_AUTH = false;
+
     private static AuthRepository authRepository;
     private static ClasseRepository classeRepository;
     private static SessionRepository sessionRepository;
@@ -49,7 +59,14 @@ public final class ServiceLocator {
     public static synchronized void init(Context context) {
         if (authRepository != null) return;
         AttendBleDbHelper helper = AttendBleDbHelper.getInstance(context);
-        authRepository = new SqliteAuthRepository(helper);
+
+        if (USE_LOCAL_SQLITE_FOR_AUTH) {
+            authRepository = new SqliteAuthRepository(helper);
+        } else {
+            TokenStore tokenStore = new TokenStore(context);
+            authRepository = new RetrofitAuthRepository(RetrofitClient.getApi(tokenStore), tokenStore);
+        }
+
         classeRepository = new SqliteClasseRepository(helper);
         sessionRepository = new SqliteSessionRepository(helper);
         pointageRepository = new SqlitePointageRepository(helper);

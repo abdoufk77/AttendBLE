@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Autorise le trafic HTTP en clair vers le backend local en dev (émulateur + vrai device sur LAN).
+     Pour la prod (HTTPS Azure) ce fichier pourra être réduit ou supprimé. -->
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">10.0.2.2</domain>      <!-- émulateur → host -->
+        <domain includeSubdomains="true">localhost</domain>
+        <domain includeSubdomains="true">127.0.0.1</domain>
+        <domain includeSubdomains="true">192.168.0.103</domain> <!-- IP LAN du PC dev -->
+    </domain-config>
+</network-security-config>
