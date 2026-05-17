@@ -3,6 +3,7 @@ package com.example.attendble.data.repository;
 import com.example.attendble.data.remote.AttendBleApi;
 import com.example.attendble.data.remote.TokenStore;
 import com.example.attendble.data.remote.dto.AuthResponseDto;
+import com.example.attendble.data.remote.dto.FaceEmbeddingRequestDto;
 import com.example.attendble.data.remote.dto.LoginRequestDto;
 import com.example.attendble.data.remote.dto.SignupRequestDto;
 import com.example.attendble.domain.Callback;
@@ -148,9 +149,24 @@ public class RetrofitAuthRepository implements AuthRepository {
 
     @Override
     public void updateFaceEmbedding(String uid, float[] embedding, Callback<Void> callback) {
-        // Endpoint backend pas encore exposé (à ajouter : PUT /api/etudiants/me/face-embedding).
-        callback.onError(new UnsupportedOperationException(
-                "updateFaceEmbedding : endpoint backend pas encore implémenté"));
+        // L'uid est ignoré : le backend identifie l'étudiant via le JWT.
+        api.updateMyFaceEmbedding(new FaceEmbeddingRequestDto(embedding))
+                .enqueue(new retrofit2.Callback<>() {
+                    @Override
+                    public void onResponse(Call<Void> c, Response<Void> response) {
+                        if (!response.isSuccessful()) {
+                            callback.onError(new Exception(httpErrorMessage(response,
+                                    "Enregistrement du visage refusé")));
+                            return;
+                        }
+                        callback.onSuccess(null);
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> c, Throwable t) {
+                        callback.onError(asException(t));
+                    }
+                });
     }
 
     // --- helpers ---

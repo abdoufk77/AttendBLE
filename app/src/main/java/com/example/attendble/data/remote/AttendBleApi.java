@@ -5,6 +5,7 @@ import com.example.attendble.data.remote.dto.ClasseDto;
 import com.example.attendble.data.remote.dto.ClasseWithAttendanceDto;
 import com.example.attendble.data.remote.dto.CreateClasseRequestDto;
 import com.example.attendble.data.remote.dto.EtudiantAttendanceDto;
+import com.example.attendble.data.remote.dto.FaceEmbeddingRequestDto;
 import com.example.attendble.data.remote.dto.JoinClasseRequestDto;
 import com.example.attendble.data.remote.dto.LoginRequestDto;
 import com.example.attendble.data.remote.dto.MarquerPresenceRequestDto;
@@ -24,6 +25,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -36,6 +38,10 @@ public interface AttendBleApi {
 
     @POST("api/auth/signup")
     Call<AuthResponseDto> signup(@Body SignupRequestDto body);
+
+    // --- Étudiant ---
+    @PUT("api/etudiants/me/face-embedding")
+    Call<Void> updateMyFaceEmbedding(@Body FaceEmbeddingRequestDto body);
 
     // --- Classes ---
     @POST("api/classes")
